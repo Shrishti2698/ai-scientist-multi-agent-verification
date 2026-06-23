@@ -55,7 +55,7 @@ class OpenAIResearchLLM:
             return None
 
         prompt = (
-            "You are a rigorous verifier for AI and computer science research claims.\n"
+            "You are a rigorous verifier for research claims across all academic domains.\n"
             "Use only the provided evidence snippets.\n"
             "Keep the final verdict aligned to the evidence.\n"
             "If evidence is mixed, prefer contradicted over supported when strong counterevidence exists.\n"
@@ -111,7 +111,7 @@ class OpenAIResearchLLM:
                 lines.append(f"- {note.severity}: {note.message}")
 
         prompt = (
-            "You are writing the executive summary for an AI/CS research verification report.\n"
+            "You are writing the executive summary for a research verification report across all academic domains.\n"
             "State the overall finding clearly in 2 to 4 sentences.\n"
             "Be precise, research-oriented, and do not overclaim.\n"
             "Mention that evidence is grounded in the current corpus and note uncertainty when relevant."

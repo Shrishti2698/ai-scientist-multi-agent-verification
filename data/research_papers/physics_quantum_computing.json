@@ -1,0 +1,8 @@
+{
+  "paper_id": "PHY001",
+  "title": "Room-Temperature Quantum Error Correction in Silicon Qubits",
+  "abstract": "We demonstrate successful quantum error correction in silicon-based qubits operating at room temperature for the first time. Using a novel approach with topological protection, we achieved 99.2% fidelity in quantum state preservation over 100 microseconds. The system showed dramatic improvement over previous cryogenic methods, reducing energy consumption by 85% while maintaining quantum coherence. Error rates dropped from 0.8% to 0.2% compared to traditional superconducting qubits. However, the approach is limited to specific quantum algorithms and requires precise electromagnetic field control. This breakthrough suggests that practical quantum computers may not require expensive cooling systems, potentially accelerating commercial quantum computing adoption.",
+  "year": 2024,
+  "authors": ["Dr. Alex Thompson", "Dr. Priya Sharma", "Dr. Robert Kim"],
+  "topics": ["quantum computing", "error correction", "silicon qubits", "room temperature", "quantum coherence"]
+}

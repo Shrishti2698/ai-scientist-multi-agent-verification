@@ -35,7 +35,7 @@ class MultiAgentResearchSystem:
                 notes=[],
                 papers=[],
                 iteration_trace=[
-                    "Analysis stopped before retrieval because the question is outside the validated AI/CS scope."
+                    "Analysis stopped before retrieval because the question is outside the research domain scope."
                 ],
             )
         papers = self.retrieval_agent.retrieve(question)
@@ -45,9 +45,9 @@ class MultiAgentResearchSystem:
         if not papers:
             summary = (
                 "The current corpus does not contain sufficiently relevant literature for this question. "
-                "This prototype is scoped to AI and computer science research papers."
+                "Please try uploading relevant research papers or reformulating your research question."
             )
-            iteration_trace.append("Analysis stopped early because the question appears outside the validated corpus scope.")
+            iteration_trace.append("Analysis stopped early because no relevant papers were found in the current corpus.")
             return self.report_agent.build(
                 question=question,
                 summary=summary,

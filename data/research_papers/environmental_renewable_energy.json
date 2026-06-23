@@ -1,0 +1,8 @@
+{
+  "paper_id": "ENV001",
+  "title": "Solar Panel Efficiency vs Wind Turbines: Comparative Analysis Across Climate Zones",
+  "abstract": "This comprehensive study compared solar and wind energy efficiency across 12 different climate zones over 5 years. Solar panels achieved 22% average efficiency in desert regions but dropped to 14% in cloudy temperate zones. Wind turbines showed more consistent performance with 35% efficiency in coastal areas and 28% inland. Solar installations had lower maintenance costs ($0.02/kWh vs $0.045/kWh for wind). However, wind energy demonstrated better capacity factors during winter months in northern latitudes. The study found that hybrid solar-wind systems increased overall renewable energy capture by 31% compared to single-technology installations. Geographic location remains the primary factor determining optimal renewable energy strategy.",
+  "year": 2023,
+  "authors": ["Dr. Mark Stevens", "Dr. Ana Petrova", "Dr. Hassan Ali"],
+  "topics": ["renewable energy", "solar panels", "wind turbines", "energy efficiency", "climate zones"]
+}

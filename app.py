@@ -131,7 +131,8 @@ def main() -> None:
 
     st.title("AI-Scientist")
     st.caption(
-        "Interactive multi-agent research verification demo over the frozen offline corpus."
+        "Interactive multi-agent research verification system. Upload papers from any research domain "
+        "or use the existing corpus for analysis."
     )
 
     with st.sidebar:
@@ -185,7 +186,7 @@ def main() -> None:
 
     with left:
         st.subheader("Multi-Agent Report")
-        if not report.verified_claims and "validated only for AI and computer science" in report.summary:
+        if not report.verified_claims and "research question" in report.summary:
             st.warning(report.summary)
         st.write(report.summary)
 
@@ -193,7 +194,7 @@ def main() -> None:
         metrics[0].metric("Claims Verified", len(report.verified_claims))
         metrics[1].metric("Critique Issues", len(report.critique_notes), help="Number of distinct issue categories flagged by the Critic Agent")
         metrics[2].metric("Retrieved Papers", len(report.retrieved_papers))
-        metrics[3].metric("Corpus Papers", len(corpus.all_papers()), help="Fixed offline papers downloaded locally; not fetched per query")
+        metrics[3].metric("Corpus Papers", len(corpus.all_papers()), help="Papers from all research domains. Includes both uploaded papers and base corpus.")
 
         with st.expander("Orchestration Trace", expanded=True):
             for step in report.iteration_trace:
@@ -212,7 +213,7 @@ def main() -> None:
         ):
             st.caption(
                 "These papers are stored locally in the active corpus. "
-                "Uploaded papers are merged with the frozen demo corpus for this session."
+                "Uploaded papers from any research domain are merged with the base corpus for this session."
             )
             for paper in corpus.all_papers():
                 st.write(

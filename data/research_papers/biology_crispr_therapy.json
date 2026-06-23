@@ -1,0 +1,8 @@
+{
+  "paper_id": "BIO001",
+  "title": "CRISPR-Cas9 Gene Therapy for Sickle Cell Disease: Clinical Trial Results",
+  "abstract": "This Phase II clinical trial evaluated CRISPR-Cas9 gene editing therapy in 45 patients with severe sickle cell disease. After 18 months follow-up, 87% of patients showed significant improvement in pain crisis frequency, with average episodes dropping from 7.2 to 1.1 per year. Hemoglobin levels increased from 7.8 g/dL to 11.2 g/dL on average. No serious adverse events related to gene editing were observed. However, three patients showed incomplete editing efficiency with 15-20% of cells retaining the sickle mutation. The therapy requires expensive ex-vivo cell processing and is currently limited to specialized centers. Long-term safety monitoring continues, but early results suggest CRISPR offers a potential cure for this inherited blood disorder.",
+  "year": 2024,
+  "authors": ["Dr. Jennifer Adams", "Dr. Ahmed Hassan", "Dr. Rachel Lee"],
+  "topics": ["CRISPR", "gene therapy", "sickle cell disease", "clinical trial", "gene editing"]
+}

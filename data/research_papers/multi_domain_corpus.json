@@ -1,0 +1,28 @@
+{
+  "papers": [
+    {
+      "paper_id": "MED002",
+      "title": "Effectiveness of Telemedicine in Rural Healthcare Delivery",
+      "abstract": "This randomized controlled trial evaluated telemedicine effectiveness in 24 rural clinics across three states. Telemedicine consultations reduced patient travel time by 78% and increased access to specialist care by 145%. Patient satisfaction scores were equivalent to in-person visits (4.2/5 vs 4.3/5). However, diagnostic accuracy for complex cases was 12% lower via telemedicine. Emergency referrals decreased by 23% due to better preventive care coordination. The study suggests that telemedicine effectively addresses rural healthcare access gaps but requires hybrid models for complex diagnoses.",
+      "year": 2024,
+      "authors": ["Dr. Maria Santos", "Dr. John Peterson", "Dr. Lisa Chang"],
+      "topics": ["telemedicine", "rural healthcare", "healthcare access", "patient satisfaction", "diagnostic accuracy"]
+    },
+    {
+      "paper_id": "CHEM001",
+      "title": "Green Chemistry Approaches to Pharmaceutical Manufacturing",
+      "abstract": "This study examined environmentally sustainable methods for producing common pharmaceuticals. Green chemistry techniques reduced toxic solvent usage by 67% while maintaining drug purity above 99%. Water consumption dropped by 45% and energy use decreased by 32% compared to traditional methods. Production costs initially increased by 18% but long-term savings from waste reduction offset expenses within 3 years. However, some complex molecular syntheses showed 8% lower yields with green methods. The research demonstrates that sustainable pharmaceutical production is economically viable for most drug categories.",
+      "year": 2023,
+      "authors": ["Dr. Robert Kumar", "Dr. Elena Volkov", "Dr. James Wright"],
+      "topics": ["green chemistry", "pharmaceutical manufacturing", "sustainable production", "environmental impact", "drug synthesis"]
+    },
+    {
+      "paper_id": "NEURO001",
+      "title": "Brain Training Apps and Cognitive Enhancement in Older Adults",
+      "abstract": "This double-blind randomized trial tested cognitive training apps in 892 adults aged 65-85 over 12 months. Participants using brain training apps showed 14% improvement in working memory tasks compared to control groups. Processing speed increased by 18% and attention span improved by 22%. However, benefits did not transfer to real-world cognitive tasks like financial decision-making or driving safety. The study found that social cognitive activities (group discussions, collaborative puzzles) produced better overall cognitive outcomes than individual app-based training. Regular physical exercise combined with cognitive training showed the strongest effects.",
+      "year": 2024,
+      "authors": ["Dr. Catherine Moore", "Dr. Daniel Rodriguez", "Dr. Feng Li"],
+      "topics": ["cognitive enhancement", "brain training", "older adults", "working memory", "cognitive transfer"]
+    }
+  ]
+}

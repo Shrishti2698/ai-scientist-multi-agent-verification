@@ -1,0 +1,8 @@
+{
+  "paper_id": "ECON001",
+  "title": "Remote Work Productivity: Evidence from Fortune 500 Companies Post-COVID",
+  "abstract": "This study analyzed productivity metrics from 127 Fortune 500 companies before and after implementing permanent remote work policies. Results show that remote work increased overall productivity by 13% on average, with the largest gains in knowledge-intensive sectors (18% increase). Employee satisfaction scores improved by 22%, and voluntary turnover decreased by 31%. However, the study found that collaboration-heavy roles showed productivity declines of 8%. Companies with strong digital infrastructure saw productivity gains of 19%, while those with poor technology showed no improvement. The research indicates that remote work success depends heavily on role type, company digital maturity, and management practices rather than being universally beneficial.",
+  "year": 2024,
+  "authors": ["Dr. David Park", "Dr. Maria Gonzalez", "Dr. Kevin Liu"],
+  "topics": ["remote work", "productivity", "employee satisfaction", "fortune 500", "covid impact"]
+}
