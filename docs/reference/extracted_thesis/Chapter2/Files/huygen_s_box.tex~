@@ -1,0 +1,168 @@
+%\subsection{Closed Huygens\rq~Box}\label{Closed_Huygen_s_Box}
+
+Six-sided rectangular box of virtual surface locus S that enclosed the structure of interest in the scattering field-zone of FDTD lattice is known as Huygens\rq~Box. The electric and magnetic current on the closed Huygens\rq~surface are computed by using the FDTD method, and the far-field pattern is subsequently obtained from the equivalent current sources (see Fig.~\ref{Fig:huygen_box}) \cite{Mittra_CFDTD_04}. Because the electric and magnetic fields have a half-cell of deviation in Yee\rq s scheme, the field on the Huygens\rq~surface are averaged from those around the surface, shown in Fig.~\ref{Fig:equivalent_field_on_the_surface_of_Huygen_box}.
+
+\begin{figure}
+ \centering
+ \subfigure[]{\label{Fig:huygen_box}
+      \includegraphics[scale=0.4]{huygen_box}
+    }\goodgap
+ \subfigure[]{\label{Fig:equivalent_field_on_the_surface_of_Huygen_box}
+      \includegraphics[scale=0.4]{equivalent_field_on_the_surface_of_Huygen_box}
+    }
+ \caption[Huygen box]{(a) Huygens\rq~box for near-to-far field transformation. (b) Equivalent field on the surface of Huygens\rq~box.}
+\label{huygen_box}
+\end{figure}
+
+The equivalent field on the Huygens\rq~surface (see Fig.~\ref{Fig:equivalent_field_on_the_surface_of_Huygen_box}) are calculated by averaging the field arround this surface. %For example, $\overline{H}_y^{n-1/2}\left(i,j,k\right)$ and $\overline{E}_z^n\left(i,j,k\right)$ are written as:
+The average value of electric and magnetic fields on the Y-Z surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_1}
+\begin{eqnarray}
+\overline{E}_y^n\left(i,j,k\right)&=&\left[\frac{E_y^n\left(i,j,k\right)+E_y^n\left(i,j,k+1\right)}{2}\right]\label{huygen_box_E11}\\
+\overline{E}_z^n\left(i,j,k\right)&=&\left[\frac{E_z^n\left(i,j,k\right)+E_z^n\left(i,j+1,k\right)}{2}\right]\label{huygen_box_E12}\\
+\overline{H}_y^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_y^{n-1/2}\left(i-1,j,k\right)+H_y^{n-1/2}\left(i-1,j+1,k\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_y^{n-1/2}\left(i,j,k\right)+H_y^{n-1/2}\left(i,j+1,k\right)}{2}\right]\label{huygen_box_H11}\\
+\overline{H}_z^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_z^{n-1/2}\left(i,j+1,k\right)+H_z^{n-1/2}\left(i,j+1,k+1\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_z^{n-1/2}\left(i,j,k\right)+H_z^{n-1/2}\left(i,j,k+1\right)}{2}\right]\label{huygen_box_H12}
+\end{eqnarray}
+\end{subequations}
+
+
+The average value of electric and magnetic fields on the X-Z surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_2}
+\begin{eqnarray}
+\overline{E}_x^n\left(i,j,k\right)&=&\left[\frac{E_x^n\left(i,j,k\right)+E_x^n\left(i,j,k+1\right)}{2}\right]\label{huygen_box_E21}\\
+\overline{E}_z^n\left(i,j,k\right)&=&\left[\frac{E_z^n\left(i,j,k\right)+E_z^n\left(i+1,j,k\right)}{2}\right]\label{huygen_box_E22}\\
+\overline{H}_x^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_x^{n-1/2}\left(i,j-1,k\right)+H_x^{n-1/2}\left(i+1,j-1,k\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_x^{n-1/2}\left(i,j,k\right)+H_x^{n-1/2}\left(i+1,j,k\right)}{2}\right]\label{huygen_box_H21}\\
+\overline{H}_z^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_z^{n-1/2}\left(i,j-1,k\right)+H_z^{n-1/2}\left(i,j-1,k+1\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_z^{n-1/2}\left(i,j,k\right)+H_z^{n-1/2}\left(i,j,k+1\right)}{2}\right]\label{huygen_box_H22}
+\end{eqnarray}
+\end{subequations}
+
+
+The average value of electric and magnetic fields on the X-Y surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_3}
+\begin{eqnarray}
+\overline{E}_x^n\left(i,j,k\right)&=&\left[\frac{E_x^n\left(i,j,k\right)+E_x^n\left(i,j+1,k\right)}{2}\right]\label{huygen_box_E31}\\
+\overline{E}_y^n\left(i,j,k\right)&=&\left[\frac{E_y^n\left(i,j,k\right)+E_y^n\left(i+1,j,k\right)}{2}\right]\label{huygen_box_E32}\\
+\overline{H}_x^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_x^{n-1/2}\left(i,j,k-1\right)+H_x^{n-1/2}\left(i+1,j,k-1\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_x^{n-1/2}\left(i,j,k\right)+H_x^{n-1/2}\left(i+1,j,k\right)}{2}\right]\label{huygen_box_H31}\\
+\overline{H}_y^{n-1/2}\left(i,j,k\right)&=&0.5\left[\frac{H_y^{n-1/2}\left(i,j,k-1\right)+H_y^{n-1/2}\left(i,j+1,k-1\right)}{2}\right.\nonumber\\
+&&+\left.\frac{H_y^{n-1/2}\left(i,j,k\right)+H_y^{n-1/2}\left(i,j+1,k\right)}{2}\right]\label{huygen_box_H32}
+\end{eqnarray}
+\end{subequations}
+
+Along each surface of the Huygens\rq~Box, the equivalent phasor electric current J and equivalent phasor magnetic current M are calculated from FDTD computed tangential H- and E- field respectively as follows \cite{Harrington_book}:
+\begin{subequations}\label{huygen_box_I}
+\begin{eqnarray}
+M^n\left(i,j,k\right)&=&-\widehat{n}\times\overline{E}^n\left(i,j,k\right)\label{huygen_box_I_m}\\
+J^{n-1/2}\left(i,j,k\right)&=&\widehat{n}\times\overline{H}^{n-1/2}\left(i,j,k\right)\label{huygen_box_I_e}
+\end{eqnarray}
+\end{subequations}
+where $\widehat{n}$ is a unit outward normal vector to surface S. The magnetic and electric current component on the Y-Z surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_Ix}
+\begin{eqnarray}
+M^n_y\left(i,j,k\right)&=&\widehat{n}_x\times\overline{E_z}^n\left(i,j,k\right)\label{huygen_box_x_m1}\\
+M^n_z\left(i,j,k\right)&=&-\widehat{n}_x\times\overline{E_y}^n\left(i,j,k\right)\label{huygen_box_x_m2}\\
+J^{n-1/2}_y\left(i,j,k\right)&=&-\widehat{n}_x\times\overline{H_z}^{n-1/2}\left(i,j,k\right)\label{huygen_box_x_j1}\\
+J^{n-1/2}_z\left(i,j,k\right)&=&\widehat{n}_x\times\overline{H_y}^{n-1/2}\left(i,j,k\right)\label{huygen_box_x_j2}
+\end{eqnarray}
+\end{subequations}
+
+The magnetic and electric current component on the X-Z surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_Iy}
+\begin{eqnarray}
+M^n_x\left(i,j,k\right)&=&-\widehat{n}_y\times\overline{E_z}^n\left(i,j,k\right)\label{huygen_box_y_m1}\\
+M^n_z\left(i,j,k\right)&=&\widehat{n}_y\times\overline{E_x}^n\left(i,j,k\right)\label{huygen_box_y_m2}\\
+J^{n-1/2}_x\left(i,j,k\right)&=&\widehat{n}_y\times\overline{H_z}^{n-1/2}\left(i,j,k\right)\label{huygen_box_y_j1}\\
+J^{n-1/2}_z\left(i,j,k\right)&=&-\widehat{n}_y\times\overline{H_x}^{n-1/2}\left(i,j,k\right)\label{huygen_box_y_j2}
+\end{eqnarray}
+\end{subequations}
+
+The magnetic and electric current component on the X-Y surface of the Huygens\rq~box are given by
+\begin{subequations}\label{huygen_box_Iz}
+\begin{eqnarray}
+M^n_x\left(i,j,k\right)&=&\widehat{n}_z\times\overline{E_y}^n\left(i,j,k\right)\label{huygen_box_z_m1}\\
+M^n_y\left(i,j,k\right)&=&-\widehat{n}_z\times\overline{E_x}^n\left(i,j,k\right)\label{huygen_box_z_m2}\\
+J^{n-1/2}_y\left(i,j,k\right)&=&-\widehat{n}_z\times\overline{H_y}^{n-1/2}\left(i,j,k\right)\label{huygen_box_z_j1}\\
+J^{n-1/2}_z\left(i,j,k\right)&=&\widehat{n}_z\times\overline{H_x}^{n-1/2}\left(i,j,k\right)\label{huygen_box_z_j2}
+\end{eqnarray}
+\end{subequations}
+where $\widehat{n}_x$, $\widehat{n}_y$, $\widehat{n}_z$ are the unit vector in the x, y \& z-direction. Fourier transformation of the time domain electric current ($J^n$) \& magnetic current ($M^n$) give the frequency domain electric current ($\widetilde J$) \& magnetic current ($\widetilde M$). 
+
+
+Given the Cartesian geometry of the FDTD space lattice and its NTFF transformation surface $S$, it is convenient to first calculate $\widetilde{N}$ and $\widetilde{L}$ in the rectangular coordinates, and then transform to spherical coordinates for substitution in to Fqn.~(\ref{far_field_e}) and (\ref{far_field_h}). Again following\cite{Balanis_book},we have
+\begin{eqnarray}
+\widetilde{N}&=&\int\!\!\!\!\int\limits_S\left(\widehat{x}\widetilde{J_x}+\widehat{y}\widetilde{J_y}+\widehat{z}\widetilde{J_z}\right)e^{+jkr'\cos\psi}ds'\label{far_field_n}
+\end{eqnarray}
+\begin{eqnarray}
+\widetilde{L}&=&\int\!\!\!\!\int\limits_S\left(\widehat{x}\widetilde{M_x}+\widehat{y}\widetilde{M_y}+\widehat{z}\widetilde{M_z}\right)e^{+jkr'\cos\psi}ds'\label{far_field_l}
+\end{eqnarray}
+and the corresponding $\theta$ and $\phi$ components:
+\begin{subequations}
+\begin{eqnarray}\label{far_field_cn}
+\widetilde{N}_\theta&=&\int\!\!\!\!\int\limits_S\left(\widetilde{J_x}\cos\theta\cos\phi+\widetilde{J_y}\cos\theta\sin\phi-\widetilde{J_z}\sin\theta\right)e^{+jkr'\cos\psi}ds'\label{far_field_cnh}\\
+\widetilde{N}_\phi&=&\int\!\!\!\!\int\limits_S\left(-\widetilde{J_x}\sin\phi+\widetilde{J_y}\cos\phi\right)e^{+jkr'\cos\psi}ds'\label{far_field_cnp}
+\end{eqnarray}
+\end{subequations}
+\begin{subequations}
+\begin{eqnarray}\label{far_field_cl}
+\widetilde{L}_\theta&=&\int\!\!\!\!\int\limits_S\left(\widetilde{M_x}\cos\theta\cos\phi+\widetilde{M_y}\cos\theta\sin\phi-\widetilde{J_z}\sin\theta\right)e^{+jkr'\cos\psi}ds'\label{far_field_clh}\\
+\widetilde{L}_\phi&=&\int\!\!\!\!\int\limits_S\left(-\widetilde{M_x}\sin\phi+\widetilde{M_y}\cos\phi\right)e^{+jkr'\cos\psi}ds'\label{far_field_clp}
+\end{eqnarray}
+\end{subequations}
+
+The integral expression of Eqn.~(\ref{far_field_cn}) and Eqn.~(\ref{far_field_cl}) can now be numerically implemented, taking into account the location and orientation of each face of the integration surface $S$. Assuming that $S$ is a rectangular box of side dimension $2x_0,~2y_0,~z_0)$ located symmetrically about the coordinate origin, there are six faces to be accounted for in the integration process. There may be grouped into three pair of faces whose kernel functions have common properties, as follows. 
+\begin{enumerate}
+\item $The~ two~ face~ of~ S~ located~ at ~x'=~\pm x_0$\\
+Nonzero component of $\widetilde{J}_S$ and $\widetilde{M}_S$: $\widetilde{J}_y~\widetilde{J}_z~\widetilde{M}_y~ \widetilde{M}_z$\\
+Exponential phase term:
+\be\label{x_term}
+r'\cos\psi&=&r'\cdot \widehat{r}=\left(\pm x_0\widehat{x}+y'\widehat{y}+z'\widehat{z} \right)\cdot\left(\widehat{x}\sin\theta\cos\phi+\widehat{y}\sin\theta\sin\phi+\widehat{z}\cos\theta\right)\nonumber\\
+&=&\pm x_0\sin\theta\cos\phi+y'\sin\theta\sin\phi+z'\cos\theta
+\ee
+Integration limits:   $-y_0\leq y'\leq y_0,~-z_0\leq z'\leq z_0;~ds'=dy'dz'~~$ 
+
+\item $The~ two~ face~ of~ S~ located~ at ~y'=~\pm y_0$\\
+Nonzero component of $\widetilde{J}_S$ and $\widetilde{M}_S$: $\widetilde{J}_x~\widetilde{J}_z~\widetilde{M}_x~ \widetilde{M}_z$\\
+Exponential phase term:
+\be\label{y_term}
+r'\cos\psi&=&r'\cdot \widehat{r}=\left(x'\widehat{x}\pm y_0\widehat{y}+z'\widehat{z} \right)\cdot\left(\widehat{x}\sin\theta\cos\phi+\widehat{y}\sin\theta\sin\phi+\widehat{z}\cos\theta\right)\nonumber\\
+&=&\pm x'\sin\theta\cos\phi\pm y_0\sin\theta\sin\phi+z'\cos\theta
+\ee
+Integration limits:   $-x_0\leq x'\leq x_0,~-z_0\leq z'\leq z_0;~ds'=dx'dz'~~$ 
+
+\item $The~ two~ face~ of~ S~ located~ at ~z'=~\pm z_0$\\
+Nonzero component of $\widetilde{J}_S$ and $\widetilde{M}_S$: $\widetilde{J}_x~\widetilde{J}_y~\widetilde{M}_x~ \widetilde{M}_y$\\
+Exponential phase term:
+\be\label{z_term}
+r'\cos\psi&=&r'\cdot \widehat{r}=\left(\pm x'\widehat{x}+y'\widehat{y}+z_0\widehat{z} \right)\cdot\left(\widehat{x}\sin\theta\cos\phi+\widehat{y}\sin\theta\sin\phi+\widehat{z}\cos\theta\right)\nonumber\\
+&=&\pm x'\sin\theta\cos\phi+y'\sin\theta\sin\phi+z_0\cos\theta
+\ee
+Integration limits:   $-x_0\leq x'\leq x_0,~-y_0\leq y'\leq y_0;~ds'=dx'dy'~~$ 
+\end{enumerate}
+
+
+Finally, knowing the value of $\widetilde{N_\theta},~\widetilde{N_\phi},~\widetilde{L_\theta},~\widetilde{L_\phi}$, the far-field pattern can be calculated from the following formulas:\cite{Balanis_book_antenna_theory_and_degine} and \cite{Taflove_book_05}
+\begin{subequations}\label{far_field_e}
+\begin{eqnarray}
+\widetilde{E_r}&\cong& 0\label{far_field_e_r}\\
+\widetilde{E_\theta}&\cong&-\frac{jke^{-jkr}}{4\pi r}\left(\widetilde{L}_\phi+\eta_0\widetilde{N}_\theta\right) \label{far_field_e_th}\\
+\widetilde{E_\phi}&\cong&+\frac{jke^{-jkr}}{4\pi r}\left(\widetilde{L}_\theta+\eta_0\widetilde{N}_\phi\right) \label{far_field_e_ph}
+\end{eqnarray}
+\end{subequations}
+The far-field $H$ components are given by
+\begin{subequations}\label{far_field_h}
+\begin{eqnarray}
+\widetilde{H_r}&\cong& 0\label{far_field_h_r}\\
+\widetilde{H_\theta}&\cong&+\frac{jke^{-jkr}}{4\pi r}\left(\widetilde{N}_\phi-\widetilde{L}_\theta/\eta_0\right) \label{far_field_h_th}\\
+\widetilde{H_\phi}&\cong&-\frac{jke^{-jkr}}{4\pi r}\left(\widetilde{N}_\theta-\widetilde{L}_\phi/\eta_0\right) \label{far_field_h_ph}
+\end{eqnarray}
+\end{subequations}
+where ~$\eta_0=\sqrt{\mu_0/\varepsilon_0}$ ~is the intrinsic impedance of the free space.
+
+
+
+
+

@@ -1,0 +1,68 @@
+\subsection{The Ray Technique}\label{LR_Ray_Technique}\index{Ray technique}
+Few problems in electromagnetic radiation and scattering can be solved by exact formulation using the Maxwell\rq s equations and the associated boundary conditions. Exact solutions are possible only for problems having geometry conforming to an orthogonal coordinate system. This is because the solution can be written in a separable form. However, very often these solutions are either in the form of a slowly convergent series or are too complex to be practically useful. Furthermore, radiation and scattering geometries, to name a few, truncated sphere, finite cylinder, finite come, finite wedge, rough surfaces etc., do not conform to any orthogonal coordinate system. Hence a number of approximate but accurate methods have been developed, particularly during the past few decades.
+
+The advent of the electronic computer has brought in its wake several analytical techniques to the fore. However, the dramatic rise in storage and computing speed observed in the initial development of the modern computer has already started saturating and any steep increase is difficult to foresee in the near future. This practically limits the size of the objects that can effectively be tackled by techniques like the method of moment (MoM), aperture integration, finite-difference time-domain (FDTD) technique, finite element method (FEM) etc.
+
+An alternative to these methods are ray techniques which though dependent on the computer are less restricted by storage and computing speed inspite of an increase in the size of the scatterer/antenna. In addition, their prime attraction is the physical insight they give into the mechanisms of propagation and diffraction. As a result of this the critical points of a scatterer/antenna can be predicted.
+
+In optics ray is the limit of a very narrow beam of light. This concept has been extended and is now associated with the local propagating plane wave fields that one comes across at high frequencies. Ray travel in a straight line in free space or in homogeneous medium. Any change in medium properties causes the ray to deflect from the straight line path. This may be due to the phenomenon of reflection or refraction. However, curling of rays around opaque and translucent obstacles cannot be explained by refection or refraction. This is ascribed to the phenomenon of diffraction. 
+
+Optical paths affected by reflection or refraction can be treated by Fermat\rq s
+principle. Keller \cite{Keller_gtd} generalized this principle to also include ray paths affected by diffraction. He further generalized the earlier geometrical optics (GO) \cite{Kline_EM_Theory_GO}, \cite{Deschamps_Ray_tech_electromagnetics} so that the intensity distribution, polarization and phase of the diffracted ray could also be predicted. This is now known as the geometrical theory of diffraction (GTD).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

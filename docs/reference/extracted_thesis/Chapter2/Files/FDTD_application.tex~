@@ -1,0 +1,47 @@
+\section{A survey of the application of the FDTD method}\label{FDTD_application}
+Maxwell\lq s equations were once called the most outstanding achievement of $19^{th}$ century science by Nobel laureate Richard Feynman \cite{Reinventing_Electromagnetics_Taflove}. The equations give a unified and complete theory for people to understand electromagnetic wave phenomena. So solving Maxwell\rq s equations becomes an important method to investigate the propagation, radiation and scattering of electromagnetic waves.
+
+
+Before the 1990s the cost of solving Maxwell\rq s equation was so big that most of the related research is for military defense purposes. For example, engineers used huge parallel supercomputing arrays to model the radar wave reflection of the airplane by solving Maxwell\rq s equations, trying to develop an airplane with low radar cross section \cite{Reinventing_Electromagnetics_Taflove}.
+
+
+This former tough task has had more economical solutions after 1990, with the fast development of computing resources and the FDTD method. Now the application of the FDTD method has spread to many areas:
+\begin{enumerate}
+\item \textbf{Discrete Scattering}\\
+A major application area of the FDTD method is the investigation of electromagnetic wave scattering from discrete objects \cite{Taflove_book_05}. Many researchers working in this area developed scattering models for different materials and different media, which is very useful for future research.
+
+\item \textbf{Antenna Design}\\
+Besides scattering, the radiating structure can be modelled in the FDTD method by introducing sources and boundary conditions into the model space. So the FDTD method has been used for the research of antenna design and radar design since the 1990s. People modelled various kinds of antennas, and used these models to analyze antenna properties. The radiating horn antenna Model applied in this thesis is a good example of this research area; the details will be discussed in Section \ref{chapter4}.
+
+\item \textbf{Research on Ground Penetrating Radar}\\
+With the above two capabilities of modelling the scattering and radiating structure of electromagnetic phenomena, the FDTD method shows great ability for subsurface radar or ground penetrating radar \cite{Taflove_book_05}. 
+
+\item \textbf{Medical Studies}\\
+In the medical research area, the FDTD method is used widely for modelling electromagnetic wave phenomena in human bodies. The study of UHF and microwave interactions with human tissues helps medical research and treatment. For example:
+\begin{itemize}
+\item The study of the cell phone electromagnetic waves\rq effect on human brain
+\item The study of breast cancer detection using electromagnetic antenna
+\item The study of the heating treatment of cancer using microwave frequency electromagnetic waves
+\end{itemize}
+
+\item \textbf{Digital Circuit packaging on multiplayer circuits boards}\\
+The problems of propagation, crosstalk and radiation of the electric signal pulse is very important in analog or digital circuit design, especially in the design of complex multilayer circuit boards and in designs whose clock speed exceeds about 300MHz \cite{Reinventing_Electromagnetics_Taflove}. The FDTD method can be added to the current CAD tools to help designers analyze the electromagnetic wave phenomena on complex circuit boards.
+
+\item \textbf{EMI Sensor Design}\\
+
+\end{enumerate}
+
+\lq\lq Over the past 30 years, the FDTD method has been shown to be a remarkably robust and accurate tool for the analysis of problems in electromagnetics. Indeed, FDTD or one of its variant forms has been successfully applied in a number of disciplines out side of \lq\lq traditional\rq\rq electromagnetics, including acoustics, electrodynamics, optics and biology.\rq\rq \cite{Taflove_book_05}
+
+
+
+
+
+
+
+
+
+
+
+
+

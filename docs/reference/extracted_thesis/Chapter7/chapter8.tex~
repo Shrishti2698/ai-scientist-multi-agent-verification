@@ -1,0 +1,23 @@
+\chapter[Conclusions \& Scope for Future Work]{Conclusions \& Scope for Future Work}{Conclusions \& Scope for Future Work}\label{Conclusions_future_work}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+%In this chapter, we summarize the contributions detailed in Chapter \ref{chapter2} to Chapter \ref{chapter5}. Some important conclusions are drawn along with the summary and important issues discussed. Finally, scope for future developments and possible extensions of the present work is discussed.
+\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+\input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Ph/Chapter8/articles_Ch_8}
+
+
+
+
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt} 
+
+
+
+

@@ -1,0 +1,41 @@
+\subsection{Antenna Factor}\label{LR_antenna_factor}
+The literature on antenna factor, which is the most extensively used device descriptor in EMC industry, in established journals is highly limited. In fact, the accepted definition of antenna factor is not part of standardized antenna terminology as published in IEEE Definition of Terms for Antennas \cite{TDK_RF_Solutions_EMC_Technical_Report}. This has led to a lot of ambiguities over the application and usage of published antenna factor results, all of which are experimental in nature, carried out in different laboratories, for entirely different purposes. Benett \cite{Bennett_Properly_Applied_Antenna_Factors} provides a good insight into deficiencies of antenna factor definition and the corrections to be carried, while using published antenna factor results.
+
+The paper by Smith \cite{Smith_Antenna_Factors} in 1982 can be considered as the first of its kind in IEEE Transactions, and it attempts to classify the available antenna factor determination methods at that time under three broad classes, namely, Standard Antenna Method, Standard Field Method and the Standard Site Method. These three methods can be classified under title \lq Site Based Methods\rq. Suguira et al \cite{Suguira_EMI_Dipole_Antenna_Factors}, attempt to provide an analytical method, which they have christened as \lq Antenna Based Method\rq. An analytical procedure to predict the antenna factor using the antenna structure characteristics like effective length, effective area, impedance mismatch and losses in coupling circuits, is tried out. The procedure has been carried out for a simple dipole structure, and results presented. Ishigami et al \cite{Shinobu_Near_Field_3_Antenna_Method}, attempt to predict the antenna factor of a monopole, using site based methods. The reported works \cite{Hekert_Measurement_and_Modeling_AF} and \cite{Aggarwal_Measurement_Antenna_Factors_Case_Study, Garn_A_comparison_e_field_strength_standards, }[34]-[36] provide a good idea about the experimental set up required for determination of antenna factor. A good overview into the overall aspect of antenna factor can be obtained form the technical report \cite{TDK_RF_Solutions_EMC_Technical_Report} brought out by TDK RF Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+\subsection{Microstrip Antenna as EM Field Sensor}\label{LR_Microstrip_antenna_sensor}\index{EM field sensor!microstrip antenna} 
+Microstrip antenna has been one of the most innovative topics in antenna theory and design, and is increasingly finding applications in a wide range of modern microwave systems. To a large extent, the development of microstrip antenna has been driven by system requirements for antennas with low profile, low weight, low cost, easy integrability into arrays or into microwave integrated circuits and for polarization diversity. The microstrip antenna configuration easily satisfies all the above requirements. Another interesting feature is that microstrip antennas can be fabricated rather easily in university or other research laboratories, which have often been a source of novel designs. The work by Bailey and Aggarwal \cite{Agrawal_analysis_technique_for_microstrip_antennas_conf}, \cite{Agrawal_analysis_technique_for_microstrip_antennas} can be considered as an introductory work on analytical methods for analysis of microstrip structures. The transmission line model for the microstrip proposed by Derneryd \cite{Derneryd_heoretical_investigation_rectangular_microstrip_antenna}, \cite{Derneryd_Extended_analysis__microstrip_resonator_antennas}, was successful in predicting the input impedance approximately. The review papers by Carver $et~al.$ \cite{Carver_Microstrip_antenna_technology} and Richards $et~al.$ \cite{Richards_improved_theory_microstrip_antennas_applications}, provide a good insight into the early stages of development of microstrip technology. The FDTD method has applied to the full-wave analysis of various microstrip structures in \cite{Ali_planar_microstrip_circuits}. The method is shown to be an efficient tool for modeling complicated microstrip circuit components as well as microstrip antennas.
+
+
+The application of microstrip antennas in the field of EMI/EMC, specifically as an EMFS requires the knowledge of microstrip antenna characteristics in receiving mode.
+
+ 
+%The history of the concept of microstrip can be dated back to the early 1950\rq s \cite{Grieg_Microstrip_A_New_Transmission_Technique}, \cite{Assadourian_Simplified_Theory_of_Microstrip_Transmission}, \cite{Deschamps_Theoretical_Aspects_Microstrip_WG}, but it was only by 1970\rq s, that the first results were published by Munson \cite{Munson_Conformal_microstrip_antennas_phased_arrays} and Howell \cite{Howell_Microstrip_antennas_conf}, \cite{Howell_Microstrip_antennas}. Practical Antennas were fabricated, and basically these works were of experimental nature. Thereafter, the microstrip concept started receiving significant attention, resulting in a host of researchers proposing analytical methods capable of accurately predicting the input impedance, mutual coupling, radiation pattern and other parameters concerned with an antenna.
+
+%The work by Bailey and Aggarwal \cite{Agrawal_analysis_technique_for_microstrip_antennas_conf}, \cite{Agrawal_analysis_technique_for_microstrip_antennas} can be considered as an introductory work on analytical methods for analysis of microstrip structures. The transmission line model for the microstrip proposed by Derneryd \cite{Derneryd_heoretical_investigation_rectangular_microstrip_antenna}, \cite{Derneryd_Extended_analysis__microstrip_resonator_antennas}, was successful in predicting the input impedance approximately, though the model did not account for the presence of surface waves and the mutual coupling effect. %The review paper by Carver $et~al.$ \cite{Carver_Microstrip_antenna_technology}, and Richards $et~al.$ \cite{Richards_improved_theory_microstrip_antennas_applications}, provide a good insight into the early stages of development of microstrip technology.
+
+%The moment method solution to the microstrip antenna problem was first proposed in 1981, by Newman and Tulyathan \cite{Newman_Analysis_microstrip_antennas_MoM}, and more rigorously in 1982, by Pozar \cite{Pozar_Input_impedance_mutual_coupling_microstrip_antennas}. The paper by Pozar \cite{Pozar_millimeter_wave_printed_antennas}, provides good results for microstrip antennas, obtained using moment methods. The review paper by Pozar \cite{Pozar_Microstrip_antennas}, provides an excellent and exhaustive information about all the aspects of microstrip antennas as well as the literature available on them. The FDTD method has been applied to the full-wave analysis of various microstrip structures in \cite{Ali_planar_microstrip_circuits}. The method is shown to be an efficient tool for modeling complicated microstrip circuit components as well as microstrip antennas.
+
+
+%The application of microstrip antennas in the field of EMI/EMC, specifically as an EMI sensor requires the knowledge about the microstrip antenna characteristics in receiving mode. %RCS values of square-slot antenna \cite{Chen_Ultra-wideband_square_slot_antenna} and printed circular-disc monopole antenna (PCDMA) \cite{Liang_Study_printed_circular_monopole_antenna}, are analyzed by using the finite-difference time-domain (FDTD) method \cite{Taflove_book_00}, and then, measured \cite{Hu_Measurements_UWB_antennas_backscattering_ch} under three different loading cases. The backscattering characteristics of square-slot antenna and PCDMA with three different kinds of loads have been theoretically investigated by the FDTD method and experimentally verified in \cite{Hu_Backscattering_Cross_Section_Ultrawideband_Antennas}. 
+%Some study on microstrip patch antenna for EMFS using commercial software CST Microwave Studio is available in \cite{Ghosh_Microstrip_Patch_Antenna_EMI_Sensor}. In this work microstrip patch antenna is analyzed in receiving mode as an EMFS using FDTD.
+
+%The narrow bandwidth of the traditional microstrip antenna element is its most serious disadvantage, preventing its use in many microwave applications, including the use as an EMI sensor. A large amount of work has gone toward the development of creative designs and techniques for improving the bandwidth of the microstrip antenna. The initial works reported on this aspect \cite{Sabban_new_broadband_microstrip_antenna, Chen_bb_two_layer_microstrip_antenna, Schuss_wideband_patch_radiator_phased_arrays, Pues_impedance_matching_tech_microstrip_antennas}, basically work to overcome the limitation set by the small electrical volume occupied by the element. The works can be classified as either using an impedance matching network or using parasitic elements. A good review of bandwidth enhancement techniques along with an exhaustive list of literature available regarding this aspect is provided by Pozar \cite{Pozar_Microstrip_antennas}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+\section{Non Contact Stress Assessment based on Deep Tabular
+Method}
+One of the main issues facing today's society is stress. Stress assessment is crucial for applications such as driver condition monitoring, workplace productivity analysis, and tailored healthcare. The development of precise and economical stress task and level classification techniques is urgently needed. Therefore, in this work we have presented a deep tabular  non-contact stress measurement technique.The suggested method concentrates on extracting the physiological parameters from the rPPG signal and improving ROI selection while dynamically moving the face inside the video frame. Stress task and stress level are classified using this physiological parameter.
+Two sets of experiments—stress task classification and multi-level stress classification—were carried out to validate the efficacy of suggested methodology.
+ The suggested architecture performed better than earlier approaches on the UBFC-Phy dataset in both sets of experiments.
+
+Future research may examine the possibilities of combining speech and eye gaze data with rPPG signals to assess stress. Additionally, training the model on bigger and more varied datasets may improve its generalizability and robustness across a range of environmental and demographic circumstances.
+
+\section{rPPG Signal Biometric or Not: Investigation Under
+both Stable and Motion Condition}
+
+In this work, we investigated the feasibility of using remote photoplethysmography (rPPG) signals for biometric identification under varying real-world conditions and different levels of signal quantization. We proposed a CNN-based embedding network trained using triplet loss and evaluated its effectiveness across multiple publicly available datasets.
+
+Extensive experiments on the PURE dataset demonstrated that our method achieves strong performance in terms of AUC and EER, outperforming or closely matching state-of-the-art approaches such as~\cite{sun2024biometric}, even under aggressive quantization levels (5-bit, 10-bit, and 20-bit). Notably, under 20-bit quantization, our approach yielded results comparable to existing methods for intra-session testing and achieved lower EER in cross-session testing, highlighting its robustness and discriminative capability in stable acquisition conditions.
+
+However, when applied to more challenging datasets such as UBFC-Phys and MSPM—captured under stress-inducing and unconstrained motion conditions—the performance declined. This can be attributed to the inherent variability in physiological signals under stress, which affects the consistency and uniqueness required for reliable biometric identification. These results suggest that while rPPG is effective under controlled settings, its utility diminishes when faced with real-world variability.
+
+Our findings emphasize two key limitations in rPPG-based biometric systems: (1) their sensitivity to physiological and emotional state changes (e.g., stress), and (2) reduced robustness under dynamic, real-world conditions. These issues must be addressed to enable practical deployment of contactless rPPG authentication systems.
+
+\textbf{Future work} may focus on integrating hybrid biometric modalities (e.g., combining rPPG with facial features or ECG signals) to enhance identification accuracy and resilience. Additionally, developing stress-invariant representations to further improve robustness in real-world applications.
+

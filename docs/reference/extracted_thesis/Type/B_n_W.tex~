@@ -1,0 +1,62 @@
+%\DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
+\ProcessOptions\relax
+
+%\LoadClass[pdftex, a4paper]{book}
+
+\renewcommand{\bibname}{References}
+%\newcommand{\be}{\begin{eqnarray}}
+%\newcommand{\ee}{\end{eqnarray}}
+
+\usepackage{amsmath, amssymb}
+\usepackage{graphics}
+\usepackage{setspace}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{fancyhdr}
+\usepackage{eucal}
+\usepackage[below]{placeins}
+\usepackage[english]{babel}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage[perpage]{footmisc}
+ \usepackage{multirow}
+\usepackage[square, comma]{natbib}
+\usepackage{ifthen}
+\usepackage{makeidx}
+% Nomenclature
+\usepackage{nomencl}
+\usepackage{acronym}
+\renewcommand{\nomname}{List of Symbols}
+\makeglossary
+
+
+
+
+
+
+
+
+
+\usepackage[dvips,
+                 bookmarks,
+                 bookmarksopen = true,
+                 bookmarksnumbered = true,
+                 breaklinks = true,
+                 linktocpage,
+                 backref,
+                 colorlinks = true,
+                 linkcolor = black,
+                 urlcolor  = magenta,
+                 citecolor = blue,
+                 anchorcolor = green,
+                 hyperindex = true,
+                 hyperfigures
+                 ]{hyperref} % added by Sandipan
+
+
+
+
+
+\usepackage{epsfig}
+    \usepackage{graphicx}
+
+

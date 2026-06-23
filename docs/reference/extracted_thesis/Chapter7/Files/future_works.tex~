@@ -1,0 +1,57 @@
+\section{Scope for Future Work}
+The future scope and possible extensions of the investigations carried out in this thesis are
+ 
+
+%\subsection{Corner Slope Diffraction for Conducting Tip and Imperfectly Conducting Corner and Tip}
+%Based on the corner slope diffraction detailed in chapter \ref{Ch:CSD_and_H_Plane_Horn_Pattern}, slope diffraction from the perfectly conducting tip\index{Conducting tip} can be evaluated. Also corner slope diffraction for the perfectly conducting case can be extended for imperfectly conducting corner and tip\index{Imperfectly!conducting corner}\index{Imperfectly!conducting tip}.
+\begin{enumerate}[(i)]
+\item \textbf{Corner diffraction field associated with one corner at the intersection of three edges of a perfectly conducting three dimensional wedge:}\\
+The H-plane pattern computed in Chapter \ref{Ch:GTD_H_Plane_Horn_Pattern} used the corner diffracted field obtained on the basis of the available heuristic corner diffraction coefficient for a corner formed at the end of a plate by a pair of finite straight edges. However, it can be seen that the horn corner is actually at the intersection of three edges of a finite perfectly conducting wedge. Further studies should therefore be made to obtain a solution for the latter problem.
+
+\item \textbf{Corner slope diffraction field associated with one corner at the intersection of three edges of a perfectly conducting three dimensional wedge:}\\
+The H-plane pattern computed in Chapter \ref{Ch:CSD_and_H_Plane_Horn_Pattern} used the corner slope diffracted field obtained on the basis of corner slope diffraction coefficient of (\ref{c_s_cxf}) for a corner formed at the end of a plate by a pair of finite straight edges. However, it can be seen that the horn corner is actually at the intersection of three edges of a finite perfectly conducting wedge. Further studies should therefore be made to obtain a solution to the latter problem.
+
+
+
+
+
+\item \textbf{A more analytical (versus heuristic) corner diffraction coefficient could be used:}\\
+Marhefka and Brinkley \cite{Marhefka_Far_Zone_Scattering_Flat_Plate_Cube} obtained a UTD corner effect from the integration of the physical optics (PO) and fringe components of Michaeli\rq s edge. This corner diffraction coefficient could be used instead of \cite{Burnside_tip_diffraction}, \cite{Sikta_F_corner_diffraction} in the computations to determine improvements, if any, in the horn  radiation and Sikta\rq s triangle scatter predictions. Further, based on \cite{Ivrissimtzis_uniform_ray_higher_order_terms} a higher order corner diffraction could be used to see if further improvements, if any, in horn radiation pattern predictions are obtained. 
+
+
+\item \textbf{The need for a finite-edge edge diffraction coefficient:}\\
+The GTD scattered field for Sikta\rq s triangle shows steep rise for angles at and around $\theta_g=90^\circ$. The UTD (version of GTD) edge diffraction coefficient of the corresponding the canonical half-plane problem was used in this case. Though in this case of at and near the reflection boundary, the UTD result is finite, the scattered field magnitude is high. The half-plane problem is not necessarily the suitable canonical problem for all cases of edge diffraction \cite{Sanyal_Bhatt_curved_plate}. It is clear that at these angles the  edge diffraction coefficient needs refinement to incorporate suitable higher order diffraction mechanism. 
+
+\item \textbf{Performance analysis of horn antenna as EMFS using finite edge GTD technique:}\\
+The GTD on axis gain formula of pyramidal horn antenna (\ref{gtd_Gain_1})(6.42) given in \cite{Jull_gain_pyramidal_horns} is based on two-dimensional E-plane sectoral horn analysis. Further GTD analysis of horn as EMFS should be carried using on axis pyramidal horn antenna gain formula obtained through finite edge GTD analysis of three-dimensional pyramidal horn.
+\end{enumerate}
+
+
+%FDTD Analysis of Broad Band Horn Antennas for EM Field Sensors:
+%
+%Double ridge guide horns are broadband antennas that offer excellent performance over the frequency range of 170 MHz to 40 GHz \cite{Bruns_Broadband_Double_Ridged_Horn}. The FDTD technique used in Section 6.6 to obtain the AF for pyramidal horn antenna can be extended to evaluating the performance of double ridge guide horn antenna\index{Horn!double ridge guide}.
+
+
+
+
+
+
+
+
+
+%\subsection{FDTD Analysis of Broad Band Horn Antennas for EM Field Sensors}
+%Double ridge guide horns are broadband antennas that offer excellent performance over the frequency range of 170 MHz to 40 GHz \cite{Bruns_Broadband_Double_Ridged_Horn}. The procedure used in Chapter~\ref{Chapter_RCS_Cal_UTD} to obtain the AF for rectangular/circular horn antenna can be extended to evaluating the performance of double ridge guide horn antenna\index{Horn!double ridge guide}.
+
+
+
+%Broadband antennas, compared to half wave dipoles, reduce test time because the technician did not have to stop the test to adjust the dipole antenna for each frequency. Most compliance standards now require the use of such antennas. Double ridge guide horns\index{Horn!double ridge guide} are broadband antennas that offer excellent performance over the frequency range of 170 MHz to 40 GHz \cite{Bruns_Broadband_Double_Ridged_Horn}. The procedures which is used to evaluate AF in chapter \ref{Chapter_Aperture_Antenna_EMI_Sensor} is very useful procedure to simulate a horn antenna in receiving mode as an EM field sensor. Double ridge guide horn antenna is one of the excellent choice for both radiated immunity\index{Radiated immunity} and emissions\index{Radiated emissions} testing. Concentration can be done for the broad banding of horn antenna for EM field sensor over double ridge guide horns using FDTD method.
+
+
+%Broadband antennas, compared to half wave dipoles, reduce test time because the technician did not have to stop the test to adjust the dipole antenna for each frequency. Most compliance standards now require the use of such antennas. The latest version of Mil-Std 461E states the used of broadband double ridge guide horn antenna as the antenna of choice for frequencies above 200 MHz. Double Ridge Guide Horns are broadband antennas that offer excellent performance over the frequency range of 170 MHz to 40 GHz. These Horn antennas are an excellent choice for both radiated immunity and emissions testing. Here are several double ridge guide horn antennas ideal for most compliance standards and/or general field measurements.
+
+%We presented the electromagnetic simulation of a 1–18-GHz broadband double-ridged horn antenna including a coaxial excitation. Our frequency-domain MoM simulations have been supported by measurements. This is the first time that such a complete antenna system was simulated in one step over the entire frequency range. It was found that for satisfactory antenna performance, small geometric tolerances of the ridged waveguide horn must be maintained and that the introduction of mechanical imperfections into the simulation model significantly enhances the agreement between simulations and measurements. Furthermore, our research indicates that all similarly designed broadband ridged horns exhibit the same performance degradation in the upper frequency range, as they fail to effectively suppress the propagation of higher order modes. Nevertheless, manufacturers of these antennas continue to advertise them as suited for application over the full 1–18 GHz range.
+
+
+
+%\subsection{Electromagnetic Analysis of Plane Wave Illumination Effects Onto Passive and Active Circuit Topologies:}\index{Circuit topologies!passive}\index{Circuit topologies!active} With the uptake of wireless devices and services, the impact of electromagnetic (EM) coupling and interference on active circuits exposed to ambient radiation are of increasing concern. This interference can be intentional or unintentional and could result in a distortion of the output signal for analog devices and in digital circuit logic errors leading to improper functionality of digital systems. It is observed that significant interference on the device operation can be caused by this excitation \cite{Volakis_Plane_Wave_Illumination_Effects}. The procedures which is used to evaluate CAF in chapter \ref{Ch:Wire_And_Microstrip_Antenna_EMI_Sensor} can extended efficiently to evaluate the influence of external EM interference on the performance of a circuit.
+

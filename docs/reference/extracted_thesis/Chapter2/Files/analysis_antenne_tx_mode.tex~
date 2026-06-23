@@ -1,0 +1,56 @@
+%\section{Analysis of Antenna}\label{analysis_of_Antenna}
+%In this section FDTD technique is used to analysis an antenna in transmitting mode. How to use FDTD technique for analysis an antenna in receiving mode is also discussed. In transmitting mode analysis H-plane radiation pattern of pyramidal horn antenna is computed and compared with the measurement and results from open literature.
+\section{Analysis of Pyramidal Horn Antenna in Transmitting Mode}\label{analysis_of_Antenna_TX_mode}\index{FDTD!antenna in transmitting mode}\index{Horn radiation pattern!FDTD}
+%\section{Pyramidal Horn H-plane Radiation Patten using FDTD technique}\label{analysis_of_Antenna_TX_mode}\index{FDTD!antenna in transmitting mode}
+%\begin{figure}
+%\centering
+%\includegraphics[height=!,width=5.750 in]{geo_fdtd_horn_all}
+%\caption{\label{Fig:geo_fdtd_horn_all_1}Geometry of a pyramidal horn.}
+%\end{figure}
+Fig.~\ref{Fig:geo_fdtd_horn_all_1} shows the FDTD model of the horn antenna. The FDTD model uses a uniform space lattice cubic $Yee $ cells having $\bigtriangleup x=$$\bigtriangleup y=$$\bigtriangleup z=$$\bigtriangleup$$(=\lambda_o/24)$. Time step $\bigtriangleup t$ is determined by (\ref{reduce_Courant_Condition_3d2}). A $15\bigtriangleup -thick$ unsplit PML is used as ABC on all six sides of the FDTD lattices. This is spaced $20\bigtriangleup$ from the closest surface of the antenna except in front of the aperture, where the spacing is $40\bigtriangleup$. The tangential electric field components along this structure are set to zero. A simple dipole antenna is used as feed of the horn antenna. The dipole is centered laterally in the waveguide and exited with the Gaussian pulse of (\ref{gaussian_pulse_1}) with $A=1$, $t_0=150\bigtriangleup t$ \& $t_\omega=25\bigtriangleup t$. It is best to choose the distance of the dipole probe to be $\lambda_g/4$ away from the terminating wall of the wave guide as described in \cite{Balanis_Finite-difference_time-domain_antenna_radiation}. The propagating mode is automatically developed by this model during the numerical computation. The mode propagated to the aperture of the wave guide is dictated by the cutoff frequency of the wave guide. A virtual surface (Huygen\rq s box)\index{Huygens\rq~box}\index{FDTD!Huygens\rq~box} of six-sided rectangular box (see Fig.~\ref{Fig:near_to_far_field_trans}) that completely encloses the horn antenna in the FDTD lattice is considered between the horn structure and the PML layer for the calculation of far-field H-plane radiation pattern. 
+
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=0.30]{tx_mode_analysis_horn_fdtd_coordinate_syst}}
+\caption{\label{Fig:tx_mode_analysis_horn_fdtd_coordinate_syst}Coordinate system for the computation of far-field horn radiation pattern.}
+\end{center}
+\end{figure}
+The coordinate system for the calculation of far-field radiation pattern is shown in the Fig.~\ref{Fig:tx_mode_analysis_horn_fdtd_coordinate_syst}. Far-field variation with respect to $\theta$, when $\phi=0^\circ$ or $\phi=180^\circ$ gives H-plane radiation pattern of the horn antenna. When $\phi=90^\circ$ or $\phi=270^\circ$, far-field variation with respect to $\theta$ gives E-plane radiation pattern and when $\phi=0^\circ\pm\phi'$ or $\phi=180^\circ\pm\phi'$, far-field variation with respect to $\theta$ gives diagonal-plane radiation pattern of the horn antenna. Where, $\phi'$ is given by
+\be\label{tx_mode_coor_syst_1}
+\phi'=\tan^{-1}\left(\frac{B}{A}\right)
+\ee
+
+
+
+
+%The small inset drawings at the Fig.~\ref{Fig:geo_fdtd_horn_all_1} define the lengths and angles that characterize the horn antenna geometry. For far-field radiation pattern, three different sized horn are considered. 
+
+%The numerical values of these parameters defined in the Fig.~\ref{Fig:geo_fdtd_horn_all_1}~for the first horn \cite{Rudduck_hp_horn}\footnote{${}^{\dagger}$ Notations used in \cite{Rudduck_hp_horn} are different from the notations in Fig.~\ref{Fig:geo_fdtd_horn_all_1}.} are $A=247.35~mm$, $B=258.64~mm$, $D=376.6~mm$, $l_w=50.8~mm$, $\rho_E=14.33\lambda_0$, $\rho_H=14.43\lambda_0$, $\theta_E=17.5^\circ$ and $\theta_H=16.6^\circ$. $\lambda_0$ is the wavelength corresponding to the frequency 10 GHz. 
+
+%The numerical values of these parameters defined in the Fig.~\ref{Fig:geo_fdtd_horn_all_1}~for the second horn \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane} are $A=123.70~mm$, $B=91.95~mm$, $D=255.52~mm$, $l_w=50.8~mm$, $\rho_E=9.697\lambda_0$, $\rho_H=10.650\lambda_0$, $\theta_E=9.092^\circ$ and $\theta_H=11.162^\circ$. $\lambda_0$ is the wavelength corresponding to the frequency 10 GHz. 
+
+%The numerical values of these parameters defined in the Fig.~\ref{Fig:geo_fdtd_horn_all_1}~for the third horn are $A=195~mm$, $B=144~mm$, $D=300~mm$, $l_w=50.8~mm$, $\rho_E=9.605\lambda_0$, $\rho_H=9.75\lambda_0$, $\theta_E=12.57^\circ$ and $\theta_H=16.01^\circ$. $\lambda_0$ is the wavelength corresponding to the frequency 9.375 GHz. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

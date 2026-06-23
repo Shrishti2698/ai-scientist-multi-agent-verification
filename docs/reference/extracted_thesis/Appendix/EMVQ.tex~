@@ -1,0 +1,106 @@
+\chapter[Appendix A]{Fresnel Integral}{Fresnel Integral}\label{appen_Fresnal_Int}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+Appendix \ref{appen_Fresnal_Int} presents.\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+
+\textbf{E\&M Algorithm:}\\
+{\LARGE T}he basic idea of the E\&M algorithm is, beginning with
+an initial model $\lambda_s$, to estimate a new model $\bar{\lambda}_s$, such that
+$p(\textbf{X}|\bar{\lambda}_s)> p(\textbf{X}|\lambda_s)$. The new model then becomes the
+initial model for the next iteration and the process is repeated
+until some convergence threshold is reached. This is the same
+basic technique used for estimating HMM parameters via the
+Baum-Welch reestimation algorithm \cite{Baum}.
+On each E\&M iteration, the following reestimation formulas
+are used which guarantee a monotonic increase in the model's
+likelihood value. For a speaker, say $s$, for whom $N_s$ amount training data are available, the reestimation algorithm is as follows:\\
+
+\textbf{Mixture Weights:}
+\begin{equation}
+\bar{p}_i^s=\frac{1}{N_s}\sum_{t=1}^{N_s} p^s(i|\textbf{x}_t,\lambda_s)
+\end{equation}\\
+
+\textbf{Means:}
+\begin{equation}
+\bar{\mu}_i^s=\frac{\sum_{t=1}^{N_s} p^s(i|\textbf{x}_t,\lambda_s)\cdot \textbf{x}_t}{\sum_{t=1}^{N_s} p^s(i|\textbf{x}_t,\lambda_s)}
+\end{equation}\\
+
+\textbf{Variances:}
+\begin{equation}
+\bar{\sigma}_i^{s^2}=\frac{\sum_{t=1}^{N_s} p^s(i|\textbf{x}_t,\lambda_s)\cdot \textbf{x}_t^2}{\sum_{t=1}^{N_s} p^s(i|\textbf{x}_t,\lambda_s)}-\bar{\mu}_i^{s^2}
+\end{equation}\\
+
+where $\bar{\lambda}_s=\{\bar{p}_i^s, \bar{\mu}_i^s,
+\bar{\Sigma}_i^s\}_{i=1}^M$ and,
+\begin{displaymath}
+\bar{\Sigma}_i^s =
+\left[ \begin{array}{cccc}
+\bar{\sigma}_{i,11}^{s^2} &  0 & \ldots & 0 \\
+0 & \bar{\sigma}_{i,22}^{s^2} & \ldots & 0 \\
+\vdots & \vdots & \ddots & \vdots\\
+0 & 0 & \ldots & \bar{\sigma}_{i,DD}^{s^2}\\
+\end{array} \right].
+\end{displaymath}
+is updated model after one iteration. Note that other symbols have their usual meaning.\\
+
+\textbf{Split VQ Algorithm:}\\
+The LBG algorithm \cite{lindeapp} is a finite sequence of steps in which, at
+every step, a new quantizer, with a total distortion less or equal to the previous
+one, is produced.
+
+Initialization by splitting requires that the number
+of codewords is a power of 2. The procedure starts from only one codeword
+that, recursively, splits it in two distinct codewords (Linde et al., 1980)\cite{lindeapp}.
+More precisely, the generic $m$-th step consists in the splitting of all vectors
+obtained at the end of the previous step. The splitting criterion is shown in Fig. \ref{split-vq}. It starts from one codeword $x$. It splits this vector into two close vectors $\textbf{x}+\textbf{e}$ and $\textbf{x}-\textbf{e}$ where $\textbf{e}$ is a fixed perturbation vector.
+\begin{figure}[h!]
+\centering
+\includegraphics[height =3.5 cm, width=4 cm]{HeadTail/split_vq.eps}\\
+\caption[Splitting of a codeword]{Splitting of a codeword}\label{split-vq}
+\end{figure}
+
+After the splitting, an optimization
+step is executed according to the method (See Algorithm \ref{split-algo}) described next.
+
+\begin{algorithm}
+\tcc*[h]{Initialization of parameters}\;
+$M$: Number of codewords\;
+$\epsilon$: Precision of the optimization process\;
+$\textbf{X}_{\mathrm{tr_0}}$: Initial codebook\;
+$\textbf{X}_{\mathrm{tr}}$: Input Patterns\;
+Further, the following assignments are made\;
+$\mathrm{Iter}=0$
+$\mathrm{Dist_{-1}}=+\inf$\;
+\tcc*[h]{\textbf{Partition Condition}:}\;
+Given the codebook $\textbf{X}_{\mathrm{tr_{iter}}}$, the partition $P(\textbf{X}_{\mathrm{tr_{iter}}})$ is calculated according to the \emph{Nearest Neighbor Condition}\cite{lindeapp}\;
+\tcc*[h]{\textbf{Termination Condition check}:}\;
+The quantizer distortion $(\mathrm{Dist_{\mathrm{iter}}}= \mathrm{Distortion}\big(\{\textbf{X}_{\mathrm{tr_{iter}}}, P(\textbf{X}_{\mathrm{tr_{iter}}})\}\big)$ is calculated according to \emph{Mean Quantization Error}\cite{lindeapp}. If $|\mathrm{Dist_{\mathrm{iter-1}}}-\mathrm{Dist_{\mathrm{iter}}}|/\mathrm{Dist_{\mathrm{iter}}}\leq \epsilon$ then the optimization ends and $X_{\mathrm{tr_{iter}}}$ is the final returned codebook.\;
+\tcc*[h]{\textbf{New Codebook calculation}:}\;
+Given the partition $P(\textbf{X}_{\mathrm{tr_{iter}}})$, the new codebook is calculated according to  \emph{Centroid Condition}\cite{lindeapp}. In symbols: $X_{\mathrm{tr_{iter+1}}}=\mathrm{Mean}\big(P(\textbf{X}_{\mathrm{tr_{iter}}})\big)$\;
+After, the counter $\mathrm{iter}$ is increased by one and the procedure follows from Partition Calculation.
+\caption{Split-VQ Algorithm \label{split-algo}}
+\end{algorithm}
+\newpage
+
+\begin{thebibliography}{10}
+
+\bibitem{Baum}
+L. E. Baum, T. Petrie, G. Soules, and N. Weiss, ``A maximization technique occurring in the statistical
+analysis of probabilistic functions of Markov chains,'' \emph{The Annals of Mathematical Statistics}, vol. 41, no. 1, pp. 164-171, 1970.
+
+\bibitem{lindeapp}
+Y. Linde, A. Buzo, and R. M. Gray, ``An algorithm for vector
+quantizer design,'' \emph{IEEE Trans. Commun.}, vol. 28, no. 1, pp.
+84-95, Jan. 1980.
+
+\rule{0.46\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.46\textwidth}{0.75pt}\\
+
+\end{thebibliography}
+

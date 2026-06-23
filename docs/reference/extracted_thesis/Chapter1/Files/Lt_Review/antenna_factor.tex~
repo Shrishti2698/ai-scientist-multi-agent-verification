@@ -1,0 +1,36 @@
+\subsection{Electromagnetic Field Sensors}\label{LR_antenna_factor}\index{EM field sensor}\index{Antenna factor}\index{Complex antenna factor}
+All electronic devices must conform to the standards of electromagnetic emission set by different regulations in different countries \cite{Paul_electromagnetic_compatibility}. Compliance of the devices conforming to the standards (limits) of interference in this range can be verified by measuring the radiated electric fields in an anechoic chamber or at an open test range after putting the measurement antenna at a specified distance from the device under test. For EM field measurements, it is required to determine the field strength at the point of measurement using a sensor characterized in terms AF or CAF \cite{Ishigami_Complex_AF_V_Dipole_Antenna}, \cite{Shinobu_Near_Field_3_Antenna_Method}, \cite{Takashi_Systematic_Uncertainties_Complex_Antenna_Factor}.
+
+
+
+The literature on AF, which is the most extensively used device descriptor in EMC industry, in established journals is highly limited. In fact, the accepted definition of AF is not part of standardized antenna terminology as published in IEEE definition of terms for antennas \cite{TDK_RF_Solutions_EMC_Technical_Report}. This has led to a lot of ambiguities over the application and usage of published AF results, all of which are experimental in nature, carried out in different laboratories, for entirely different purposes. Benett \cite{Bennett_Properly_Applied_Antenna_Factors} provides a good insight into deficiencies of AF definition and the corrections needed while using published AF results.
+
+Smith \cite{Smith_Antenna_Factors} in 1982 suggested an analytical procedure called \lq Antenna Based Method\rq to predict the AF using the antenna structure characteristics like effective length, effective area, impedance mismatch and losses in coupling circuits. The procedure was carried out for a simple dipole structure. Ishigami et al. \cite{Shinobu_Near_Field_3_Antenna_Method}, suggested a near-field 3-antenna method for measuring CAF. From these measurements they calculated the transmission coefficients in the far-field region and theoretically obtained the near-field correction factors. The theoretical simulation of the AF (or CAF) of EMFSs has attracted many research interests in recent years due to implementation costs and time required for calibrating a sensor experimentally \cite{A_Bhattacharya_rec_wg_emi_sensors}. With the advent in computer technology, numerical techniques like method of moment (MoM) have come to the fore in the investigation of AF \cite{Cerri_AF_Dipole_Resonant_Cavity}, \cite{Cho_disk_loaded_dipole_validation_EMC_test}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

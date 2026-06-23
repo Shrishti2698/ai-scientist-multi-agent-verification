@@ -1,0 +1,46 @@
+\thispagestyle{empty}
+
+
+
+
+\vspace*{1.5cm}
+%\rule{\textwidth}{0.75pt}
+\begin{flushright}
+Date: \noindent{\today}\\
+\end{flushright}
+\vskip 1.0\baselineskip
+\centerline{\underline{\Large{\bf Certificate}}}
+\vskip 2.0\baselineskip
+\noindent
+
+
+This is to certify that the thesis entitled, \textbf{\input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Title/Thesis_Title}} submitted by \textbf{Maifuz Ali} to Indian Institute of Technology, Kharagpur, is a record of bona fide research work carried under my supervision and is worthy of consideration for the award of the degree of Doctor of Philosophy of the Institute.
+
+
+
+\vspace*{1.5cm}
+\begin{flushleft}
+Signature of the Supervisor: ................................. \\
+Name of the Supervisor: {\bf Prof. Subrata Sanyal},\\
+%\begin{spacing}{1.150}
+Electronics \& Electrical Communication Engg.
+%\end{spacing}
+\end{flushleft}
+
+%\vspace*{1.5cm}
+%\begin{flushleft}
+%\raisebox{0.1cm}[3cm][0cm]{
+%\begin{minipage}{7.8cm}
+%\rule{\textwidth}{0.5pt}\\
+%Name of the Supervisor: {\bf Dr. Subrata Sanyal}\\
+%Professor\\
+%Department of Electronics \& Electrical Communication Engineering,\\
+%Indian Institute of Technology, Kharagpur, West Bengal,\\
+%{\sf INDIA} 721\ 302.
+%\end{minipage}
+%}
+%\end{flushleft}
+
+%Date: \noindent{\today}\\
+
+

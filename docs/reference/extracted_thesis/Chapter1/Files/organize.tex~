@@ -1,0 +1,29 @@
+\section{Organization of the Thesis}\label{Organization_Thesis} 
+In this thesis earlier geometrical theory of diffraction (GTD) approach to the H-plane horn radiation problem is reconsidered with spherical source excitation. Corner diffraction and new heuristic corner slope diffraction terms are included to provide a GTD model for the finiteness of the horn edges. The results are compared with the measurement and FDTD computed results. 
+
+
+Also the horn antennas are analyzed in receiving mode as EMFS using FDTD techniques. These works are organized in the following way.
+
+\textbf{Chapter 1} deals with the introduction of the thesis. It contains a brief review of the earlier GTD approach to the horn radiation problem and the present approach using Corner diffraction and the new heuristic corner slope diffraction terms included to provide a GTD model for the finiteness of the horn edges. It provides a introduction to the problem of FDTD computation and analysis horn antennas in receiving mode as EMFS using FDTD techniques. It also contains the objectives and scope of the work reported in the thesis and lastly, the contents of the thesis.
+
+\textbf{Chapter 2} contains an introduction to the FDTD technique. It is devoted to the FDTD formulation for analysis of antenna in transmitting \& receiving mode.
+
+\textbf{Chapter 3} is devoted to the problem of GTD analysis of H-plane horn radiation pattern and the application of available corner diffraction to this problem.
+
+\textbf{Chapter 4} deals with corner slope diffraction and its application to the problem of H-plane horn radiation pattern computations.
+
+\textbf{Chapter 5} deals with the further analysis of pyramidal horn antennas in the E-plane and in the diagonal plane.
+
+\textbf{Chapter 6} deals with the scattering by Sikta\rq s triangle using both finite edge GTD and FDTD techniques. This chapter deals in addition with the performance analysis of horn antennas in receiving mode as EM field sensors using FDTD and GTD techniques.
+
+\textbf{Chapter 7} deals with the discussions on all aspects of the work reported in this thesis. It also contains important conclusions \& scope for future work.
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,94 @@
+%% PLEASE READ THE COMMENTS BEFORE DOING ANYTHING %%
+\documentclass[11pt,a4paper,twoside,openright,titlepage]{book} % Font size=11, a4 paper, both-side printing, and in book format
+\usepackage{caption3} % Changed by Sandipan earlier
+\usepackage{latexsym}
+\usepackage{thesis}
+\usepackage{rotating}
+\usepackage{enumerate} 
+\usepackage{wrapfig}  % added by Sandipan for biography photo
+\usepackage{pstricks} % added by Sandipan for table shadding
+\usepackage{colortab} % added by Sandipan for table shadding
+\usepackage{subfigure}% Added by Maifuz for Sub Figure
+\usepackage[algoruled, algochapter, linesnumbered]{algorithm2e} %added by Sandipan for algorithm writing
+\usepackage{indentfirst}  % added by Sandipan for indent the first paragraph of any chapter
+\usepackage{makeidx}      % added by Sandipan for making index at last in the thesis
+\usepackage{textcomp}
+\usepackage{epsfig,psfig}
+\usepackage{booktabs}
+\makeindex  
+
+\usepackage{tabularx} 
+\usepackage{array}          % lets us define new column types
+%\newcolumntype{Y}{>{\raggedright\arraybackslash}X} % ragged‑right flexible col.
+\usepackage{amssymb}
+
+\usepackage{booktabs} % For better table lines
+\usepackage{multicol} % For two column formatting    
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float} % Add this to the preamble
+\usepackage{graphicx}
+%\usepackage{caption}
+%\usepackage{subcaption}
+              % added by Sandipan for making index at last in the thesis
+
+
+
+
+\usepackage{backrefx}% added by Sandipan
+
+
+%-------------------- 2nd Block Ends--------------------------
+
+%\setcaptionwidth{0.9\textwidth} % For caption width 'Caution: Don't Change otherwise you'll be in trouble to control the figure/Table captions.
+%Define By Maifuz Ali
+\captionsetup{width=0.9\textwidth}
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+
+\newcommand{\be}{\begin{eqnarray}}
+\newcommand{\ee}{\end{eqnarray}}
+
+\newcommand{\goodgap}{%
+\hspace{\subfigtopskip}%
+\hspace{\subfigbottomskip}}
+%\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+
+\begin{document}
+	\input{HeadTail/head}
+	%\def\baselinestretch{1.40}%Gap Between tha line
+	%\begin{spacing}{1.40}
+	\include{Chapter1/chapter1} % Inclusion of Chapter 1 so called 'Introduction'
+	\include{Chapter2/chapter2} % 
+ 	\include{Chapter7/chapter7} %
+ 	%\include{Chapter4/chapter4}
+ 	\include{Chapter5/Chapter5}
+%\bibliographystyle{IEEEtran}
+%\bibliography{IEEEabrv,/home/maifuzali/LaTex/References/references}
+%\bibliography{IEEEfull,/home/maifuzali/LaTex/References/references}
+
+\input{HeadTail/tail}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

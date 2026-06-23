@@ -1,0 +1,6 @@
+\section{Methodology Followed}\label{Methodology Followed}\index{Methodology}
+H-plane horn radiation is reconsidered with spherical source excitation and in conjunction with corner diffraction to provide a GTD model of the uniform theory of diffraction (UTD) type which takes into account the finiteness of the horn edges. Addition of the corner slope diffraction (CSD) terms is found to provide further refinement to the GTD model. In addition, the FDTD technique is used to obtain the H-plane horn radiation pattern for comparative study with finite edge GTD technique. Also for completeness sake E-plane and diagonal plane radiation pattern of a pyramidal horn has been obtained using finite edge GTD. To further test the corner diffraction coefficient, the problem of electromagnetic scattering by Sikta\rq s triangle has been analyse using finite edge GTD as well as FDTD techniques 
+
+Also FDTD is used to analysis the antenna in the receiving mode so as to evaluate its performance as an EMFS.
+
+For GTD computation programs are developed in $FORTRAN-90$ using $gcc-4.0$ compiler. Whereas for the numerical calculation, a program based on FDTD technique is developed in $C$ using compiler $gcc-4.0$ run on a Pentium $2.3~GHz$ processor based on personal computer supported by $LINUX$ operating system.

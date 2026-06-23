@@ -1,0 +1,62 @@
+\subsubsection{Comparison between the UAT and the UTD}\label{LR_Comparison_UAT_UTD}\index{UTD}\index{UAT}   
+In the process of reviewing the GTD techniques we made some comparisons between the UAT and the UTD. The importances of these theories necessitate further comparison. We first consider the case of diffraction at the edge of a plain screen.
+
+\begin{enumerate}[(a)]
+\item A notable difference is the way the two theories have been formulated. The UTD Ansatz is fully determined whereas the UAT Ansatz involves a number of undetermined functions. These functions are determined by first substituting the UAT Ansatz into the Maxwell\rq s equations or into the wave equation and then solving the resulting recursive set of transport equations. Consequently the UAT expression is an asymptotic solution of the Maxwell\rq s equations or (equivalently) the reduced wave equation. In contrast the UTD result does not in general satisfy the Maxwell\rq s equations, not even in an asymptotic sense \cite{Boersma_Comments_Kouyoumjian_UTD}, \cite{Lee_uat_curved_wedge}, \cite{Boersma_line_source_by_half_plane}, \cite{Boersma_High_frequency_diffraction_line-source_ray_techniques}, \cite{Boersma_a_simple_solution_of_Sommerfelds_half_plane_diffraction_problem}, \cite{Boersma_Rahmat}, \cite{Rahmat_Mittra_Spectral_analysis_of_diffraction_Comparison_asymptotic_techniques}. 
+
+\item The UTD formulation is based on field continuity at the shadow boundaries which is not fundamental condition. As a result, unlike UAT which is based on the edge condition, the UTD formulation is not unique \cite{Boersma_Comments_Kouyoumjian_UTD}, \cite{Boersma_Rahmat}
+
+\item The UTD solution does not satisfy the edge condition except for the case of plane wave incidence with direction normal to the edge of a half-plane. In contrast the UAT solution satisfies the edge condition for all case of diffraction by a curved strip and that of plane wave incident obliquely on a perfectly conducting half-plane \cite{Boersma_uat}, \cite{Boersma_Comments_Kouyoumjian_UTD}, \cite{Wolfe_plane_waves_semicircular_strip}, \cite{Boersma_High_frequency_diffraction_line-source_ray_techniques}, \cite{Boersma_Rahmat}, \cite{Deschamps_3_D_uat}.
+
+\item In the case of plane wave incidence on a half-plane UTD with its slope diffraction extension \cite{Pathak_utd}, \cite{Kouyoumjian_UTD_perfectly_con_edge}, \cite{Hwang_dyadic_slope_diffraction_coefficient} reproduces the exact asymptotic solution upto an order $k^{-3/2}$. However, it fails to provide the next higher order terms.
+
+In this case of an anisotropic line source diffraction by a half-plane, the following observations for the solution observed by the UTD with its slope diffraction extension hold good:
+\begin{enumerate}[(i)]
+\item Far away from the SB/RB it gives terms upto an order of $k^{-3/2}$. However, only the terms of order upto $k^{-1/2}$ correspond to the exact asymptotic solution.
+
+\item At the SB/RB it gives only terms upto an order of $k^{-1/2}$. These correspond to the exact solution. The term $k^{-3/2}$ and beyond are not obtained.
+
+\item The UTD solution is continuous at the shadow boundaries. However, its derivative in the transverse direction is discontinuous at the shadow boundaries. Inclusion of the slope diffraction term makes the first derivative continuous but then the second derivative becomes discontinuous. However, if the line source is isotropic, then the UTD solution is continuously differentiable across SB/RB.
+\end{enumerate}
+
+In contrast, in all the above cases the UAT provides in a systematic manner all the terms of the corresponding exact asymptotic solution. Further, the UAT solution is continuous and possesses continuous derivatives at the SB/RB \cite{Boersma_uat}, \cite{Boersma_Comments_Kouyoumjian_UTD}, \cite{Boersma_line_source_by_half_plane}, \cite{Boersma_High_frequency_diffraction_line-source_ray_techniques}, \cite{Boersma_a_simple_solution_of_Sommerfelds_half_plane_diffraction_problem}, \cite{Boersma_Rahmat}, \cite{Deschamps_3_D_uat}, \cite{Rahmat_Samii_spectral_domain_high_fre_phenomena}
+
+\item The original UAT Ansatz \cite{Boersma_uat} was further developed by Lee and Deschamps \cite{Lee_uat_curved_wedge} to include the general problem of diffraction by a curved wedge. This later Ansatz however gives diffracted field terms only upto an order $k^{-1/2}$. In general it also fails to satisfy the edge condition except for the special case of diffraction by a sharp wedge. However, this later UAT Ansatz unlike UTD recovers the leading terms of the exact asymptotic solution is finite, continuous and has continuous derivations to any order at the shadow boundaries in all cases of diffraction by a plane screen and by a straight wedge considered in \cite{Boersma_uat}, \cite{Wolfe_plane_waves_semicircular_strip}, \cite{Lee_uat_curved_wedge}, \cite{Boersma_line_source_by_half_plane}, \cite{Boersma_High_frequency_diffraction_line-source_ray_techniques}, \cite{Boersma_a_simple_solution_of_Sommerfelds_half_plane_diffraction_problem}, \cite{Ciarkowski_ua_expansion_plane_wave_pc_wedge}, \cite{Deschamps_3_D_uat}.
+
+\item In the case where the exact solution to the edge diffraction problem is available, it can  be shown that UAT Ansatz corresponds precisely to the rigorous asymptotic expansion obtained by Van der Waerden\rq s method \cite{Boersma_Rahmat}, \cite{Poley_Masters_Thesis}, \cite{Ciarkowski_ua_expansion_plane_wave_pc_wedge}, \cite{Deschamps_3_D_uat}. However, in all these it is found that UTD Ansatz is similar but not identical to the rigorous asymptotic expansion obtained by Pauli-Clemmow method.
+
+\item Both theoretical and numerical comparisons between the UAT and the UTD, for the case of line source incidence and for oblique plane wave incidence on a plane has been carried out in \cite{Rahmat_Samii_spectral_domain_high_fre_phenomena} and \cite{Deschamps_3_D_uat} respectively. In general the two theories give good numerical agreement with the exact solution. However, for observations point simultaneously close to the edge and to a shadow boundary, the UTD may give erroneous results \cite{Deschamps_3_D_uat}. On the other hand, the UAT solution, though in agreement with the exact solution at all observation point, needs careful handling while computing near the shadow boundaries \cite{Rahmat_Samii_spectral_domain_high_fre_phenomena}. This is because it involves subtraction of two large numbers that become infinite at the shadow boundaries. Further, in the case of line source incidence, since the UAT treats the source and its image in the same fashion, it predicts abnormally large fields near the image point. 
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

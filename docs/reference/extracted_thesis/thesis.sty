@@ -1,0 +1,59 @@
+%%%% Basic Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[body={6.0in, 9.0in},left=1.25in,right=0.750in,vcentering,dvips]{geometry} % Geometry
+\usepackage[body={7.20in, 9.0in},left=1.25in,right=0.750in,vcentering,dvips]{geometry} % Geometry
+%\usepackage[body={6.0in, 9.0in},left=1.25in,right=0.750in,vcentering,dvips]{geometry} % Geometry package for easy page %margin setup % Changed by Sandipan
+%\usepackage[body={6.0in, 8.2in},left=1.5in,right=1.0in,vcentering,dvips]{geometry} % Geometry
+%\usepackage[body={6.0in, 8.2in},left=1.25in,right=1.25in,vcentering,dvips]{geometry}
+\usepackage{graphics}
+\usepackage{psfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{eufrak}
+\usepackage{setspace}
+%\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{fancyhdr}			% Fancy Header and Footer \usepackage{setspace}
+%\topmargin=0.0in
+
+				% Line spacing
+% \usepackage{txfonts}			% Public Times New Roman text & math font
+
+%%% Fancy Header %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fancy Header Style Options
+\pagestyle{fancy}			% Sets fancy header and footer
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+\renewcommand{\headrulewidth}{0.3pt}    % Width of head rule
+\renewcommand{\footrulewidth}{0pt}    % Width of head rule
+\addtolength{\headheight}{0.5pt}
+\fancypagestyle{plain}{%
+   \fancyhead{} %
+\renewcommand{\headrulewidth}{0pt}    % Width of head rule
+}
+
+%%% Clear Header %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Clear Header Style on the Last Empty Odd pages
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else	%
+\hbox{}%
+\thispagestyle{empty}%
+								% Empty header styles
+\newpage%
+\if@twocolumn\hbox{}\newpage\fi\fi\fi} \makeatother
+
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+\newcommand{\proved}{\hfill$\Box$}
+\newcommand{\hb}{\stackrel{hb}{\rightarrow}}
+\newcommand{\nhb}{\stackrel{hb}{\nrightarrow}}
+
+\newcommand{\AlgoFont}[1]{\fontencoding{T1} \fontfamily{cmr} \fontseries{m} \fontshape{n} \fontsize{#1}{#1} \selectfont}
+

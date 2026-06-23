@@ -1,0 +1,20 @@
+\chapter*{Abstract}
+{\LARGE T}he earlier geometrical theory of diffraction (GTD) approach to the H-plane horn radiation problem is reconsidered with spherical source excitation. Corner diffraction terms are included to provide a GTD model for the finiteness of the horn edges. A new heuristic corner slope diffraction (CSD) coefficient for a finite edge in a conducting plane is presented. The H-plane horn pattern, obtained with the addition of the corner diffraction and the new CSD terms to the earlier infinite edge GTD approach, is found to be in better agreement with measured and finite-difference time domain (FDTD) predicted results compared to earlier GTD formulations. Further analysis of the horn radiation pattern in the E-plane and diagonal planes of the horn has been carried out using finite edge GTD. The results obtained are compared with available measurements and/or with computed FDTD prediction. Finite edge GTD and FDTD techniques are also applied to the problem of scattering by Sikta\rq s triangle and results obtained compared with measured and available earlier theoretical predictions of radar cross section (RCS).
+
+
+Electromagnetic (EM) field measurement uses antenna in receiving mode as EM field sensor (EMFS). The problem of characterizing horn antennas for EMFS applications is considered. Pyramidal horn antenna in receiving mode is analyzed using FDTD and its antenna factor (AF) obtained. Further, available GTD results for on axis pyramidal horn gain has been used to also obtain its AF. Theoretical results have been compared with measurements. New empirical formula for quick calculations of AF of pyramidal horns is also presented. Also, the gains of horn antennas are computed in the receiving mode using FDTD technique and the results are compared with the published measured results.
+
+
+
+\vspace*{0.185cm}
+\noindent
+{\large{\textbf{\emph{Keywords:}}}}~antenna factor (AF), antenna in receiving mode, corner diffraction, corner slope diffraction, diagonal plane horn radiation pattern, E-plane horn radiation pattern, electromagnetic field sensor (EMFS), finite difference time domain (FDTD), finite edge geometrical theory of diffraction (FEGTD), geometrical theory of diffraction (GTD), H-plane horn radiation pattern, radar cross section (RCS), Sikta\rq s triangle, scattered field, uniform asymptotic theory (UAT), uniform theory of diffraction (UTD).
+ 
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+\graphicspath{{/home/maifuzali/LaTex/Figure/gtd_utd/eps/}{/home/maifuzali/LaTex/Figure/gtd_utd/eps/}}
+\subsection{A Brief Review of Three Modern Geometrical Theory of Diffraction}\label{LR_Three_GTD}\index{GTD}
+These are high frequency asymptotic techniques. They were developed as direct solutions to practical (radiation and scattering) boundary value problems for Maxwell\rq s equations. The basic assumption in all these techniques is that at high frequency, that is as $k\rightarrow\infty$ (k=wave number), diffraction is a locally determined phenomenon. This implies that the diffracted field is determined by the local properties of the incidence field and the diffracting obstacle at the point of diffraction. Based on this assumption is the idea of \lq canonical\rq~problems that are simpler problems having the same local features as the problems under consideration and possible having an exact solution. These techniques have been based on the asymptotic expansion of the exact solution to certain canonical problems. When applied to more complex situations they give asymptotic solutions that are in general approximate.
+
+All these theories have in common individual \lq Ansatz\rq~based on Sommerfeld\rq s classic solution to the problem of plane wave diffraction by a half-plane \cite{Sommerfeld_Math_Theorie_Diffraktion}, \cite{Boersma_a_simple_solution_of_Sommerfelds_half_plane_diffraction_problem}.
+
+
+
+\subsubsection{Sommerfeld\rq s Solution}\label{LR_Sommerfeld_Solution}\index{Sommerfeld\rq s solution}
+Consider a plane wave $u^i\left(r,\phi\right)$ incident at an angle $\phi'$ on an infinitely conducting half-plane at $x\le,~y=0$ (Fig.~\ref{Fig:plane_wave_diff_half_plne_1}). The incident field is decomposed into E-polarized and H-polarized parts. The total field obtained by Sommerfeld is of the form:
+\begin{align}\label{ltsr_Sommerfeld_eq}
+u^t\left(r,\phi\right)=U\left(r,\phi\right)+R~U\left(r,4\pi-\phi\right)
+\end{align}
+Here $R=-1 (+1)$, when the incident field has E-field (H-field) parallel to the edge at $x=0,~y=0$. The wave function $U\left(r,\phi\right)$ is double valued and of period $4\pi$. The first term $U\left(r,\phi\right)$ in (\ref{ltsr_Sommerfeld_eq}) is the contribution due to the incident wave, while the second term $U\left(r,4\pi-\phi\right)$ is that of the reflected wave.
+\begin{figure}[h!]
+\begin{center}
+\centerline{\includegraphics[height=!,width=5.50 in]{plane_wave_diff_half_plne_1}}
+\caption{\label{Fig:plane_wave_diff_half_plne_1}Plane wave diffraction by a half-plane.}
+\end{center}
+\end{figure}
+
+
+
+
+\subsubsection{Keller\rq s GTD}\label{LR_Keller_CTD}\index{GTD}
+Upto this point all the \lq Ansatz\rq~are in agreement with (\ref{ltsr_Sommerfeld_eq}) . Now they begin to differ. The difference being in the way the function $U\left(r,\phi\right)$ is asymptotically evaluated. The first of these, the now classic Keller\rq s GTD \cite{Keller_gtd} gives 
+\begin{subequations}\label{ltsr_Keller_gtd}
+\begin{align}
+&U\left(r,\phi\right)=u^i\left(r,\phi\right)+u^{di}\left(r,\phi\right)+0\left(k^{-3/2}\right)\label{ltsr_Keller_gtd_1}\\
+\text{and}~~~~~~~~~~~~~~~~~~~~~~~~~~~&\nonumber\\
+&R~U\left(r,4\pi-\phi\right)=u^r\left(r,\phi\right)+u^{dr}\left(r,\phi\right)+0\left(k^{-3/2}\right)\label{ltsr_Keller_gtd_2}
+\end{align}
+\end{subequations}
+Here the superscript $i(r)$ indicates the contribution associated with the incident (reflected) field. Thus $u^i\left(r,\phi\right)$~/~$u^r\left(r,\phi\right)$ are the GO incident/reflected in their respective lit regions (Fig.~\ref{Fig:plane_wave_diff_half_plne_1}). They vanish in their respective shadow regions. The terms $u^{di}\left(r,\phi\right)$~/~$u^{dr}\left(r,\phi\right)$ are the contributions to the diffracted field associated with the incident / reflected wave. The sum of $u^{di}\left(r,\phi\right)$ and $u^{dr}\left(r,\phi\right)$ gives the total diffracted field. In fact, the Keller\rq s diffraction coefficient is obtained from this sum. This sum can be written as the product of  
+\begin{enumerate}[(i)]
+\item the incident field value at the diffracting edge,
+\item a phase and divergence factor,
+\item the diffraction coefficient.
+\end{enumerate}
+
+Keller\rq s GTD, often referred to simply as GTD, is the simplest among all the geometrical theories of diffraction. It provides a physical picture of the diffraction phenomenon, and has proved its practical utility. However, at and near the shadow boundary (SB) and the reflection shadow boundary (RB), it blows up. This is due to the presence of singularity in the terms $u^{di}\left(r,\phi\right)$ at the SB and in $u^{dr}\left(r,\phi\right)$ at the RB respectively. Further, Kellers\rq s GTD predicts infinite fields at the edge and at other caustics.
+
+The later geometrical theories of diffraction attempt to rectify some of these defects.
+
+
+\subsubsection{The Uniform Asymptotic Theory of Diffraction (UAT)}\label{LR_UAT}\index{UAT}
+The uniform asymptotic theory of diffraction (UAT) \cite{Boersma_UAT_plane_screen}, \cite{Boersma_uat}, \cite{Lee_uat_curved_wedge} overcome some of the deficiencies in Keller\rq s GTD. It does this by first modifying the GO term in (\ref{ltsr_Keller_gtd}). The UAT expresses the GO field as a product of the original Keller\rq s GO term and a term made up of the difference between a Fresnel integral expression and a series function $\widehat{F}$. The series $\widehat{F}$ is the same as that obtained by the asymptotic expansion of the Fresnel integral.
+
+The UAT diffracted field is obtained by applying to the total field, the edge condition, namely, the edge does not radiate. At the SB/RB the singularities of the diffracted field cancels out with those of the function $\widehat{F}$. Consequently, the UAT total field remains finite at and near the SB/RB.
+
+The UAT solution also provides in a systematic manner terms higher in order than in (\ref{ltsr_Keller_gtd}). The same UAT formulations remain uniformly valid in all regions of space. However at the SB/RB a rearrangement of the UAT expression is necessary for numerical computation purpose \cite{Rahmat_Mittra_Spectral_analysis_of_diffraction_Comparison_asymptotic_techniques}.
+
+
+\subsubsection{Uniform Theory of Diffraction (UTD)}\label{LR_UTD}\index{UTD} 
+The other leading theory, uniform theory of diffraction (UTD) \cite{Pathak_utd}, \cite{Kouyoumjian_UTD_perfectly_con_edge}, \cite{Hwang_dyadic_slope_diffraction_coefficient} avoids the singularities in Keller\rq s GTD at the shadow boundaries by modifying only the diffracted field term in (\ref{ltsr_Keller_gtd}). This it does by obtaining the diffraction coefficient in terms of the Fresnel integral.
+
+The UTD and its modified slope diffraction extension \cite{Kouyoumjian_UTD_perfectly_con_edge}, \cite{Hwang_dyadic_slope_diffraction_coefficient}, \cite{Cashman_Comments_UTD} provide terms upto an order $k^{-3/2}$. The UTD has become popular with workers in this field, probably because of the ease of application. 
+
+\subsubsection{Failure at the Caustics}\label{LR_Failure_Caustics}\index{Caustics} 
+Though both the parallel leading theories, the UAT and the UTD overcome the defects of Keller\rq s GTD at the incidence and reflection shadow boundaries, the difficulties at and near the caustic (the focal plane or the focal point as the case may be) continue to remain. A ray theory is in general incapable of predicting finite fields at the caustics. In this sense, these theories are not truly \lq uniform\rq. However, the prediction of the caustic fields can be made by: the equivalent edge current method \cite{Ryan_Evaluation_edge_diffracted_fields_equivalent_currents}, the physical optics method \cite{Ruck_Radar_Handbook} and also by the physical and the spectral theories of diffraction \cite{Ufimtsev_Method_edge_wave_PTD}, \cite{Shung_Wu_Lee_Comparison_of_uat}, \cite{Mittra_sd_analysis_high_frequency_diffraction}.
+
+
+
+
+
+
+
+
+
+
+

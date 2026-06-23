@@ -1,0 +1,18 @@
+%-------------------- 1st Block ----------------------------
+\usepackage[dvips,
+                 bookmarks,
+                 bookmarksopen = true,
+                 bookmarksnumbered = true,
+                 breaklinks = true,
+                 linktocpage,
+                 backref,
+                 colorlinks = true,
+                 linkcolor = monochrome,%black,
+                 urlcolor  = monochrome,%black,
+                 citecolor = monochrome,%black,
+                 anchorcolor = monochrome,%black,
+                 hyperindex = true,
+                 hyperfigures
+                 ]{hyperref} % added by Sandipan
+%
+%\usepackage{backrefx}% added by Sandipan

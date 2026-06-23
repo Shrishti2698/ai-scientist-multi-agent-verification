@@ -1,0 +1,31 @@
+The finite difference time domain (FDTD) method has exploded
+in popularity in recent years as illustrated by the steady
+increase in conference presentations and journal articles. FDTD
+is a popular method because it is simple, efficient, robust, and
+highly accurate, and it easily treats general time domain excitations
+and objects with complicated shape and/or material composition.
+
+
+
+
+Several authors have recently applied the FDTD method to antenna radiation problems. Reineh and Jecko [ I ] analyzed radiation from a microstrip patch antenna using a general timedependent wave form. Their results were presented as a spatial distribution of current on the radiating element, input impedance versus frequency, and normalized radiation pattems. Maloney and Smith [2] analyzed radiation from circularly symmetric wire and conical monopole antennas in two dimensions using a
+general time-dependent wave form. Their results were in the form of time domain far-zone radiation and input admittance versus frequency. Tirkas and Balanis [3] and Katz et aE. [41
+analyzed radiation from rectangular waveguides and pyramidal
+horn antennas in two and three dimensions using sinusoidal
+excitation and the contour path FDTD method [5]. Results from
+these analyses were also presented as normalized radiation
+patterns. Luebbers and Beggs [61 have shown wideband absolute
+gain and efficiency computations for dipole antennas. To the
+authors' knowledge, no previously published work exists regarding
+the application of the FDTD method to radiation from
+circular waveguides and/or circular antenna structures. More
+importantly, absolute gain computations have not been shown in
+FDTD analyses of shaped-end radiators.
+
+This communication presents the application of the FDTD
+method to the analysis of electromagnetic radiation from circular
+waveguides and other "shaped-end radiators" (SERs or
+Vlasov radiator). A straight-cut circular waveguide and two
+separate SERs are analyzed using a sinusoidal wave form.
+Absolute gain versus angle is presented for all three cases and
+data are compared against measured data.

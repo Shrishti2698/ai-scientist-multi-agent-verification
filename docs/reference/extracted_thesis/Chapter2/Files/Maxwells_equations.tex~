@@ -1,0 +1,88 @@
+\section{Maxwell\rq s Equations in Three Dimensions}\label{Maxwells_equations}
+The differential form of Maxwell\rq s equations and constitutive relations \cite{Taflove_book_00} can be written as:\index{Maxwell\rq s equations}\\
+%\begin{itemize}%{enumerate}%[a.]
+%\item
+	Faraday\rq s law:
+\begin{eqnarray}\label{Faraday_eqn}
+\bigtriangledown\times \overrightarrow{E}=-\frac{\partial \overrightarrow{B}}{\partial t}-\sigma_m\overrightarrow{H}-\overrightarrow{M}
+\end{eqnarray}
+%\item
+	Ampere\rq s Law:
+\begin{eqnarray}\label{Ampere_eqn}
+\bigtriangledown\times \overrightarrow{H}=\frac{\partial \overrightarrow{D}}{\partial t}+\sigma_e\overrightarrow{E}+\overrightarrow{J}
+\end{eqnarray}
+%\item
+	Gauss\rq s Law for the electric field:
+	\begin{eqnarray}\label{Gauses_ef_eqn}
+\bigtriangledown\cdot \overrightarrow{D}=\rho_e
+\end{eqnarray}
+%\item
+	Gauss\rq s Law for the magnetic field:
+	\begin{eqnarray}\label{Gauses_mf_eqn}
+\bigtriangledown\cdot \overrightarrow{B}=\rho_m
+\end{eqnarray}
+%\item
+	Constitutive relations:
+\begin{subequations}
+\begin{eqnarray}\label{Consti_rela}
+\overrightarrow{B}=\mu\overrightarrow{H} \label{Consti_rela_BH}\\
+\overrightarrow{D}=\varepsilon\overrightarrow{E} \label{Consti_rela_DE}
+\end{eqnarray}
+\end{subequations}
+%\end{itemize}
+
+%When we substitute (\ref{Consti_rela_BH}) and (\ref{Consti_rela_DE}) into (\ref{Faraday_eqn}) and (\ref{Ampere_eqn}), this yields Maxwell\rq s curl equations in linear, isotropic, nondispersive, lossy materials:
+%\begin{eqnarray}\label{Faraday_eqn2}
+%\mu\frac{\partial \overrightarrow{H}}{\partial t}=-\bigtriangledown\times \overrightarrow{E}-\sigma_m\overrightarrow{H}-\overrightarrow{M}
+%\end{eqnarray}
+%\begin{eqnarray}\label{Ampere_eqn2}
+%\varepsilon\frac{\partial \overrightarrow{E}}{\partial t}=\bigtriangledown\times \overrightarrow{H}-\sigma_e\overrightarrow{E}-\overrightarrow{J}
+%\end{eqnarray}
+In case of electromagnetic phenomenon in free space, or more general, in a perfect dielectric containing no charge and no conduction current, the field equations \cite{Jordan_book_95} become  
+\begin{subequations}
+\begin{eqnarray}\label{max_eqn_free}
+\bigtriangledown\times \overrightarrow{H}&=&\frac{\partial \overrightarrow{D}}{\partial t}\label{me_1}\\
+\bigtriangledown\times \overrightarrow{E}&=&-\frac{\partial \overrightarrow{B}}{\partial t}\label{me_2}\\
+\bigtriangledown\cdot \overrightarrow{D}&=&0\label{me_3}\\
+\bigtriangledown\cdot \overrightarrow{B}&=&0\label{me_4}
+\end{eqnarray}
+\end{subequations}
+Substituting (\ref{Consti_rela_BH}) and (\ref{Consti_rela_DE}) into (\ref{me_1}) and (\ref{me_1}), the Maxwell\rq s curl equations become 
+\begin{eqnarray}\label{Faraday_eqn2}
+\mu\frac{\partial \overrightarrow{H}}{\partial t}=-\bigtriangledown\times \overrightarrow{E}
+\end{eqnarray}
+\begin{eqnarray}\label{Ampere_eqn2}
+\varepsilon\frac{\partial \overrightarrow{E}}{\partial t}=\bigtriangledown\times \overrightarrow{H}
+\end{eqnarray}
+%We know, the curl symbol $\bigtriangledown \times F$ means:
+%\begin{eqnarray}\label{Curl_eqn}
+%curl~F=\bigtriangledown \times F=\widehat{x}(\frac{\partial F_z}{\partial y}-\frac{\partial F_y}{\partial z})+\widehat{y}(\frac{\partial F_x}{\partial z}-\frac{\partial F_z}{\partial x})+\widehat{z}(\frac{\partial F_y}{\partial x}-\frac{\partial F_x}{\partial y})
+%\end{eqnarray}
+In rectangular coordinates, (\ref{Faraday_eqn2}) and (\ref{Ampere_eqn2}) can be written as
+\begin{subequations}\label{Faraday_eqn3}
+\begin{eqnarray}
+\mu\frac{\partial H_x}{\partial t}=\frac{\partial E_y}{\partial z}-\frac{\partial E_z}{\partial y}\label{FE_3a}\\
+\mu\frac{\partial H_y}{\partial t}=\frac{\partial E_z}{\partial x}-\frac{\partial E_x}{\partial z}\label{FE_3b}\\
+\mu\frac{\partial H_z}{\partial t}=\frac{\partial E_x}{\partial y}-\frac{\partial E_y}{\partial x}\label{FE_3c}
+\end{eqnarray}
+\end{subequations}
+\begin{subequations}\label{Ampere_eqn3}
+\begin{eqnarray}
+\epsilon\frac{\partial E_x}{\partial t}=\frac{\partial H_z}{\partial y}-\frac{\partial H_y}{\partial z}\label{AE_3a}\\
+\epsilon\frac{\partial E_y}{\partial t}=\frac{\partial H_x}{\partial z}-\frac{\partial H_z}{\partial x}\label{AE_3b}\\
+\epsilon\frac{\partial E_z}{\partial t}=\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\label{AE_3c}
+\end{eqnarray}
+\end{subequations}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+\section{Frequency Domain Output}\index{Fourier transformation}\index{FDTD!frequency domain output}
+A very narrow Gaussian pulse is a good approximation to an impulse. The FDTD program will continue until the pulse has died out, and Fourier transform of the field will be taken in the slab. If the Fourier transform of the field at a point is known then the amplitude and phase of the field that would result from illumination by sinusoidal source can also be known. The Fourier transform of the $E$ field $E\left(t\right)$ at a frequency $f_1$ is given by \cite{Sullivan_book_00}
+\be\label{Frequency_transformation_1}
+E\left(f_1\right)=\int_o^{t_T}E\left(t\right)~ e^{-j2\pi f_1t}dt
+\ee
+As in \cite{Sullivan_book_00} the FDTD program treats all functions as causal and we set the lower limit of the integral as zero. The upper limit of the integral is given by the time (tT) at which the FDTD interaction is terminated. In the finite difference form, (\ref{Frequency_transformation_1}) can be written as
+\be\label{Frequency_transformation_2}
+E\left(f_1\right)=\sum_{n=0}^T E\left(n\bigtriangleup t\right)~e^{-j2\pi f_1\left(n\bigtriangleup t\right)}
+\ee
+where, $T$ is the number of iterations and $\bigtriangleup t$ is the time step, so~$t_T=T\bigtriangleup t$. 
+
+
+

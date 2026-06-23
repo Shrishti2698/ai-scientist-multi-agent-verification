@@ -1,0 +1,49 @@
+{
+  "papers": [
+    {
+      "paper_id": "P6",
+      "title": "Critic-Guided Verification Loops for Research Assistants",
+      "abstract": "Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains. Critic feedback reduces overconfident reporting in ambiguous cases. The approach does not eliminate all factual errors, but it improves transparency.",
+      "year": 2025,
+      "authors": [
+        "S. Iyer",
+        "D. Patel"
+      ],
+      "topics": [
+        "critic agent",
+        "verification loops",
+        "research assistants"
+      ]
+    },
+    {
+      "paper_id": "MULTI_AGENT_REASONING",
+      "title": "Multi-Agent Debate for Evidence-Sensitive Reasoning",
+      "abstract": "A multi-agent reasoning pipeline improves evidence coverage by assigning separate roles for retrieval, critique, and synthesis. The system achieves more consistent justifications than a single-agent baseline on knowledge-intensive tasks. The gains are limited when the evidence corpus is sparse.",
+      "year": 2024,
+      "authors": [
+        "J. Malik",
+        "T. Howard"
+      ],
+      "topics": [
+        "multi-agent",
+        "reasoning",
+        "evidence synthesis"
+      ]
+    },
+    {
+      "paper_id": "RAG_GROUNDING",
+      "title": "Retrieval-Augmented Language Models for Factual Grounding",
+      "abstract": "This study shows that retrieval-augmented generation improves factual grounding in large language models. The approach reduces unsupported statements when relevant documents are retrieved at inference time. However, performance depends heavily on retriever quality and corpus coverage.",
+      "year": 2024,
+      "authors": [
+        "A. Verma",
+        "L. Chen"
+      ],
+      "topics": [
+        "rag",
+        "hallucination",
+        "language models"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Title: Multi-Agent Debate for Evidence-Sensitive Reasoning
+Year: 2024
+Authors: J. Malik, T. Howard
+Topics: multi-agent, reasoning, evidence synthesis
+
+Abstract: A multi-agent reasoning pipeline improves evidence coverage by assigning separate roles for retrieval, critique, and synthesis. The system achieves more consistent justifications than a single-agent baseline on knowledge-intensive tasks. The gains are limited when the evidence corpus is sparse.
+

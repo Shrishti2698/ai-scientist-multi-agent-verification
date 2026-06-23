@@ -1,0 +1,23 @@
+\section{The Absorbing Boundary Condition}\label{abc}\index{FDTD!absorbing boundary condition}\index{FDTD!perfect matched layer}
+%Absorbing boundary conditions are necessary to keep outgoing ${\overrightarrow E}$ and ${\overrightarrow H}$ field being reflected back into the problem space. Normally, in calculating the ${\overrightarrow E}$ field, we need to know the surrounding ${\overrightarrow H}$ values; this is a fundamental assumption of FDTD technique. At the edge of the problem space we will not have the value to one side. However, we have an advantage because we know there are no sources outside the problem space. Therefore, the field at the edge must be propagating outward. We will use these two faces to estimate the value at the end by using the value next to it \cite{Sullivan_book_00}.
+
+%The absorbing boundary conditions (ABC\rq s) are essential to terminate the computational space when the finite-difference time-domain(FDTD) technique is applied to analyze electromagnetic (EM) problems. With the ABC\rq s, the fields on the truncated boundaries are evaluated by the interior fields.
+
+
+
+
+The finite-difference time-domain (FDTD) technique is a full-wave approach for the analysis of electromagnetic (EM) problems \cite{lee_Algorithm}. When the FDTD technique is used to solve open-structure EM problems such as scattering, antenna, and discontinuity problems, absorbing boundary conditions (ABC\rq s) are required to terminate the meshes. Investigators have paid much attention to the application and improvement of ABC\rq s during the last several decades. There are two popular ways used to construct the ABC\rq s, one is the usage of outgoing wave equations, another is the employment of nonphysical absorbing media. Engquist and Majda \cite{Engquist_ABC_for_numerical_simulation_waves} first used the outgoing wave equations to construct ABC\rq s, and Mur \cite{Mur_ABC_for_FDTD} improved them and presented the widely used Mur\rq s ABC\rq s. Mur\rq s ABC\rq s can adequately absorb the outgoing waves that are incident perpendicular to the truncated boundaries. However, when the incident angles of the outgoing waves increase, the absorbing performance of the Mur\rq s ABC\rq s rapidly becomes worse. The dispersive boundary conditions developed by Bi \cite{Bi_ABC_FDTD} and improved by Zhao et al. \cite{Zhao_ABC_FDTD} can adequately absorb the outgoing waves incident with several different angles. On the other hand, great development has been made on the usage of nonphysical absorbing media to truncate the FDTD meshes in the last few years. The perfect matched layer (PML) proposed by Berenger \cite{Berenger_PML} can perfectly absorb the scattered waves with the incident angle in a large range. This implementation requires the E and H fields to be split. Recently, Sacks et al. \cite{Sacks_pml} suggested a PML which did not require the computation of the individual and fields be split into two components and demonstrated on a finite element code. Zhao and Cangellaris \cite{Zhao_pml} formulated this into the FDTD technique and demonstrated it in a two-dimensional FDTD code. 
+
+In this work, a three-dimensional (3-D) unsplit step PML is implemented by following the theory of Sacks in a formulation similar to Zhao and Cangellaris. However, it varies in one important aspect: the PML is implemented using the magnetic field and the electrical displacement instead of the electric field , which makes the PML completely impervious to the background medium and completely separate from any \lq\lq real\rq\rq conductivity of the medium. Its accuracy and robustness were demonstrated \cite{Sullivan_book_00}, \cite{Sullivan_unsplit_3d_pml} in three-dimensional (3-D) problems with different background media. Unsplit step 3-D PML detailed in \cite{Sullivan_book_00}, \cite{Sullivan_unsplit_3d_pml}, \cite{Sullivan_simp_pml} is used in this work. Furthermore, this PML is implemented with no additional computational resources. 
+
+
+
+
+
+
+
+
+
+
+
+

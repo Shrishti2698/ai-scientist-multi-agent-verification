@@ -1,0 +1,21 @@
+%\pagestyle{empty} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{plain}
+%\begin{spacing}{1.4}
+\begin{center}
+\vspace*{2.5cm}
+{\huge \bf Analysis of H-plane Horn Radiation Pattern Using GTD and FDTD Technique and A Slope Corner Diffraction\\}
+\end{center}
+%\end{spacing}
+
+
+\vspace{11.0cm}
+\begin{flushright}
+%\begin{Large}
+\begin{Large}
+{\bf {Maifuz Ali}\noindent
+\vskip -.8\baselineskip
+\noindent
+\rule[-2.5 mm]{\textwidth}{3 pt}\\}
+%\end{Large}
+\end{Large}
+\end{flushright}

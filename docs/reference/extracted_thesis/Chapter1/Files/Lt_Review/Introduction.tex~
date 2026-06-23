@@ -1,0 +1,34 @@
+The horn antenna invented by Bose \cite{Emerson_work_of_Jagadis_Chandra_Bose} in the 1890\rq s is a good canonical problem as it has a broad range of low response in the backward direction \cite{Katz_FDTD_Analysis_Horn_Antennas}. Russo, Rudduck, and Peters applied geometrical theory of diffraction (GTD)\index{Horn radiation pattern!GTD} from \cite{Keller_gtd} to predict the far out sidelobes and backlobes of a horn antenna \cite{Russo_Rudduck_computing_E_plane}. They approximated the pyramidal horn by a dihedral corner reflector excited by a magnetic line source and then obtained its E-plane far field radiation pattern. A more  comprehensive analysis of the E plane radiation pattern of pyramidal horn was carried out by Yu, Rudduck, and Peters in \cite{Yu_Rudduck_E_plane}. Their analysis included the multiply reflected images and, as a result, they obtained continuous far field E-plane patterns at all angles. Further refinement in predicting the far out sidelobes ripples, better than 1dB at 35 dB below reference, in the E-plane radiation pattern was carried out by Sanyal and Bhattacharyya in \cite{Sanyal_Bhatt_E-plane_horn}.\index{Horn radiation pattern!UAT}\index{Horn radiation pattern!E-plane}  
+
+
+Keller\rq s GTD and parallel plate waveguide mode approximation was used by Yu to obtain the H-plane pattern in \cite{Rudduck_hp_horn}. The GTD prediction was in good agreement with measurements in the forward direction. In the back lobe direction it was shown that the E-edge contributions was significant at and around $180^\circ$. However, their remained wide differences in broad range of low response back lobe directions. For $\theta> 105^\circ$, better results in the average was obtained by taking into account the finite edge effect of the E-edges by equivalent current method. The dip at $180^\circ$ was conjectured to be caused by the detector mount used. These works were later followed by those of Mentzer, Peters and Rudduck who presented a new slope diffraction function for the half-plane valid through the shadow region \cite{Mentzer_s_diff}. Keller\rq s form of the slope diffraction\index{Slope diffraction} was extended as a slope diffraction function that is continuous across the shadow boundary. This slope diffraction function was cast in the form of a cylindrical slope function, which was used to represent the fields diffracted by an edge for a source placed on the conducting surface. Reciprocity was invoked to find the far-fields for a source on the surface of the conducting wedge. In addition, the equivalent current concept was extended to include equivalent slope currents for the analysis of either finite or curved edges. This form of the slope diffraction function was used to provide an H-plane horn pattern analysis. 
+
+
+%These concepts were used to evaluate the H-plane pattern of a horn antenna. With Keller\rq s plane wave slope diffraction coefficient, the results were found to generally agree with measurement except for the shadow boundary region. When the slope diffraction function was used in lieu of Keller\rq s slope diffraction coefficient the errors around the shadow boundary region were reduced. In addition to the fields of the geometrical optics ray and the fields of the H-edge diffracted rays, the fields of the E-edge diffracted rays were included in the H-plane pattern analysis for the main beam region and the back lobe region. Since these E-edges are finite in length, the equivalent current concepts were used to evaluate the fields near the principal back lobe. 
+
+
+%Both the slope equivalent current and the point diffraction were used to compute the H-plane patterns and the results compared with experimental results.
+
+%Procedures were outlined for using the concepts of edge diffraction to supplement or extend the conventional solution using some aperture integration process.
+
+It was shown that a hybrid approach could use the existing solutions (aperture integration) over the main beam region and the edge diffraction solutions over the remainder of the pattern. This generally gave good agreement with experiment for both the E- and H-plane patterns of horn antennas in the forward region and on the average in the low response backward region.
+
+This equivalent current concept prediction was shown to improve the pattern level with the average measured radiation in the broad range of low response backward region.\index{Horn radiation pattern!equivalent current concept}
+
+%This usage of the equivalent current concept was shown to improve the pattern level computation in the region far out sidelobe regions $120^\circ <\theta < 170^\circ$. However, the backward low response variation of the measured results remained unpredicted.
+
+It was conjectured in \cite{Mentzer_s_diff} that  \lq\lq The computed patterns may indeed be more accurate than the measured pattern because of the possible experimental errors such as leakage, reflections from feed, and mount structures, etc., for this low field level ($\approx 60$ dB below main beam maximum)\rq\rq. However, the results of \cite{Mentzer_s_diff} showed no significant improvement over those of \cite{Rudduck_hp_horn}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+\subsection{E-Plane Radiation Patten of Pyramidal Horn Antenna}\label{FDTD_results_E_Plane_Horn_Pattern}\index{E-plane horn radiation pattern!FDTD}\index{Horn radiation pattern!E-plane}\index{FDTD!E-plane horn radiation pattern}
+E-plane radiation patterns of pyramidal horn are computed using FDTD technique and compared with the available measured results in \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane} shown in Figs.~\ref{Fig:field_e_plane_balanis_normalished_both_color}. The FDTD predicted radiation patterns of the E-plane horn antennas are in good agreement with measured results at all angles.
+
+%\begin{figure}[tb!]
+%\begin{center}
+%\centerline{\includegraphics[scale=1.0]{field_e_plane_rudduk_normalished_both_color}}
+%\caption[E-plane radiation pattern of horn antenna using FDTD technique.]{\label{Fig:field_e_plane_rudduk_normalished_both_color}E-plane radiation pattern of horn antenna using FDTD technique.}
+%\end{center}
+%\end{figure}
+
+
+%\subsubsection{Horn-2}\label{Horn_Balanis_E_Plane}
+%E-plane radiation pattern of the second horn antenna is computed and compared with the measurement of \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane} shown in Fig.~\ref{Fig:field_e_plane_balanis_normalished_both_color}. The FDTD predicted radiation pattern of the E-plane horn antenna is in good agreement with measured results at all angles. 
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_e_plane_balanis_normalished_both_color}}
+\caption[E-plane radiation pattern of horn antenna using FDTD technique compared with the published measurement]{\label{Fig:field_e_plane_balanis_normalished_both_color}E-plane radiation pattern of horn antenna using FDTD technique compared with the measurement of \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane}.}
+\end{center}
+\end{figure}
+
+
+%\subsubsection{Horn-3}\label{Horn_Lab_Horn_1_E_Plane}
+%E-plane radiation pattern of the third horn antenna is computed and compared with the measurement shown in Fig.~\ref{Fig:field_e_plane_Lab_Horn_1_normalished_both_color}. The FDTD predicted radiation pattern of the E-plane horn antenna is in good agreement with measured results at all angles. 
+
+%\begin{figure}[tb!]
+%\begin{center}
+%\centerline{\includegraphics[scale=1.0]{field_e_plane_Lab_Horn_1_normalished_both_color}}
+%\caption[E-plane radiation pattern of horn antenna using FDTD technique compared with the published measurement]{\label{Fig:field_e_plane_Lab_Horn_1_normalished_both_color}E-plane radiation pattern of horn antenna using FDTD technique compared with the measurement.}
+%\end{center}
+%\end{figure}
+
+

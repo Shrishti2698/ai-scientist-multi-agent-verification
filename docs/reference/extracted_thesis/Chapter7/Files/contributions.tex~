@@ -1,0 +1,24 @@
+\section{Contributions Made by the Scholar}
+\begin{enumerate}[(i)]
+\item The H-plane horn radiation pattern has been obtained with spherical source excitation.
+\item A GTD approach that incorporates the finiteness of the horn edges has been used to obtain the H-plane horn radiation pattern.
+\item It has been shown that the finite edge GTD approach to the H-plane radiation predicts for the first time the dip at and near $180^\circ$ obtained earlier in the measured radiation pattern. It is therefore proved that this dip is not due to errors in measurements.
+\item A new CSD coefficient is heuristically obtained.
+\item Addition of this new CSD terms to the GTD predictions in (\ref{field_hp_slope_corner}) above is shown to further improve the GTD predictions of the H-plane radiation, especially in the broad range of LRB region.
+\item The FDTD approach has been used to obtain H-plane radiation pattern for both large and small aperture horns and results compared with available measurements and predictions obtained using our finite edge GTD approach.
+\item The finite edge GTD approach has been used to obtain E-plane radiation pattern of a pyramidal horn and results compared with earlier predictions and measurements. No significant improvement was found by the inclusion of corner diffractions.
+\item The finite edge GTD approach has been used to obtain diagonal plane radiation pattern of a pyramidal horn and results compared with predictions obtained using FDTD technique.
+\item Addition of our new CSD terms to the GTD predictions is shown to give predictions of the diagonal-plane radiation, that is in good agreement with FDTD predictions in all regions including the broad range of LRB region.
+\item Finite edge GTD and the FDTD technique has been used to analyze the scattering from Sikta\rq s triangle. 
+\item The finite edge GTD scattered field (suitably level adjusted) versus aspect angle were found to agree with the experimental RCS of Sikta\rq s triangle for both parallel and perpendicular to plane of incidence polarizations. 
+\item  The FDTD predictions of the E-plane RCS of Sikta\rq s triangle were obtained The FDTD gave absolute value of the RCS. There was no need for level adjustment. The agreement with measured RCS was found to be excellent at all these discrete angles
+\item The FDTD has been used for the first time to analyze horn antennas in receiving mode as EMFS.
+\item It has been demonstrated that pyramidal horns have low AF can be simulated using FDTD. 
+\item GTD has been applied to also obtain the pyramidal horn AF. GTD computed AF showed were found to agree with  measurements in lower microwave frequency region. 
+\item New empirical formulas for quick calculation of these AFs are also presented.
+\end{enumerate}
+
+
+
+
+

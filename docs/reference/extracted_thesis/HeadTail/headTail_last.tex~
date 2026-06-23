@@ -1,0 +1,27 @@
+\end{spacing}
+
+
+\renewcommand{\chaptername}{Appendix} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{spacing}{1.25}
+\begin{appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{Appendix/EMVQ} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\include{Appendix/Appen2} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% % Atention!!! Include other appendixes if using this by copying  Appen1.tex file in the 'Appendix' folder before changing it.
+\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{appendix}
+\end{spacing}
+%\renewcommand{\chaptername}{Chapter} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \addcontentsline{toc}{chapter}{Index} % added by Sandipan for registering 'Index' in the table of contents
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+    \printindex       % added by Sandipan for printing the index
+    \renewcommand{\chaptername}{Chapter}
+	\addcontentsline{toc}{chapter}{Publication}
+	\include{HeadTail/publication}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+	\begin{spacing}{1.25}
+    \addcontentsline{toc}{chapter}{Author's Biography}
+   \include{HeadTail/biodata}
+   \clearpage{\pagestyle{empty}\cleardoublepage}
+   \end{spacing}

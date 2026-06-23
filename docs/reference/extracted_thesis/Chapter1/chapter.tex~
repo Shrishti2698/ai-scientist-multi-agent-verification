@@ -1,0 +1,17 @@
+\chapter[Introduction]{Introduction}{Introduction}\label{Intro}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+This chapter content the Introduction of the thesis, review of literature and organization of the thesis
+\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+%\newpage
+
+\input{Intro/Files/intro}
+\input{Intro/Files/literature_review}
+\input{Intro/Files/organize}
+
+

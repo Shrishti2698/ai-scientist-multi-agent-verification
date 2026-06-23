@@ -1,0 +1,32 @@
+\chapter[Appendix \label{appen_L_correction}]{Correction on the distance parameters~$\left(L\right)$}{Correction on the distance parameters~$\left(L\right)$}\label{appen_L_correction}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+Appendix \ref{appen_Fresnal_Int} presents.\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+
+\textbf{Correction on the distance parameters~$\left(L\right)$:}\index{distance parameter!correction}\cite{Boersma_Rahmat}
+\graphicspath{{/home/maifuzali/LaTex/Figure/gtd_utd/eps/}{/home/maifuzali/LaTex/Figure/gtd_utd/eps/}}
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.4]{l_correction}
+    \caption{Geometry for $L$ Corrections.}
+    \label{fig:l_correction}
+  \end{center}
+\end{figure}
+Consider the notation the Fig.~\ref{fig:l_correction}. and from the Eqs.~(\ref{a_pera}), (\ref{n_pm}) \&\  (\ref{L_fact}) for cylindrical wave incident on half-plane ($n=2.0$) the function $F\left(X\right)$ of Eqn.~(\ref{fres}) \&\ (\ref{sfres})  have the argument 
+\be\label{L_correct_rah}
+ kLa\left(\phi\mp\phi'\right)&=&\frac{2ks\rho}{s+\rho}\sin^2{\frac{1}{2}\left(\Omega\mp\phi\right)}\nonumber\\
+&=&k\left(s+\rho-\rho_{i,r}\right)\frac{s+\rho+\rho_{i,r}}{2\left(s+\rho\right)}
+\ee
+in correct with the arguments $k\left(s+\rho-\rho_{i,r}\right)$. Note that the multiplicative factor in Eqn.~(\ref{L_correct_rah}) is equal to $1$ on the shadow boundaries $SB^{i,r}$.The argument of $F\left(X\right)$ become $k\left(s+\rho-\rho_{i,r}\right)$ for cylindrical wave and half plane case where $n=2$. %But if $n\neq 2i$ (where $i$ is any integer) it is very much difficult to deduce the argument in the form of Eqn.~(\ref{L_correct_rah}). The of argument $F\left(X\right)$ is taken in the form of
+%\be\label{L_correct_us}
+% kLa\left(\phi\mp\phi'\right)=kLa\left(\phi\mp\phi'\right)\frac{2\left(s+\rho\right)}{s+\rho+\rho_{i,r}}
+%\ee
+

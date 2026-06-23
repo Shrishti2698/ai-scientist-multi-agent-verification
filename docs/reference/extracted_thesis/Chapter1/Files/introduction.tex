@@ -1,0 +1,67 @@
+
+\section{Introduction}\label{thesis_introductions}
+
+% Remote photoplethysmography (rPPG) tracks subtle color variation from the human face to estimate  the blood flow and heart related parameters without any physical contact or sensors~\cite{9050507}.
+% We choose the rppg signal for its non-contact meausrement, cost effective and continuous monitoring.
+% By eliminating the need for physical sensors, rPPG has broad applications in healthcare, fitness monitoring, and affective 
+% computing, stress estimation, fatigue detection.
+% Devices that capture rPPG signals typically use standard RGB cameras or near-infrared cameras  etc.
+% 	- Measuring vital sign with RGB cameras is informative , they are 	 	 susceptible to image background , subject skin tone , subject motion  but 	fail to be imaged in low-light conditions.(help in BP,HR,RR,SpO2)
+% 	-NIR camera are able to image under low illumination conditions.(help in 	sleep research)
+% 	-Thermal imaging camera commonly used to measure temperature.(rapid 	infection screening in public places and human stress state).
+% 	-Multimodal imaging camera combines RGB, NIR, Thermal and Depth 	Camera.
+% and the objective of our proposed work is to detect stress,biometric identification , fatigue detection etc.
+% However, the accurate estimation of physiological signals in real-world conditions remains a challenge due to variations in lighting, skin tone, and motion artifacts.
+% To address these issues, a variety of signal processing methods have been developed. Among them, the CHROM and POS algorithms are widely used, as they leverage color information from facial regions to produce signals that correlate well with contact-based PPG (cPPG) signals~\cite{shahmirzadi2025hybrid}. Building on these foundations, recent work has focused on improving robustness under dynamic conditions. For instance, Cantrill et al.~\cite{cantrill2024orientation} proposed an approach using 3D facial surface geometry to construct orientation-conditioned facial texture representations, enhancing rPPG signal stability in motion-rich environments. Similarly, Das et al.~\cite{das2023time} introduced a Time-Frequency Learning (TFL) framework that combines 2D convolutional neural networks with scalogram-based features to capture the periodic nature of cardiovascular signals from RGB video traces.
+% Together, these advancements reflect the ongoing evolution of rPPG from basic signal extraction techniques to sophisticated deep learning models capable of robust performance in real-world settings.
+
+
+Remote photoplethysmography (rPPG) tracks subtle color variation from the human face to estimate  the blood flow and heart related parameters without any physical contact or sensors~\cite{9050507}.  
+We focus on rPPG because it enables \textbf{non‑contact, low‑cost, and continuous monitoring}, giving it wide appeal in healthcare, fitness, affective‑computing, stress‑assessment, and fatigue‑detection scenarios.
+
+%-------------------------------------------------
+\subsection{Data–acquisition modalities}
+
+%\subsubsection{Data--acquisition modalities}
+
+Remote photoplethysmography (rPPG) signals can be acquired using various camera modalities, each offering distinct advantages and limitations. \textbf{RGB cameras} are the most ubiquitous and cost-effective option. They provide rich color information that can be leveraged to estimate physiological parameters such as heart rate (HR), blood pressure (BP), respiration rate (RR), and blood oxygen saturation (SpO\textsubscript{2}). However, their performance can be affected by background clutter, variations in skin tone, motion artifacts, and low-light environments. \textbf{Near-infrared (NIR) cameras}, on the other hand, function effectively in low-light conditions and are less sensitive to ambient light changes. Nevertheless, they require dedicated sensors and lack color information, which may reduce their applicability in some contexts. \textbf{Thermal cameras} capture skin temperature patterns independently of visible light, making them valuable in scenarios such as fever screening and stress detection. Their drawbacks include higher cost and lower spatial resolution. Finally, \textbf{multimodal systems} that combine RGB, NIR, and thermal imaging aim to exploit the strengths of each individual modality, offering improved robustness in diverse conditions. However, these systems come with increased hardware complexity and cost. Typical applications of these modalities include mobile health monitoring, sleep research, fever detection, telemedicine, and driver-state assessment.
+
+
+
+
+%-------------------------------------------------
+\subsection{Research objective}
+
+The objective of this work is to develop rPPG‑based algorithms for
+\emph{stress detection, biometric identification, and fatigue assessment}
+that remain accurate under real‑world variations in illumination, skin pigmentation, and motion.
+
+%-------------------------------------------------
+\subsection{Methods to extract rPPG}
+
+Early colour–space methods such as \textsc{CHROM} and \textsc{POS} exploit spatiotemporal skin‑colour dynamics to generate signals closely matching contact‑based PPG (cPPG) waveforms~\cite{shahmirzadi2025hybrid}.  
+Recent research targets robustness in dynamic scenes:
+
+\begin{itemize}
+    \item \textbf{Orientation‑conditioned texture mapping:} Cantrill~\textit{et~al.} employ 3‑D facial geometry to stabilise rPPG extraction during head motion~\cite{cantrill2024orientation}.
+    \item \textbf{Time–Frequency Learning (TFL):} Das~\textit{et~al.} fuse scalogram features with 2‑D CNNs to capture the periodic cardiovascular signature in unconstrained RGB videos~\cite{das2023time}.
+\end{itemize}
+
+These advances trace the field’s progression from classical signal‑processing pipelines to deep‑learning frameworks capable of \textbf{robust, contact‑free physiological monitoring outside the laboratory}.
+
+
+
+\section{Organization of the Thesis}
+The rest part ot the thesis is organized in the following manner:
+
+%\textbf{Chapter 1} provides a foundational overview of remote photoplethysmography (rPPG) signals, including their definition, the types of devices used for video acquisition, various signal extraction techniques, and key application areas such as stress estimation and biometric identification.
+
+\textbf{Chapter 2} presents a detailed account of Study 1, which focuses on non-contact stress assessment using deep tabular methods. It includes a review of relevant literature, the proposed methodology, architectural details,   experimental details and  the results.
+
+\textbf{Chapter 3}  provides a detailed explanation of Study 2, which investigates the use of rPPG signals as a potential biometric identifier or not.
+
+\textbf{Chapter 4}  Present the conclusion of both our studies along with their respective future scopes.
+
+% \textbf{Chapter 4} presents the experimental outcomes of our proposed model for detecting deepfakes, along with tabular and graphical representations of the results.
+
+% \textbf{Chapter 5} concludes the findings of our proposed hybrid models and their superior performance in deepfake detection. It also outlines future avenues for research in the domain of deepfake detection.

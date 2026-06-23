@@ -1,0 +1,55 @@
+$\phi'$ derivative of Fresnel Integral $F\left(X\right)$ is $F'\left(X\right)$ given by
+\be\label{d_fres_int_appendix_1}
+\frac{\partial F\left(X\right)}{\partial\phi'}&=&\frac{\partial}{\partial X}\left\{2j\sqrt{X}\exp{\left(jX\right)}\int^\infty_{\sqrt{X}}\exp{\left(-j\tau^2\right)d\tau} \right\}\times\frac{\partial X}{\partial \phi'}\nonumber\\
+&=&2j\left[\left(\frac{e^{jX}}{2\sqrt{X}}+j\sqrt{X}e^{jX}\right)\int^\infty_{\sqrt{X}}e^{-j\tau^2}d\tau\right.\nonumber\\
+&&+\left.\sqrt{X}e^{jX}\frac{\partial}{\partial X}\left(\int^\infty_{\sqrt{X}}\exp{\left(-j\tau^2\right)d\tau}\right)\right]\times\frac{\partial X}{\partial \phi'}\nonumber\\
+&=&2j\left[e^{jX}\sqrt{X}\left(\frac{1+2jX}{2X}\right)\int^\infty_{\sqrt{X}}e^{-j\tau^2}d\tau\right.+\left.\sqrt{X}e^{jX}\left(-\frac{e^{-jX}}{2\sqrt{X}}\right)\right]\times\frac{\partial X}{\partial \phi'}\nonumber\\
+&=&\left[\left(\frac{1+2jX}{2X}\right) 2j\sqrt{X}e^{jX}\int^\infty_{\sqrt{X}}e^{-j\tau^2}d\tau-j\right]\times\frac{\partial X}{\partial \phi'}\nonumber\\
+&=&\left[\left(\frac{1+2jX}{2X}\right) F\left(X\right)-j\right]\times\frac{\partial X}{\partial \phi'}
+\end{eqnarray}
+Let, function $X$ is of the form of \cite{Burnside_tip_diffraction} 
+\begin{eqnarray}\label{a:x_1}
+X=\frac{La^\pm\left(\beta\right)/\lambda}{kL_ca\left(\pi+\beta_{oc}-\beta_c\right)}
+\end{eqnarray}
+where,
+\begin{eqnarray}\label{a:beta}
+\beta=\phi\pm\phi'
+\end{eqnarray}
+Differentiating Eqn.~(\ref{a:x_1}) with respact to $\phi'$
+\begin{eqnarray}\label{a:xd_1}
+\frac{\partial X}{\partial \phi'}=\frac{L/\lambda}{kL_ca\left(\pi+\beta_{oc}-\beta_c\right)}\times\frac{\partial a^+\left(\beta\right)}{\partial \phi'}
+\end{eqnarray}
+where, $a^\pm\left(\beta\right)$ is given \cite{Pathak_utd}
+\begin{eqnarray}\label{a:ap}
+a^\pm\left(\beta\right)=2\cos^2\left(\frac{2n\pi N^\pm-\beta}{2}\right)
+\end{eqnarray}
+\begin{eqnarray}\label{a:adp}
+\frac{\partial a^\pm\left(\beta\right)}{\partial \phi'}&=&\frac{\partial}{\partial \beta}\left\{2\cos^2\left(\frac{2n\pi N^\pm-\beta}{2}\right)\right\}\frac{\partial\beta}{\partial\phi'}\nonumber\\
+&=&-2\cos\left(\frac{2n\pi N^\pm-\beta}{2}\right)\sin\left(\frac{2n\pi N^\pm-\beta}{2}\right)\left(\frac{-1}{2}\right)\frac{\partial\beta}{\partial\phi'}\nonumber\\
+&=&\frac{1}{2}\sin\left(2n\pi N^\pm-\beta\right)\frac{\partial\beta}{\partial\phi'}
+\end{eqnarray}
+From Eqn.~(\ref{a:xd_1}),
+\begin{eqnarray}\label{a:xd_2}
+\frac{\partial X}{\partial \phi'}&=&\frac{L/\lambda}{kL_ca\left(\pi+\beta_{oc}-\beta_c\right)}\times\frac{1}{2}\sin\left(2n\pi N^\pm-\beta\right)\frac{\partial\beta}{\partial\phi'}\nonumber\\
+&=&\frac{(L/\lambda)\sin\left(2n\pi N^\pm-\beta\right)}{2kL_ca\left(\pi+\beta_{oc}-\beta_c\right)}\frac{\partial\beta}{\partial\phi'}
+\end{eqnarray}
+$N^+$, $N^-$ each have two values given in \cite{Pathak_utd}. Lis the distance parameter and $n$ is wedge angle. From Eqns.~(\ref{d_fres_int_appendix_1})~$\&$~(\ref{a:xd_2}) we can write,
+\begin{eqnarray}\label{a:fx_1d}
+\frac{\partial F\left(X\right)}{\partial \phi'}=\left(\left(\frac{1+2jX}{2X}\right) F\left(X\right)-j\right)\left(\frac{L/\lambda\sin\left(2n\pi N^\pm-\beta\right)}{2kL_ca\left(\pi+\beta_{oc}-\beta_c\right)}\right)\frac{\partial\beta}{\partial\phi'}
+\end{eqnarray}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

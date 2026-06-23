@@ -1,0 +1,56 @@
+%\section{Summary of the Work}
+%{\LARGE T}
+
+
+\section{Conclusions}
+{\LARGE T}he computed H-plane horn radiation pattern using (\ref{field_hp_ray_trac_sec_cor}) and (\ref{field_hp_slope_corner}) were compared with experimental results available elsewhere and shown in Figs.~\ref{Fig:h_plane_only_slope_e_plane_2_cor_rudduck_normalished_color}, \ref{Fig:h_plane_slope_e_plane_2_cor_slope_corrudduck_normalished_color} and \ref{Fig:h_plane_only_utd_balanis_normalished_color}. Again, H-plane radiation pattern of a different aperture sized horn was computed using (\ref{field_hp_slope_corner}) and compared with measured results in Fig.~\ref{Fig:field_h_plane_ane_3_2_normalished_color}.
+
+The presence of the dip at $180^\circ$ is predicted in Figs.~\ref{Fig:h_plane_only_slope_e_plane_2_cor_rudduck_normalished_color} and \ref{Fig:h_plane_slope_e_plane_2_cor_slope_corrudduck_normalished_color} unlike in \cite{Rudduck_hp_horn} and \cite{Mentzer_s_diff}. This dip is a consequence of the corner diffraction caused by the incidence of skewed E-edge diffracted rays on the opposite corner. The inclusion of the new CSD terms in (\ref{field_hp_slope_corner}) further improves the prediction compared to (\ref{field_hp_ray_trac_sec_cor}) especially in the LRB region within $60^\circ$ and $140^\circ$. Except for a small region of $\theta$ lying between $130^\circ$ and $150^\circ$, positions of most of the peaks and nulls in the measured pattern are predicted by computation made using (\ref{field_hp_slope_corner}). The corner diffraction augmented GTD approach shows significant improvement in agreement with measured results compared to the extended equivalent edge current method of \cite{Mentzer_s_diff}. Thus the conjecture in \cite{Mentzer_s_diff} that the equivalent edge current method prediction are more accurate than the measured pattern because of the possible experimental error such as leakage, reflection from feed and mount structure etc. may not be completely true.
+
+
+For the small aperture horn in Fig.~\ref{Fig:h_plane_only_utd_balanis_normalished_color}, for $\theta<125^\circ$ both FDTD and present approach gave essentially the same agreement with measurement. However, for $\theta>125^\circ$ the FDTD prediction shows better agreement near the baclobe region at $180^\circ$.
+
+
+
+Theoretical computation of the E-plane pattern of the horn using uniform asymptotic theory (UAT) of diffraction approach of \cite{Sanyal_Bhatt_E-plane_horn}, \cite{S_Sanyal_thesis} was performed. Skewed ray that result in corner diffraction was introduced and augmented E-plane horn radiation were also computed. However, corner diffraction was found to have no significant influence on the E-plane horn radiation pattern. The corner diffracted field were found to be less than $50~dB$ throughout the E-plane. As the far out $(100^\circ$ to $160^\circ)$ side lobe levels in the E-plane vary around $35$ to $40~dB$ the effect of corner diffraction is less compared to the H-plane case where the far out sidelobe levels were around $55$ to $60~dB$.
+
+
+Theoretical computation of the far field diagonal plane radiation pattern of a Scientific Atlanta, (model no. $12-8.2$, series 12) standard gain horn was carried out. Contributions of the various orders of diffraction at the horn edges and corners were obtained in stages and compared with FDTD predictions. Diagonal plane radiation pattern was obtained using the contributions of the direct ray, first order H-edge slope diffracted field, additional contributions of the E-edge diffracted fields  using (\ref{dp_field_hp_ray_trac}). Considerable improvement in the predictions using (\ref{EDEDCI_field_hp_ray_trac_sec_cor}), both in the mainlobe and the backlobe regions, were obtained following the addition of contributions of the second order corner diffracted field arising from the incidence of the E-edge and H-edge diffracted field at the respective corners and also the third order corner diffracted fields arising from the incidence of the double E-edge diffracted field at the respective corners. Finally, the addition of the contribution of the first order corner slope diffracted field were found to give  excellent agreement with FDTD predictions in the main lobe, in the backlobe and in the broad range of low response backward region as compared to (\ref{EDEDCI_field_hp_ray_trac_sec_cor}). In the author\rq s opinion this result can be considered as validation of the new slope diffraction coefficient (\ref{c_slope_sdiff_f}).
+
+
+
+For the problem of scattering by Sikta\rq s triangle the plots of finite edge GTD scattered field (suitably level adjusted) versus aspect angle were found to agree with the experimental RCS of Sikta\rq s triangle for both parallel and perpendicular to plane of incidence polarizations. The position of the dips in the  finite edge GTD scattered E-plane pattern at $42^\circ$, $65^\circ$, $115^\circ$, $136^\circ$ degree show good agreement with those of the measured RCS (see Fig~\ref{Fig:rcs_Sikta_a_3l_e_plane_three_corner_h_plane_2_h_plane_2_corner}). The dips at $0^\circ$ and $180^\circ$ are about $5^\circ$ to $10^\circ$ in error. For the H-plane case the position of the dip in the finite edge GTD scattered H-plane pattern at $48^\circ$ is only $4^\circ$ off from the $44^\circ$ dip in the measured RCS plot (see Fig~\ref{Fig:rcs_Sikta_t_3l_three_corner_h_plane}). The finite edge GTD predicted H-plane scatter also agrees well with measured RCS at $0^\circ$ and in an average manner between $100^\circ$ to $180^\circ$. However, the finite edge GTD result for both cases of polarizations show steep rise for angles at and around $\theta_g=90^\circ$. At these angles $(90^\circ \pm 5^\circ)$ the observation point is at and near the reflection boundary (RB) of the corresponding canonical half-plane problem. Though in this case the UTD result is finite, the edge scattered field magnitude for this problem is high. The FDTD predictions of the E-plane and H-plane RCS of Sikta\rq s triangle were obtained for aspect angles from $0^\circ$ to $180^\circ$ in $15^\circ$ steps. The FDTD gave absolute value of the RCS. There was no need for level adjustment. The agreement with measured RCS was found to be excellent at all these discrete angles (see Figs~\ref{Fig:rcs_Sikta_a_3l_e_plane_FDTD_corner} and \ref{Fig:rcs_Sikta_a_3l_h_plane_FDTD_corner}).
+
+
+Further study carried out here has been to demonstrate that FDTD simulation can also predict the performance of horn antennas as EMFS in receiving mode accurately. To the best of the author\rq s knowledge the FDTD has till now not been used explicitly in computing the AF of an EMFS. In this work it has been demonstrated that pyramidal horns have low AF and therefore are suitable as EMFS in the microwave region. GTD computed AF using (\ref{af_horn_GTD_1}) shows significant deviations from the measurements at the higher frequency region. New empirical formula for quick calculation of pyramidal horns was presented. AF obtained from measurements carried out for horn antennas of different sizes compare favorably with the FDTD predicted AF and AF calculated from the empirical formula (\ref{AF_horn_gain_improve_db}).
+
+The gains of pyramidal horns are calculated in receiving mode and results are compared with the measured results given in \cite{Mayhew_Ridgers_incident_wave_models_horn_gain}. It can be concluded that the gain calculation using FDTD technique are agreed well with measurement and not depends upon the horn shape like \cite{Mayhew_Ridgers_incident_wave_models_horn_gain}.
+
+%==============================================================================================
+
+
+
+
+%Further study carried out here has been to demonstrate that FDTD simulation can also predict the performance of various antennas as EMFS in receiving mode accurately. To the best of the author\rq s knowledge the FDTD has till now not been used explicitly in computing the AF or CAF of an EMFS. In this work it has been demonstrated that pyramidal and conical horns have low AF and therefore are suitable as EMFS in the microwave region. New empirical formulas for quick calculation of these horns are presented.% The FDTD can be used to study several other horn structures having dielectric loading so as to highlight the versatility of the method as a tool for the search of complex structures as EMFS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

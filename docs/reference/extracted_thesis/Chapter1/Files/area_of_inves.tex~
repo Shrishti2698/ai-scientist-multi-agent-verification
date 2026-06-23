@@ -1,0 +1,12 @@
+\section{Objectives and Scope}\label{Objectives_thesis}
+Following the survey of various available published literatures we propose
+\begin{enumerate}[(i)]
+\item to reconsider the H-plane horn radiation problem using GTD with spherical source
+incidence.
+\item to obtain a finite edge GTD formulation using available corner diffraction coefficient.
+\item to present a new corner slope diffraction (CSD) coefficient and its heuristic derivation.
+\item in addition to carry out FDTD analysis of the H-plane horn radiation problem.
+\item to obtain a comprehensive finite edge GTD formulation of the H-plane horn radiation problem using available corner diffraction coefficient and the new CSD and compare with FDTD predictions and also results available in open literature.
+\item to consider several antennas in receiving mode. Specifically to carry out the performance analysis of wire, microstrip and aperture antennas as EMFS using the FDTD technique.
+\item to present some empirical formulas for quick calculation of AFs.
+\end{enumerate}

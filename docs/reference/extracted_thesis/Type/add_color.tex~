@@ -1,0 +1,16 @@
+\usepackage[dvips,
+                 bookmarks,
+                 bookmarksopen = true,
+                 bookmarksnumbered = true,
+                 breaklinks = true,
+                 linktocpage,
+                 backref,
+                 colorlinks = true,
+                 linkcolor = red,
+                 urlcolor  = magenta,
+                 citecolor = blue,
+                 anchorcolor = green,
+                 hyperindex = true,
+                 hyperfigures
+                 ]{hyperref} % added by Sandipan
+\usepackage{backrefx}% added by Sandipan

@@ -1,0 +1,440 @@
+% "colours.sty"	K. J. Turner	25/02/97
+%
+% This (La)TeX style file allows PostScript colour directives to be
+% inserted with:
+% 
+%   \colouring{Green}		set current colour to be green
+%   
+%   \begin{colour}{Blue}	set colour in environment to be blue
+%     ...			(may be nested)
+%   \end{colour}
+%
+% New colours can be defined with:
+% 
+%   \addcolour{Mauve}{0.5}{0.0}{0.5}
+% 
+% which gives the colour a name and fractions of red/green/blue. The
+% fractions must be in the range 0.0 to 1.0 inclusive. If a colour is
+% added that is already defined, it overrides the current definition.
+%
+% The following command disables colour-setting commands and preserves
+% the current colour (typically used at the start of a document for
+% black printing):
+%
+%   \nocolours
+%
+% The current colour can be saved and restored with:
+%
+%   \colourpush			save current colour
+%  
+%   \colourpop			restore colour
+%
+% This might typically be necessary because a header or footer needs to
+% be printed in a colour that is different from the current body
+% colour.  The last should be saved in the footer and restored in the
+% following header.
+%
+% An attempt to use an undefined colour name defaults to black. An
+% attempt to add an illegal colour definition is ignored. The American
+% spelling "color" is also acceptable in command names.
+%
+% The "\special" convention of Rokicki's "dvips" is followed.
+% 
+% The pre-defined colours are as follows. They are searched linearly,
+% which is rather inefficient, but since colour changes should be
+% relatively infrequent this should not matter too much.
+%
+% Blacks:
+%  
+%  Black              IvoryBlack       LampBlack
+%  
+% Blues:
+%  
+%  AliceBlue          Blue             BlueLight          BlueMedium
+%  Cadet              Cobalt           Cornflower         Cerulean
+%  DodgerBlue         Indigo           ManganeseBlue      MidnightBlue
+%  Navy               Peacock          PowderBlue         RoyalBlue
+%  SlateBlue          SlateBlueDark    SlateBlueLight     SlateBlueMedium
+%  SkyBlue            SkyBlueDeep      SkyBlueLight       SteelBlue
+%  SteelBlueLight     TurquoiseBlue    Ultramarine
+%  
+% Browns:
+%  
+%  Beige              Brown            BrownOadder        BrownOchre
+%  Burlywood          BurntSienna      BurntUmber         Chocolate
+%  DeepOchre          Flesh            FleshOchre         GoldOchre
+%  GreenishUmber      Khaki            KhakiDark          LightBeige
+%  Peru               RosyBrown        RawSienna          RawUmber
+%  Sepia              Sienna           SaddleBrown        SandyBrown
+%  Tan                VanDykeBrown
+%  
+% Cyans:
+%  
+%  Aquamarine         AquamarineMedium Cyan               CyanWhite
+%  Turquoise          TurquoiseDark    TurquoiseMedium    TurquoisePale
+%  
+% Greens:
+%  
+%  Chartreuse         ChromeOxideGreen CinnabarGreen      CobaltGreen
+%  EmeraldGreen       ForestGreen      Green              GreenDark
+%  GreenPale          GreenYellow      LawnGreen          LimeGreen
+%  Mint               Olive            OliveDrab          OliveGreenDark
+%  PermanentGreen     SapGreen         SeaGreen           SeaGreenDark
+%  SeaGreenMedium     SeaGreenLight    SpringGreen        SpringGreenMedium
+%  TerreVerte         ViridianLight    YellowGreen
+%  
+% Greys:
+%  
+%  ColdGrey           DimGrey          Grey               LightGrey
+%  SlateGrey          SlateGreyDark    SlateGreyLight     WarmGrey
+%  
+% Magentas:
+%  
+%  BlueViolet         CobaltVioletDeep Magenta            Orchid
+%  OrchidDark         OrchidMedium     PermanentRedViolet Plum
+%  Purple             PurpleMedium     UltramarineViolet  Violet
+%  VioletDark         VioletRed        VioletRedMedium    VioletRedPale
+%  
+% Oranges:
+%  
+%  CadmiumOrange      CadmiumRedLight  Carrot             DarkOrange
+%  MarsOrange         MarsYellow       Orange             OrangeRed
+%  YellowOchre
+%  
+% Reds:
+%  
+%  AlizarinCrimson    Brick            CadmiumRedDeep     Coral
+%  CoralLight         DeepPink         EnglishRed         Firebrick
+%  GeraniumLake       HotPink          IndianRed          LightSalmon
+%  MadderLakeDeep     Maroon           Pink               PinkLight
+%  Raspberry          Red              RoseMadder         Salmon
+%  Tomato             VenetianRed
+%  
+% Whites:
+%  
+%  Antique            Azure            Bisque             BlanchedAlmond
+%  Cornsilk           Eggshell         Floral             Gainsboro
+%  Ghost              Honeydew         Ivory              Lavender
+%  LavenderBlush      LemonChiffon     Linen              MintCream
+%  MistyRose          Moccasin         Navajo             OldLace
+%  PapayaWhip         PeachPuff        Seashell           Smoke
+%  Snow               Thistle          Titanium           Wheat
+%  White              Zinc
+%  
+% Yellows:
+%  
+%  AureolineYellow    Banana            CadmiumLemon       CadmiumYellow
+%  CadmiumYellowLight Gold              Goldenrod          GoldenrodDark
+%  GoldenrodLight     GoldenrodPale     LightGoldenrod     Melon
+%  NaplesYellowDeep   Yellow            YellowLight
+	
+\special{!
+  TeXDict begin				% make available in body
+%
+  /clrsmax 256 def			% maximum number of colours
+  /clrsnxt 0 def			% next free colour entry
+  /clrswid 4 def			% width of colour entry
+  /clrs clrsmax clrswid mul array def	% define colours array
+%
+  /addclr {				% (name) red grn blu addclr -
+    /clrblue exch def			% define blue fraction
+    /clrgreen exch def			% define green fraction
+    /clrred exch def			% define red fraction
+    /clrname exch def			% define colour name
+    clrname () ne			% non-empty colour name?
+    clrred 0.0 ge and clrred 1.0 le and	% color fractions 0.0-1.0?
+    clrgreen 0.0 ge and clrgreen 1.0 le and	
+    clrblue 0.0 ge and clrblue 1.0 le and	
+    clrred 0.0 ge and clrred 1.0 le and	
+    clrsnxt clrsmax lt and {		% free colour array entry?
+      /clrind clrsnxt clrswid mul def	% define colour array index
+      clrs clrind clrname put		% store colour name
+      clrs clrind 1 add clrred put	% store red fraction
+      clrs clrind 2 add clrgreen put	% store blue fraction
+      clrs clrind 3 add clrblue put	% store green fraction
+      /clrsnxt clrsnxt 1 add def	% update next colour index
+    } if
+  } def
+%
+  /clrstkmax 16 def			% maximum colour stack size
+  /clrstknxt 0 def			% next free colour stack entry
+  /clrstkwid 3 def			% width of colour stack entry
+  /clrstk clrstkmax clrstkwid mul array def
+					% define colour stack array
+%
+  /clrpush {				% - clrpush -
+    clrstknxt clrstkmax lt {		% free colour stack entry?
+      /clrind clrstknxt clrstkwid mul def
+					% define colour stack index
+      currentrgbcolor			% stack current red/grn/blu
+      clrstk clrind 2 add 3 2 roll put	% store blue fraction
+      clrstk clrind 1 add 3 2 roll put	% store green fraction
+      clrstk clrind 3 2 roll put	% store red fraction
+      /clrstknxt clrstknxt 1 add def	% update next stack index
+    } if
+  } def
+%
+  /clrpop {				% - clrpop -
+    clrstknxt 0 gt {			% colour stack entry?
+      /clrstknxt clrstknxt 1 sub def	% update next stack index
+      /clrind clrstknxt clrstkwid mul def
+					% define colour stack index
+      clrstk clrind get			% retrieve red fraction
+      clrstk clrind 1 add get		% retrieve green fraction
+      clrstk clrind 2 add get		% retrieve blue fraction
+      setrgbcolor			% unstack new red/grn/blu
+    } if
+  } def
+%
+  /clr {				% (name) clr -
+    /clrname exch def			% define colour name sought
+    clrsnxt 1 sub -1 0 {		% work back through colours
+      /clrind exch clrswid mul def	% define current index
+      clrs clrind get			% get colour name
+      clrname eq			% same colour?
+      clrind 0 eq or {			% or last colour?
+	clrs clrind 1 add get		% push red fraction
+	clrs clrind 2 add get		% push green fraction
+	clrs clrind 3 add get		% push blue fraction
+        setrgbcolor			% set red/green/blue
+	exit				% leave loop (prematurely)
+      } if
+    } for
+  } def
+%
+  end
+}
+
+\special{!
+  TeXDict begin				% make available in body
+%
+  (Black) 0.0000 0.0000 0.0000 addclr	% first colour is default
+  (AliceBlue) 0.9412 0.9725 1.0000 addclr
+  (AlizarinCrimson) 0.8900 0.1500 0.2100 addclr
+  (Antique) 0.980575 0.922330 0.844661 addclr
+  (Aquamarine) 0.4980 1.0000 0.8314 addclr
+  (AquamarineMedium) 0.4000 0.8039 0.6667 addclr
+  (AureolineYellow) 1.0000 0.6600 0.1400 addclr
+  (Azure) 0.941740 1.000000 1.000000 addclr
+  (Banana) 0.8900 0.8100 0.3400 addclr
+  (Beige) 0.6400 0.5800 0.5000 addclr
+  (Bisque) 1.000000 0.898053 0.771844 addclr
+  (BlanchedAlmond) 1.000000 0.921600 0.803900 addclr
+  (Blue) 0.0000 0.0000 1.0000 addclr
+  (BlueLight) 0.6784 0.8471 0.9020 addclr
+  (BlueMedium) 0.0000 0.0000 0.8039 addclr
+  (BlueViolet) 0.5412 0.1686 0.8863 addclr
+  (Brick) 0.6100 0.4000 0.1200 addclr
+  (Brown) 0.5000 0.1647 0.1647 addclr
+  (BrownOadder) 0.8600 0.1600 0.1600 addclr
+  (BrownOchre) 0.5300 0.2600 0.1200 addclr
+  (Burlywood) 0.8706 0.7216 0.5294 addclr
+  (BurntSienna) 0.5400 0.2100 0.0600 addclr
+  (BurntUmber) 0.5400 0.2000 0.1400 addclr
+  (Cadet) 0.3725 0.6196 0.6275 addclr
+  (CadmiumLemon) 1.0000 0.8900 0.0100 addclr
+  (CadmiumOrange) 1.0000 0.3800 0.0100 addclr
+  (CadmiumRedDeep) 0.8900 0.0900 0.0500 addclr
+  (CadmiumRedLight) 1.0000 0.0100 0.0500 addclr
+  (CadmiumYellow) 1.0000 0.6000 0.0700 addclr
+  (CadmiumYellowLight) 1.0000 0.6900 0.0600 addclr
+  (Carrot) 0.9300 0.5700 0.1300 addclr
+  (Cerulean) 0.0200 0.7200 0.8000 addclr
+  (Chartreuse) 0.4980 1.0000 0.0000 addclr
+  (Chocolate) 0.8235 0.4118 0.1176 addclr
+  (ChromeOxideGreen) 0.4000 0.5000 0.0800 addclr
+  (CinnabarGreen) 0.3800 0.7000 0.1600 addclr
+  (Cobalt) 0.2400 0.3500 0.6700 addclr
+  (CobaltGreen) 0.2400 0.5700 0.2500 addclr
+  (CobaltVioletDeep) 0.5700 0.1300 0.6200 addclr
+  (ColdGrey) 0.5000 0.5400 0.5300 addclr
+  (Coral) 1.0000 0.4980 0.3137 addclr
+  (CoralLight) 0.9412 0.5020 0.5020 addclr
+  (Cornflower) 0.3922 0.5843 0.9294 addclr
+  (Cornsilk) 1.000000 0.972500 0.862700 addclr
+  (Cyan) 0.0000 1.0000 1.0000 addclr
+  (CyanWhite) 0.8784 1.0000 1.0000 addclr
+  (DarkOrange) 1.0000 0.5490 0.0000 addclr
+  (DeepOchre) 0.4500 0.2400 0.1000 addclr
+  (DeepPink) 1.0000 0.0784 0.5765 addclr
+  (DimGrey) 0.4118 0.4118 0.4118 addclr
+  (DodgerBlue) 0.1176 0.5647 1.0000 addclr
+  (Eggshell) 0.990000 0.900000 0.790000 addclr
+  (EmeraldGreen) 0.0000 0.7900 0.3400 addclr
+  (EnglishRed) 0.8300 0.2400 0.1000 addclr
+  (Firebrick) 0.6980 0.1333 0.1333 addclr
+  (Flesh) 1.0000 0.4900 0.2500 addclr
+  (FleshOchre) 1.0000 0.3400 0.1300 addclr
+  (Floral) 1.000000 0.980400 0.941200 addclr
+  (ForestGreen) 0.1333 0.5451 0.1333 addclr
+  (Gainsboro) 0.862700 0.862700 0.862700 addclr
+  (GeraniumLake) 0.8900 0.0700 0.1900 addclr
+  (Ghost) 0.972500 0.972500 1.000000 addclr
+  (Gold) 1.0000 0.8431 0.0000 addclr
+  (GoldOchre) 0.7800 0.4700 0.1500 addclr
+  (Goldenrod) 0.8549 0.6471 0.1255 addclr
+  (GoldenrodDark) 0.7216 0.5255 0.0431 addclr
+  (GoldenrodLight) 0.9804 0.9804 0.8235 addclr
+  (GoldenrodPale) 0.9333 0.9098 0.6667 addclr
+  (Green) 0.0000 1.0000 0.0000 addclr
+  (GreenDark) 0.0000 0.3922 0.0000 addclr
+  (GreenPale) 0.5961 0.9843 0.5961 addclr
+  (GreenYellow) 0.6784 1.0000 0.1843 addclr
+  (GreenishUmber) 1.0000 0.2400 0.0500 addclr
+  (Grey) 0.7529 0.7529 0.7529 addclr
+  (Honeydew) 0.941200 1.000000 0.941200 addclr
+  (HotPink) 1.0000 0.4118 0.7059 addclr
+  (IndianRed) 0.6900 0.0900 0.1200 addclr
+  (Indigo) 0.0300 0.1800 0.3300 addclr
+  (Ivory) 1.000000 1.000000 0.941200 addclr
+  (IvoryBlack) 0.1600 0.1400 0.1300 addclr
+  (Khaki) 0.9412 0.9020 0.5490 addclr
+  (KhakiDark) 0.7412 0.7176 0.4196 addclr
+  (LampBlack) 0.1800 0.2800 0.2300 addclr
+  (Lavender) 0.902000 0.902000 0.980400 addclr
+  (LavenderBlush) 1.000000 0.941200 0.960800 addclr
+  (LawnGreen) 0.4863 0.9882 0.0000 addclr
+  (LemonChiffon) 1.000000 0.980400 0.803900 addclr
+  (LightBeige) 0.9608 0.9608 0.8627 addclr
+  (LightGoldenrod) 0.9333 0.8667 0.5098 addclr
+  (LightGrey) 0.8275 0.8275 0.8275 addclr
+  (LightSalmon) 1.0000 0.6275 0.4784 addclr
+  (LimeGreen) 0.1961 0.8039 0.1961 addclr
+  (Linen) 0.980400 0.941200 0.902000 addclr
+  (MadderLakeDeep) 0.8900 0.1800 0.1900 addclr
+  (Magenta) 1.0000 0.0000 1.0000 addclr
+  (ManganeseBlue) 0.0100 0.6600 0.6200 addclr
+  (Maroon) 0.6902 0.1882 0.3765 addclr
+  (MarsOrange) 0.5900 0.2700 0.0800 addclr
+  (MarsYellow) 0.8900 0.4400 0.1000 addclr
+  (Melon) 0.8900 0.6600 0.4100 addclr
+  (MidnightBlue) 0.0980 0.0980 0.4392 addclr
+  (Mint) 0.7400 0.9900 0.7900 addclr
+  (MintCream) 0.960800 1.000000 0.980400 addclr
+  (MistyRose) 1.000000 0.894100 0.882400 addclr
+  (Moccasin) 1.000000 0.894100 0.709800 addclr
+  (NaplesYellowDeep) 1.0000 0.6600 0.0700 addclr
+  (Navajo) 1.000000 0.870600 0.678400 addclr
+  (Navy) 0.0000 0.0000 0.5020 addclr
+  (OldLace) 0.992200 0.960800 0.902000 addclr
+  (Olive) 0.2300 0.3700 0.1700 addclr
+  (OliveDrab) 0.4196 0.5569 0.1373 addclr
+  (OliveGreenDark) 0.3333 0.4196 0.1843 addclr
+  (Orange) 1.0000 0.5000 0.0000 addclr
+  (OrangeRed) 1.0000 0.2706 0.0000 addclr
+  (Orchid) 0.8549 0.4392 0.8392 addclr
+  (OrchidDark) 0.6000 0.1961 0.8000 addclr
+  (OrchidMedium) 0.7294 0.3333 0.8275 addclr
+  (PapayaWhip) 1.000000 0.937300 0.835300 addclr
+  (PeachPuff) 1.000000 0.854900 0.725500 addclr
+  (Peacock) 0.2000 0.6300 0.7900 addclr
+  (PermanentGreen) 0.0400 0.7900 0.1700 addclr
+  (PermanentRedViolet) 0.8600 0.1500 0.2700 addclr
+  (Peru) 0.8039 0.5216 0.2471 addclr
+  (Pink) 1.0000 0.7529 0.7961 addclr
+  (PinkLight) 1.0000 0.7137 0.7569 addclr
+  (Plum) 0.8667 0.6275 0.8667 addclr
+  (PowderBlue) 0.6902 0.8784 0.9020 addclr
+  (Purple) 0.6275 0.1255 0.9412 addclr
+  (PurpleMedium) 0.5765 0.4392 0.8588 addclr
+  (Raspberry) 0.5300 0.1500 0.3400 addclr
+  (RawSienna) 0.7800 0.3800 0.0800 addclr
+  (RawUmber) 0.4500 0.2900 0.0700 addclr
+  (Red) 1.0000 0.0000 0.0000 addclr
+  (RoseMadder) 0.8900 0.2100 0.2200 addclr
+  (RosyBrown) 0.7373 0.5608 0.5608 addclr
+  (RoyalBlue) 0.2549 0.4118 0.8824 addclr
+  (SaddleBrown) 0.5451 0.2706 0.0745 addclr
+  (Salmon) 0.9804 0.5020 0.4471 addclr
+  (SandyBrown) 0.9569 0.6431 0.3765 addclr
+  (SapGreen) 0.1900 0.5000 0.0800 addclr
+  (SeaGreen) 0.1804 0.5451 0.3412 addclr
+  (SeaGreenDark) 0.5608 0.7373 0.5608 addclr
+  (SeaGreenLight) 0.1255 0.6980 0.6667 addclr
+  (SeaGreenMedium) 0.2353 0.7020 0.4431 addclr
+  (Seashell) 1.000000 0.960800 0.933300 addclr
+  (Sepia) 0.3700 0.1500 0.0700 addclr
+  (Sienna) 0.6275 0.3216 0.1765 addclr
+  (SkyBlue) 0.5294 0.8078 0.9216 addclr
+  (SkyBlueDeep) 0.0000 0.7490 1.0000 addclr
+  (SkyBlueLight) 0.5294 0.8078 0.9804 addclr
+  (SlateBlue) 0.4157 0.3529 0.8039 addclr
+  (SlateBlueDark) 0.2824 0.2392 0.5451 addclr
+  (SlateBlueLight) 0.5176 0.4392 1.0000 addclr
+  (SlateBlueMedium) 0.4824 0.4078 0.9333 addclr
+  (SlateGrey) 0.4392 0.5020 0.5647 addclr
+  (SlateGreyDark) 0.1843 0.3098 0.3098 addclr
+  (SlateGreyLight) 0.4667 0.5333 0.6000 addclr
+  (Smoke) 0.960800 0.960800 0.960800 addclr
+  (Snow) 1.000000 0.980400 0.980400 addclr
+  (SpringGreen) 0.0000 1.0000 0.4980 addclr
+  (SpringGreenMedium) 0.0000 0.9804 0.6039 addclr
+  (SteelBlue) 0.2745 0.5098 0.7059 addclr
+  (SteelBlueLight) 0.6902 0.7686 0.8706 addclr
+  (Tan) 0.8235 0.7059 0.5490 addclr
+  (TerreVerte) 0.2200 0.3700 0.0600 addclr
+  (Thistle) 0.847100 0.749000 0.847100 addclr
+  (Titanium) 0.990000 1.000000 0.940000 addclr
+  (Tomato) 1.0000 0.3882 0.2784 addclr
+  (Turquoise) 0.2510 0.8784 0.8157 addclr
+  (TurquoiseBlue) 0.0000 0.7800 0.5500 addclr
+  (TurquoiseDark) 0.0000 0.8078 0.8196 addclr
+  (TurquoiseMedium) 0.2824 0.8196 0.8000 addclr
+  (TurquoisePale) 0.6863 0.9333 0.9333 addclr
+  (Ultramarine) 0.0700 0.0400 0.5600 addclr
+  (UltramarineViolet) 0.3600 0.1400 0.4300 addclr
+  (VanDykeBrown) 0.3700 0.1500 0.0200 addclr
+  (VenetianRed) 0.8300 0.1000 0.1200 addclr
+  (Violet) 0.5600 0.3700 0.6000 addclr
+  (VioletDark) 0.5804 0.0000 0.8275 addclr
+  (VioletRed) 0.8157 0.1255 0.5647 addclr
+  (VioletRedMedium) 0.7804 0.0824 0.5216 addclr
+  (VioletRedPale) 0.8588 0.4392 0.5765 addclr
+  (ViridianLight) 0.4300 1.0000 0.4400 addclr
+  (WarmGrey) 0.5000 0.5000 0.4100 addclr
+  (Wheat) 0.960800 0.870600 0.702000 addclr
+  (White) 1.000000 1.000000 1.000000 addclr
+  (Yellow) 1.0000 1.0000 0.0000 addclr
+  (YellowGreen) 0.6039 0.8039 0.1961 addclr
+  (YellowLight) 1.0000 1.0000 0.8784 addclr
+  (YellowOchre) 0.8900 0.5100 0.0900 addclr
+  (Zinc) 0.990000 0.970000 1.000000 addclr
+%
+  end
+}
+
+\def\addcolour#1#2#3#4{		% \addcolour{name}{red}{green}{blue}
+  \special{ps:(#1) #2 #3 #4 addclr}
+}
+
+\def\colouring#1{%		% \colouring{name}
+  \special{ps:(#1) clr}%
+}
+
+\let\@colouring=\colouring
+
+\def\colourpush{%		% \colourpush
+  \special{ps: clrpush}%	% push current red/green/blue
+}
+
+\let\@colourpush=\colourpush
+
+\def\colour#1{%			% \begin{colour}{name}
+  \colourpush%
+  \colouring{#1}%
+}
+
+\def\endcolour{%		% \end{colour}
+  \special{ps: clrpop}%		% pop previous red/green/blue
+}
+
+\let\colourpop=\endcolour	% no parameters
+
+\let\@colourpop=\colourpop
+
+\def\nocolours{			% no parameters
+  \def\colouring##1{}
+  \def\colour##1{}
+  \def\endcolour{}
+  \def\framecolours##1##2{}
+}

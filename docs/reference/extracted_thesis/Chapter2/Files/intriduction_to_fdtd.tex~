@@ -1,0 +1,26 @@
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+%The finite-difference time-domain (FDTD) formulation of electromagnetic (EM) field is a convenient tool for solving radiation and scattering problems. FDTD and related space-grid time-domain techniques are direct solution methods for Maxwell\rq s curl equations. The explicit nature of the time-stepping algorithm to solve Maxwell\rq s equations conveniently enables the visualization of the electromagnetic fields inside the medium under investigation. In this chapter, basic formulation of FDTD technique for analysis of antenna in transmitting \& receiving mode is explained.\\
+%==============================================
+%The finite-difference time-domain (FDTD) formulation of EM field problems is a convenient tool for solving scattering problems. The FDTD technique, first introduced by Yee in 1966 and later developed by Taflove and others is a direct solution of Maxwell\rq s time-dependent curl equations. The scheme treats the irradiation of the scatterer as an initial value problem. In this chapter, our discussion on the FD-TD method will cover the basic formulation of FDTD technique for analysis of antenna in transmitting \& receiving mode. 
+The finite-difference time-domain (FDTD) formulation of electromagnetic (EM) field is a convenient tool for solving radiation and scattering problems. FDTD and related space-grid time domain techniques are direct solution methods for Maxwell\rq s curl equations. The explicit nature of the time-stepping algorithm to solve Maxwell's equations conveniently enables the visualization of the electromagnetic fields inside the medium under investigation. In this chapter, basic formulation of FDTD technique for analysis of antenna in transmitting \& receiving mode is explained.
+\\\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+
+
+
+\section{Introduction}\index{FDTD}
+{\LARGE U}nderstanding and predicting electromagnetic behavior is more and more needed in key electrical engineering technologies such as cellular phones, mobile computing, antenna design and EM field measurement etc. \cite{Ryan_Application_FPGA_FDTD}. After the introduction of FDTD by K. Yee in 1966, and with the development in computers the accuracy and flexibility of FDTD for solving electromagnetic problems became soon apparent \cite{Kunz_book_93}. The FDTD technique provides a direct time-domain solution of Maxwell\rq s equations in differential form by discretizing both the physical region and time interval using uniform or non-uniform grid. The explicit nature of the time-stepping algorithm \cite{Anders_Bondeson_book_05} to solve Maxwell\rq s equations conveniently enables the visualization of the electromagnetic fields inside the medium under investigation. This feature is a great benefit compared to frequency-domain methods, like the Method of Moments (MoM) or the Finite-Element Method (FEM). Because this method can solve Maxwell\rq s equations on any scale with almost all kinds of environments, it has become a powerful method for solving a wide variety of electromagnetic problems \cite{Kosmas_FDTD_Model_GPR_Detection}. %In this chapter basic formulation of FDTD technique using Yee algorithm has been introduced. Then FDTD technique has been used to analysis an antenna in transmitting mode. How to use FDTD technique for analysis an antenna in receiving mode for EM field sensor has been discussed. In transmitting mode analysis, H-plane radiation pattern of pyramidal horn antenna has been computed and compared with the measurement and numerical results.
+In this chapter, our discussion on the FDTD technique will cover Yee\rq s finite difference algorithm, accuracy and stability, absorbing boundary conditions, initial fields, tine-domain to frequency domain transformation, near-field to far-field transformation and the method how to perfectly plane wave is generated within FDTD lattice. H-plane and E-plane horn antenna radiation patterns are computed using FDTD technique and compared with the published measured results. Diagonal plane horn antenna radiation patterns are also computed. How to used FDTD technique to predict the performance of an antenna in receiving mode as an EM field sensor is also described.
+
+
+%In this section Maxwell\rq s equations, Yee\rq s FDTD algorithm, the condition for stability and accuracy of the FDTD computation, absorbing boundary condition (abs) to truncate the FDTD grid, FDTD excitation, time domain data to frequency domain transformation, modeling of material inside the FDTD grid, near field FDTD data to far-field transformation and total/scattered field formulation to generate 3-D perfectively plane wave will be discussed briefly.%In this section, Maxwell\rq s equations and Yee\rq s FDTD algorithm and other basic theory of FDTD will be introduced firstly. How to transform FDTD computed near-field data to far-field radiation pattern will be discussed secondly. And finally free space wave propagating model we implemented will be introduced.
+
+
+
+

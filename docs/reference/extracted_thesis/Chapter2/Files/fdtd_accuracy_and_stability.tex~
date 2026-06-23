@@ -1,0 +1,14 @@
+\section{Accuracy and Stability}\index{FDTD!accuracy}\index{FDTD!stability}
+To ensure the accuracy of the computed results, the spatial increment must be small compared to the wavelength $\left(usually \leq \lambda/10\right)$ or the minimum dimension of the scatterer. Next, to ensure the stability of the finite difference scheme of Eqn. (\ref{E_3d2}) and (\ref{H_3d2}) the time increment $\bigtriangleup t$ must satisfy the following stability condition \cite{Taflove_Numerical_Solution_Steady_State_Electromagnetic_Scattering, Sadiku_Stability_criteria}
+\be\label{Courant_Condition_3d}
+u_{max}\bigtriangleup t\leq\left[\frac{1}{\bigtriangleup x^2}+\frac{1}{\bigtriangleup y^2}+\frac{1}{\bigtriangleup z^2}\right]^{-1/2}
+\ee
+where $u_{max}$ is the maximum wave phase velocity within the model. Since we are using a cubic cell with $\bigtriangleup x=\bigtriangleup y=\bigtriangleup z=\delta$, Eqn.(\ref{Courant_Condition_3d}) become 
+\be\label{reduce_Courant_Condition_3d} 
+\frac{u_{max}\bigtriangleup t}{\delta}\leq \frac{1}{\sqrt{n_s}} 
+\ee
+ where $n_s$ is the number of space dimensions. Throughout this work we will determine $\bigtriangleup t$ by the relation \cite{Sullivan_book_00}
+\be\label{reduce_Courant_Condition_3d2} 
+\bigtriangleup t=\frac{\delta}{2u_{max}} 
+\ee
+This is not necessarily the best formula; however, we will use it for simplicity. 

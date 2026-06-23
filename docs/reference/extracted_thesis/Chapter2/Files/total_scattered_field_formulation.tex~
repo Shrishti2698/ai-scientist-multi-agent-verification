@@ -1,0 +1,81 @@
+\section{Simulation of Plane Wave}\label{T_S_Field_Formulation}\index{FDTD!total/scattered Field}\index{FDTD!plane wave simulation}
+
+		FTDD models of receiving antennas need to use a plane-wave source condition to create an incident electromagnetic wave. In order to simulate a plane wave in a FDTD program, the problem space will be divided up into two regions, namely the total field and scattered field regions. The reasons behind this division are that the propagating plane wave should not interact with the absorbing boundary conditions and the load on the absorbing boundary conditions should be minimized \cite{Sullivan_book_00}. These boundary conditions are not perfect, i.e., a certain portion of the impinging wave reflects back into the problem space. By subtracting the incident field, the amount of radiating field hitting the boundary is minimized, thereby reducing the amount of error. The method for the simulation of plane wave given in \cite{Sullivan_book_00} is detailed in appendix \ref{}.
+
+
+
+
+
+
+
+
+
+
+The problem, like prediction of the performance of an antenna in receiving mode working as an EM field sensor, deal with the plane waves. In order to simulate a plane wave in a FDTD program, the problem space will be divided up into two regions, namely the total field and scattered field regions as shown in the Fig.~\ref{Fig:total_scattered_field}. The reasons behind this division are that the propagating plane wave should not interact with the absorbing boundary conditions and the load on the absorbing boundary conditions should be minimized \cite{Sullivan_book_00}. These boundary conditions are not perfect, i.e., a certain portion of the impinging wave reflects back into the problem space. By subtracting the incident field, the amount of the radiating field hitting the boundary is minimized, thereby reducing the amount of error.
+
+Fig.~\ref{Fig:total_scattered_field} illustrates how this is accomplished. First an auxiliary one-dimensional buffer called the incident array is considered. As this is a one-dimensional array, it is easy to generate a plane wave: a source point is chosen and the incident $E_z$ field is just added at that point. Then a plane wave propagates away in both directions. Since it is a one-dimensional array, the boundary conditions are perfect \cite{Sullivan_book_00}.
+
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.65]{point_is_in_either_the_tf_or_the_sf}
+    \caption{Each point is in either total field or in the scattered field.}
+    \label{Fig:point_is_in_either_the_tf_or_the_sf}
+  \end{center}
+\end{figure}
+
+As illustrated in Fig.~\ref{Fig:point_is_in_either_the_tf_or_the_sf} the two-dimensional field at every point in the problem space is either in the total field or it is not; no point lies on the border. Therefore, if a point is in the total field but it uses points outside to calculate the spatial derivatives when updating its value, it must be modified. The same is true in case a point lying just outside that uses points inside the total field. A plane wave generated in one plane of the three-dimensional problem space, in this case an $XZ$ plane, at $j=ja$ and subtracted out at $j=jb$. Therefore, in free space with no obstacle in the total field, we should see only $E_z$ and $H_x$. The plane wave is generated at one side and subtracted out at other side by adding to $E$ or $H$ fields that are on the boundary and subtracting from $E$ or $H$ fields that are next to the boundary. For the three dimensional case, there is additional surface at $k=ka$ and $k=kb$. The Fig.~\ref{Fig:total_scattered_field_3d} illustrates the $k=ka$ \& $k=kb$ boundaries. For this reason it is needed to make these modifications for the incident array. The modifications are:
+\begin{enumerate}
+\item The $E_y$ value at $k=ka$ \& $k=kb$:
+\begin{subequations}\label{tf_sf_modified_3d_1}
+\begin{align}
+E_y\left(i,j+1/2,ka\right)&=E_y\left(i,j+1/2,ka\right)-0.5\cdot H_{x\_inc}\left(j\right)\\
+E_y\left(i,j+1/2,kb+1\right)&=E_y\left(i,j+1/2,kb+1\right)+0.5\cdot H_{x\_inc}\left(j\right)
+\end{align}
+\end{subequations}
+
+\item The $E_z$ value at $j=ja$ \& $j=jb$:
+\begin{subequations}\label{tf_sf_modified_1}
+\begin{align}
+E_z\left(i,j_a,k+1/2\right)&=E_z\left(i,j_a,k+1/2\right)+0.5\cdot H_{x\_inc}\left(j_a-1/2\right)\\
+E_z\left(i,j_b,k+1/2\right)&=E_z\left(i,j_b,k+1/2\right)-0.5\cdot H_{x\_inc}\left(j_b+1/2\right)
+\end{align}
+\end{subequations}
+
+\item The $H_x$ field just outside $j=ja$ \& $j=jb:$
+\begin{subequations}\label{tf_sf_modified_2}
+\begin{align}
+H_x\left(i,j_a-1/2,k\right)&=H_x\left(i,j_a-1/2,k\right)+0.5\cdot E_{z\_inc}\left(j_a\right)\\
+H_x\left(i,j_b+1/2,k\right)&=H_x\left(i,j_b+1/2,k\right)-0.5\cdot E_{z\_inc}\left(j_b\right)
+\end{align}
+\end{subequations}
+
+\item The $H_y$ field just outside $i=ia$ \& $i=ib:$
+\begin{subequations}\label{tf_sf_modified_3}
+\begin{align}
+H_y\left(i_a-1/2,j,k\right)&=H_x\left(i_a-1/2,j,k\right)-0.5\cdot E_{z\_inc}\left(j_a\right)\\
+H_y\left(i_b+1/2,j,k\right)&=H_x\left(i_b+1/2,j,k\right)+0.5\cdot E_{z\_inc}\left(j_b\right)
+\end{align}
+\end{subequations}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

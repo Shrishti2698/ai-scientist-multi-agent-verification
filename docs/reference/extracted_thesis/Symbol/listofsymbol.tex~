@@ -1,0 +1,122 @@
+% Greek Symbols are to be given first followed by other symbols alphabatically
+\chapter*{List of Notations and Operations}\label{LstSym}
+\begin{large}
+\textbf{List of symbols}
+\end{large}
+\begin{flushleft}
+\begin{longtable}{lp{9.3cm}}
+$B$ & : magnetic flux density vector\\
+$D $ & : electric flux density vector\\
+$E $ & : electric field intensity vector\\
+$H $ & : magnetic field intensity vector\\
+$J $ & : equivalent electric current density vector\\
+$J_c $ & : conduction current density vector of a lossy medium\\
+$M $ & : equivalent magnetic current density vector\\
+$k$ & : wave vector\\
+$n$ & : normal vector or time index\\
+$x,~y,~z$ & : unit vectors in the x, y and z directions, respectively\\
+%$\Delta_cube$ & :length of the side of a cubic Yee cell\\
+$\Delta x,~\Delta y,~\Delta z $ & : Yee-cell size in the x, y and z directions, respectively\\
+$\Delta t$ & : time step\\
+$\varepsilon$ & : electric permittivity of medium\\
+$\varepsilon_0$ & : electric permittivity of free space $(8.854 \times 10^{-12}~F/m)$\\
+$\varepsilon_r$ & : relative electric permittivity or dielectric constant of medium\\
+$\eta$ & : wave impedance $\sqrt{\mu/\varepsilon}$\\
+$\theta$ & : angle\\
+$\mu $ & : magnetic permeability of medium\\
+$\mu_0 $ & : magnetic permeability of free space $(4\pi\times 10^{-7}~ H/m)$\\
+$\mu_r$ & : relative magnetic permeability of medium\\
+%$\rho$ & : volume charge density\\
+%$\sigma_e $ & :electric conductivity (siemens/meter)\\
+%$\sigma_m $ & :equivalent magnetic loss (ohms/meter)\\
+%$\tau $ & :transmission coefficient\\
+$\omega$ & : angular frequency\\
+$c$ & : speed of light in free space $\approx 3 \times 10^8$ [m/s]\\
+%$C$ & :capacitance\\
+%$C_g$ & :grid capacitance\\
+%$d$ & :thickness of UPML shell\\
+$e$ & : the base of the natural logarithm $\exp(1)=e=2.718281828459045...$\\
+$i,~j,~k$ & : space coordinate indices in the x, y and z directions, respectively\\
+$k_x,~k_y,~k_z$ & : x, y, or z component of the wave vector k\\
+$I$ & : current\\
+%$I_l$ & :current through a lumped element\\
+$j$ & : the imaginary unit $\sqrt{-1}$\\
+%$m$ & :order of the polynomial used to vary the conductance in the UPML\\
+%$n$ & : time index, or thickness of the UPML in number of cells\\
+%$L $ & :inductance\\
+%$q $ & :unit charge\\
+%$Q $ & :total charge\\
+$V_{50}$ & : voltage across 50 $\Omega$ resistance\\
+%$V_{50}$ & : reflection error\\
+%$R_s$ & : internal resistance of a lumped element voltage source\\
+%$v_p$ & : phase velocity of propagating wave\\
+%$V_l$ & : voltage across a lumped element\\
+%$V_s$ & : voltage of a lumped element voltage source\\
+$t$ & : time\\
+$r$ & : position vector\\
+%$v$ & : velocity vector\\
+$\widehat{r'}$&	: unit vector in the direction of incidence\\
+$\widehat{r}$&	: unit vector in the direction of diffraction\\
+$\widehat{\phi'}$&	: unit vector perpendicular to the plane of incidence\\
+$\widehat{\phi}$&	: unit vector perpendicular to the plane of diffraction\\
+$\widehat{\beta_0'}$&	: unit vector parallel to the plane of incidence\\
+$\widehat{\beta_0}$&	: unit vector parallel to the plane of diffraction\\
+$A(r',r)$ &: spatial attenuation factor\\
+$L$ &	: distance parameter\\
+$F(X)$ &: modified Fresnel integral\\
+$F_s(X)$ &: modified Fresnel integral\\
+$D_s$&	: wedge diffraction coefficient for soft BC\\ 
+$D_h$&	: wedge diffraction coefficient for hard BC\\ 
+$\frac{\partial D_s}{\partial \phi'}$&	: wedge slope diffraction coefficient for soft BC\\ 
+$\frac{\partial D_h}{\partial \phi'}$&	: wedge slope diffraction coefficient for hard BC\\ 
+$C_s$&	: corner diffraction coefficient for soft BC\\ 
+$C_h$&	: corner diffraction coefficient for hard BC\\ 
+$\frac{\partial C_s}{\partial \phi'}$&	: corner slope diffraction coefficient for soft BC\\ 
+$\frac{\partial C_h}{\partial \phi'}$&	: corner slope diffraction coefficient for hard BC\\ 
+\end{longtable}
+\end{flushleft}
+
+\newpage
+
+\begin{large}
+\textbf{Operators and symbolic notations}
+\end{large}
+
+
+
+\begin{flushleft}
+\begin{longtable}{lp{9.3cm}}
+$A_x\arrowvert ^n_{i,j,k}$ & :x component of vector $\overrightarrow{A}$ at location $i\Delta _x,~j\Delta _y,~k\Delta _z$ evaluated at time $n\Delta t$\\
+$R_e \{z\}$ &:the real part of the complex number z\\
+$\sum_{i=1}^n a_i$ &:sum of the n terms $a_1$,......., $a_n$\\
+$\overrightarrow{A} \cdot \overrightarrow{B}$ &:dot product of vectors $\overrightarrow{A}$  and $\overrightarrow{B}$\\
+$\overrightarrow{A} \times \overrightarrow{B}$ &:cross product of vectors $\overrightarrow{A}$ and $\overrightarrow{B}$\\
+$\frac{d}{dt}$ &:derivative with respect to t\\
+$\frac{\partial}{\partial t},~D_t$ &:partial derivative with respect to t\\
+$\bigtriangledown \cdot \overrightarrow{A}$ &:divergence of vector $\overrightarrow{A}$ in continuum space\\
+$\bigtriangledown \times \overrightarrow{A}$ &:curl of vector $\overrightarrow{A}$ in continuum space\\
+%$\bigtriangledown \odot \overrightarrow{A}$ &:divergence of vector $\overrightarrow{A}$ in discrete space\\
+%$\bigtriangledown \otimes \overrightarrow{A}$ &:curl of vector $\overrightarrow{A}$ in discrete space\\
+$\frac{d^2}{dt^2} $ &:second derivative with respect to t\\
+$\bigtriangledown ^2 $ &:Laplace operator\\
+\end{longtable}
+\end{flushleft}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+\section{Near-to-Far-Field Transformation}\label{N_to_F_Transformation}\index{FDTD!NTFF transformation}
+Though FDTD technique is a general tool for solving electromagnetic problem, both the memory and run-time limitations require us to use a computational domain as small as possible \cite{Mittra_CFDTD_04}. To calculate the far-zone-field pattern, it is necessary to combine the FDTD technique with the near-to-far-field transformation scheme detailed in appendix~\ref{appendix_NTFF}.
+
+
+

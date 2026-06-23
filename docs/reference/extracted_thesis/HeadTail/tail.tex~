@@ -1,0 +1,46 @@
+\end{spacing}
+
+
+\renewcommand{\chaptername}{Appendix} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{spacing}{1.4}
+\begin{appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{Appendix/neat_to_far_field} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\include{Appendix/ts_field_formulation} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\include{Appendix/Fresnel_Integral} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\include{Appendix/l_correction}
+\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{appendix}
+
+%\renewcommand{\chaptername}{Chapter} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{HeadTail/thesis_reference}
+\end{spacing}
+\begin{spacing}{1.25}
+    \addcontentsline{toc}{chapter}{Index} % added by Sandipan for registering 'Index' in the table of contents
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+    \printindex       % added by Sandipan for printing the index
+    \renewcommand{\chaptername}{Chapter}
+	\addcontentsline{toc}{chapter}{Publication}
+	\include{HeadTail/publication}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+	\begin{spacing}{1.25}
+    \addcontentsline{toc}{chapter}{Author's Biography}
+   \include{HeadTail/biodata}
+   \clearpage{\pagestyle{empty}\cleardoublepage}
+   \end{spacing}
+
+
+\end{spacing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \clearpage{\pagestyle{empty}\cleardoublepage}
+%\renewcommand{\chaptername}{Chapter}
+%	\addcontentsline{toc}{chapter}{References}
+   %\include{HeadTail/thesis_reference}
+ %  \clearpage{\pagestyle{empty}\cleardoublepage}
+%=====================================

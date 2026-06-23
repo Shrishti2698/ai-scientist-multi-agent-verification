@@ -1,0 +1,146 @@
+\subsection{Time domain transformation}
+In this section we present a method that calculates the far field at a few specific points as the $FDTD$ simulation running. We can do this because we know that the source of the far field is confined to a limited number of points in the slot. We will also use the equivalence principle, which says we can treat the slot of the antenna as a group pf radiating currents, similar to an antenna. Therefore, we will only have to model the area immediately in front of and in back of the slot. This is illustrated in Fig.~. The first thing we have to do it develop the formulation for the calculation of the external field based on the field within the slot.\\
+This section illustrates several important characteristic of time domain simulation. Perhaps the most important is the following: while computer simulation makes possible the calculation of many problems which can,t handled analytically, it does not replace electromagnetic theory. Specially, we will use the well-known $Green's$ function approach to calculate the far field. This section will further demonstrate how a complicated frequency domain expression can be converted into the sampled time domain for implementation into $FDTD$
+\subsubsection{Formulating the Transformation from the Aperture}
+We begin with the vector potential\cite{Harrington_book}
+\be\label{trans_from_aperture_1}
+A\left(r\right)=\frac{1}{4\pi}\int\!\!\!\!\int\limits_S J_s\left(r'\right)\frac{e^{-jkR}}{R}dS'
+\ee
+where
+\begin{eqnarray}
+R&=&\arrowvert \overline{r}-\overline{r}'\arrowvert,\nonumber\\
+J_s&=&the current source,\nonumber\\
+ \frac{e^{-jkR}}{R}&=&the Green's function\nonumber
+\end{eqnarray}
+and the magnitude of $R$ is
+\be
+R=\left[\left(x-x'\right)^2+\left(y-y'\right)^2+\left(z-z'\right)^2\right]^{1/2}
+\ee
+The primed parameters indicate the source while the unprimed parameters are the scattered field (See Fig.~). The $H$ field obtained by
+\be\label{trans_from_aperture_2}
+H=\bigtriangledown_r\times A
+\ee
+Putting these together gives
+\begin{eqnarray}\label{trans_from_aperture_3}
+H&=&\frac{1}{4\pi}\bigtriangledown_r\times\int\!\!\!\!\int\limits_S J_s\left(r'\right)\frac{e^{-jkR}}{R}dS'\nonumber\\
+&=&\frac{1}{4\pi}\int\!\!\!\!\int\limits_S\bigtriangledown_r\times J_s\left(r'\right)\frac{e^{-jkR}}{R}dS'
+\end{eqnarray}
+The integrand can be simplified by the following:
+\begin{eqnarray}
+\bigtriangledown_r\times J_s\left(r'\right)\frac{e^{-jkR}}{R}&=&\frac{e^{-jkR}}{R}\bigtriangledown_r\times J_s\left(r'\right)- J_s\left(r'\right)\times\bigtriangledown_r\frac{e^{-jkR}}{R}\nonumber\\
+&=&-J_s\left(r'\right)\times\bigtriangledown_r\frac{e^{-jkR}}{R}\nonumber
+\end{eqnarray}
+The $\bigtriangledown_r\times J_s\left(r'\right)$ term can be dropped because $J\left(r'\right)$ is only a function of $r'$. Also,
+\be
+&&\bigtriangledown_r'\frac{e^{-jkR}}{R}=-\bigtriangledown_r\frac{e^{-jkR}}{R}\nonumber
+\ee
+and
+\be
+&&\bigtriangledown'\frac{e^{-jkR}}{R}=\frac{e^{-jkR}}{R}\left(jk+\frac{1}{R}\right)\widehat{r},\nonumber\ee
+where
+\be\label{trans_from_aperture_4}
+\widehat{r}=r_x\widehat{x}+r_y\widehat{y}+r_z\widehat{z}\label{trans_from_r}
+\ee
+We now have
+\be\label{trans_from_aperture_5}
+H=\frac{1}{4\pi}\int\!\!\!\!\int\limits_S\left(J\left(r'\right)\times \widehat{r}\right)\left(jk+\frac{1}{R}\right)\frac{e^{-jkR}}{R}dS'\nonumber
+\ee
+Using the principle of duality\cite{Harrington_book} we can deduce the following equation:
+\be\label{trans_from_aperture_6}
+E=\frac{-1}{4\pi}\int\!\!\!\!\int\limits_S\left(M\left(r'\right)\times \widehat{r}\right)\left(jk+\frac{1}{R}\right)\frac{e^{-jkR}}{R}dS'\nonumber
+\ee
+Now we have an expression for the external $E$ field in terms of the magnetic current $M$ in the aperture. The magnetic current is a fictitious current that is calculated from the $E$ field in the aperture\cite{Harrington_book}. We know that the fields in the aperture result from an $x-$polarized plane wave, and the direction normal to the aperture is the $z-$direction, so we can write
+\begin{eqnarray}\label{trans_from_aperture_7}
+M&=&2E_a\times \widehat{n}\nonumber\\
+&=&2E_a\widehat{x}\times\widehat{z}=-2E_a\widehat{y}
+\end{eqnarray}
+Hence,
+\be\label{trans_from_aperture_8}
+E=\frac{1}{4\pi}\int\!\!\!\!\int\limits_S\left(2E_a\left(r'\right)\widehat{y}\times \widehat{r}\right)\left(jk+\frac{1}{R}\right)\frac{e^{-jkR}}{R}dS'
+\ee
+From Eqn.~(\ref{trans_from_aperture_4})
+\be\label{trans_from_aperture_9}
+\widehat{y}\times\widehat{r}=\left(r_x\widehat{z}-r_z\widehat{x}\right),\nonumber
+\ee
+so we can write the $E$ field in terms of the two polarizations:
+\begin{subequations}
+\begin{eqnarray}\label{trans_from_aperture_10}
+E_x&=&\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot E_a\left(jk+\frac{1}{R}\right)\frac{e^{-jkR}}{R}dS'\label{trans_from_aperture_10a}\\
+E_z&=&-\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_x\cdot E_a\left(jk+\frac{1}{R}\right)\frac{e^{-jkR}}{R}dS'\label{trans_from_aperture_10b}
+\end{eqnarray}
+\end{subequations}
+$r_x$ and $r_z$ represent the portions of the unit vector $\widehat{r}$ in the x and z directions, respectively.\\
+From here on, we will restrict our development to the $E_x$ term, which is the dominant term as long as the incoming plane wave in Fig.~ is $x$~polarized. Just be aware that we could always come back and duplicate the following results for $E_z$. We begin by separating $E_x$ into two terms
+\begin{eqnarray}\label{trans_from_aperture_11}
+E_x=\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot E_a\cdot jk\frac{e^{-jkR}}{R}dS'+\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot E_a\frac{e^{-jkR}}{R^2}dS'
+\end{eqnarray}
+Starting with the first term, we will rewrite it as an explicit frequency domain function of $x,~y~\mathrm{and}~z:$
+\begin{eqnarray}\label{trans_from_aperture_12}
+\widehat{E}_{x1}\left(x,y,z,\omega\right)=\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot \frac{\widehat{E}_a\left(x',y',\omega\right)}{R}\cdot jke^{-jkR}dx'dy'
+\end{eqnarray}
+The following changes will be helpful:
+\begin{eqnarray}\label{trans_from_aperture_13}
+jk=\frac{j\omega}{c_0}~~~~~~~~~e^{-jkR}=e^{j\omega R/c_0}
+\end{eqnarray}
+So now we have
+\begin{eqnarray}\label{trans_from_aperture_14}
+\widehat{E}_{x1}\left(x,y,z,\omega\right)=\frac{1}{2\pi c_0}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot j\omega\frac{\widehat{E}_a\left(x',y',\omega\right)e^{-j\omega R/c_0}}{R}dx'dy'
+\end{eqnarray}
+The first step to implementing an equation like Eqn.~(\ref{trans_from_aperture_14}) into the $FDTD$ formulation is to take it to the time domain:
+\begin{eqnarray}\label{trans_from_aperture_15}
+E_{x1}\left(x,y,z,t\right)=\frac{1}{2\pi c_0}\int\!\!\!\!\!\!\int\limits_{apper}r_z\cdot \frac{d}{dt}\frac{{E}_z\left(x',y',t-R/c_0\right)}{R}dx'dy'
+\end{eqnarray}
+The exponential term in the frequency domain result in a retardation in the time domain; the $j\omega$ term became a time domain differential. In $FDTD$, the time is quantized as
+\be\label{trans_from_aperture_16}
+t\cong n\cdot \bigtriangleup t\nonumber
+\ee
+and the distance $R$ is quantized as
+\be\label{trans_from_aperture_17}
+R\cong \bigtriangleup x\cdot R_{\bigtriangleup x}\nonumber
+\ee
+where $\bigtriangleup x$ is the cell size used in the $FDTD$ simulation. We use cubic cells, ie., $\bigtriangleup x=\bigtriangleup y=\bigtriangleup z.$) We will use the usual relationship between the time step and the cell size:
+\be\label{trans_from_aperture_18}
+\bigtriangleup t=\frac{\bigtriangleup x}{2\cdot c_0}\nonumber
+\ee
+Therefore, the retardation in $E_a$ in Eqn.~(\ref{trans_from_aperture_15}) is approximated by
+\be\label{trans_from_aperture_19}
+\frac{R}{c_0}=\frac{R_{\bigtriangleup x}\bigtriangleup x}{c_0}=\frac{R_{\bigtriangleup x}\cdot\left(\bigtriangleup t\cdot 2c_0\right)}{c_0}=2\cdot R_{\bigtriangleup x}\cdot\bigtriangleup t 
+\ee
+We will further use the spatial quantization
+\be\label{trans_from_aperture_20}
+x\cong i\cdot\bigtriangleup x,~y\cong j\cdot\bigtriangleup x,~z\cong k\cdot\bigtriangleup x\nonumber 
+\ee
+to give
+\be\label{trans_from_aperture_21}
+E_a\left(x',y',t-R/c_0\right)\cong E_a\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)
+\ee
+The first-order approximation for the time derivative in Eqn.~(\ref{trans_from_aperture_15}) is
+\be\label{trans_from_aperture_22}
+\frac{d}{dt}E_a\left(x',y',t-R/c_0\right)\cong \frac{E_a\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)-E_a\left(i',j',n-1-2\cdot R_{\bigtriangleup x}\right)}{\bigtriangleup t}
+\ee
+For convenience, we will define the parameter
+\be\label{trans_from_aperture_23}
+del\_E_a^n\left(i,j,n-2\cdot R_{\bigtriangleup x}\right)\cong E_a\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)-E_a\left(i',j',n-1-2\cdot R_{\bigtriangleup x}\right) 
+\ee
+The finite difference approximation of Eqn.~(\ref{trans_from_aperture_15}) is
+\begin{eqnarray}\label{trans_from_aperture_24}
+E_{x1}^n\left(i,j,k\right)&\cong&\frac{1}{2\pi c_0}\sum_{i'}\sum_{j'} r_z\frac{del\_E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)}{R_{\bigtriangleup x}\cdot\bigtriangleup x \cdot\bigtriangleup t}\bigtriangleup x^2\nonumber\\
+&=&\frac{1}{2\pi c_0}\sum_{i'}\sum_{j'} r_z\frac{del\_E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)}{R_{\bigtriangleup x}\cdot\bigtriangleup x \cdot\left(\bigtriangleup x/2\cdot c_0\right)}\bigtriangleup x^2
+\end{eqnarray}
+By dividing out extra terms, we obtain the expression
+\begin{eqnarray}\label{trans_from_aperture_25}
+E_{x1}^n\left(i,j,k\right)\cong\frac{1}{\pi}\sum_{i'}\sum_{j'} r_z\frac{del\_E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)}{R_{\bigtriangleup x}}
+\end{eqnarray}
+We will now go back and transform the second term of Eqn.~(\ref{trans_from_aperture_11}) into the time domain
+\begin{eqnarray}\label{trans_from_aperture_26}
+E_{x2}\left(x,y,z,t\right)=\frac{1}{2\pi}\int\!\!\!\!\!\!\int\limits_{apper}r_z\frac{E_a\left(x,y,t-R/c_0\right)}{R^2}dx'dy'
+\end{eqnarray}
+Following the same quantization procedures, we obtain the following expression:
+\begin{eqnarray}\label{trans_from_aperture_27}
+E_{x2}^n\left(i,j,k\right)\cong\frac{1}{2\pi}\sum_{i'}\sum_{j'} r_z\frac{E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)}{R_{\bigtriangleup x}^2}
+\end{eqnarray}
+Finally, we write the two components of $E_x$ together:
+\begin{eqnarray}\label{trans_from_aperture_28}
+E_x^n\left(i,j,k\right)\cong\frac{1}{2\pi}\sum_{i'}\sum_{j'}\frac{r_z}{R_{\bigtriangleup x}}\left[del\_E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)+\frac{E_a^n\left(i',j',n-2\cdot R_{\bigtriangleup x}\right)}{2\cdot R_{\bigtriangleup x}}\right]\nonumber\\
+\end{eqnarray}
+Obviously, we would obtain identical expressions for the calculation of $E_z$ in Eqn.~(\ref{trans_from_aperture_10b}), except with an $r_x$ term instead of an $r_z$ term.

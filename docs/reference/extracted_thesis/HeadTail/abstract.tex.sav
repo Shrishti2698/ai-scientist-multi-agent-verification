@@ -1,0 +1,11 @@
+\chapter*{Abstract}
+{\LARGE O}ver the last decade, an \emph{Speaker Identification} (SI) system, have been employed efficiently as an add-on module with various speech related applications like \emph{Speech Recognition}, \emph{Personalized Speech Coding}, \emph{Speaker Verification} (SV), and many \emph{Personalized User Interfaces}. At the time of testing, the identification time for an unseen speech sample depends on the number of feature vectors, their dimensionality, the complexity of the speaker
+models and the number of speakers. Methods like \emph{Pre-quantization} (PQ) and \emph{Speaker Pruning} help the system to achieve considerable speed-up gain. However, the performance of the system degrades as some of the important parameters have been pruned out during testing in order to make the it faster. In this thesis, we focus on decreasing the computational load in the identification phase while an attempt is made to keep the recognition accuracy reasonably high through various fusion strategies that take evidences from complementary feature sets and feature sets with their reduced dimensionality.
+
+First, we have proposed a complementary feature set, which can describe high frequency part of the spectrum accurately. The performances of the proposed complementary feature set has been compared with baseline in the SI context. Next, a fusion strategy is developed to fuse the score from the models where models are developed from baseline and evidences from the complementary features. The fusion strategy have adopted the method PQ to equalize the computational involved as with baseline system.  
+
+
+ 
+
+
+

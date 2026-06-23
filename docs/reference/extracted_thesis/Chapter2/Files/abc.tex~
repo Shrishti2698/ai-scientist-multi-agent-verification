@@ -1,0 +1,323 @@
+\section{The Absorbing Boundary Condition}
+%Absorbing boundary conditions are necessary to keep outgoing ${\overrightarrow E}$ and ${\overrightarrow H}$ field being reflected back into the problem space. Normally, in calculating the ${\overrightarrow E}$ field, we need to know the surrounding ${\overrightarrow H}$ values; this is a fundamental assumption of FDTD method. At the edge of the problem space we will not have the value to one side. However, we have an advantage because we know there are no sources outside the problem space. Therefore, the field at the edge must be propagating outward. We will use these two faces to estimate the value at the end by using the value next to it \cite{Sullivan_book_00}.
+
+%The absorbing boundary conditions (ABC\rq s) are essential to terminate the computational space when the finite-difference time-domain(FDTD) method is applied to analyze electromagnetic (EM) problems. With the ABC\rq s, the fields on the truncated boundaries are evaluated by the interior fields.
+
+
+
+
+The finite-difference time-domain (FDTD) method is a full-wave approach for the analysis of electromagnetic (EM) problems \cite{lee_Algorithm}. When the FDTD method is used to solve open-structure EM problems such as scattering, antenna, and discontinuity problems, absorbing boundary conditions (ABC\rq s) are required to terminate the meshes. Investigators have paid much attention to the application and improvement of ABC\rq s during the last several decades. There are two popular ways used to construct the ABC\rq s, one is the usage of outgoing wave equations, another is the employment of nonphysical absorbing media. Engquist and Majda \cite{Engquist_ABC_for_numerical_simulation_waves} first used the outgoing wave equations to construct ABC\rq s, and Mur \cite{Mur_ABC_for_FDTD} improved them and presented the widely used Mur\rq s ABC\rq s. Mur\rq s ABC\rq s can adequately absorb the outgoing waves that are incident perpendicular to the truncated boundaries. However, when the incident angles of the outgoing waves increase, the absorbing performance of the Mur\rq s ABC\rq s rapidly becomes worse. The dispersive boundary conditions developed by Bi \cite{Bi_ABC_FDTD} and improved by Zhao et al. \cite{Zhao_ABC_FDTD} can adequately absorb the outgoing waves incident with several different angles. On the other hand, great development has been made on the usage of nonphysical absorbing media to truncate the FDTD meshes in the last few years. The perfect matched layer (PML) proposed by Berenger \cite{Berenger_PML} can perfectly absorb the scattered waves with the incident angle in a large range. In this implementation required the E and H fields to be split. In a recent paper, Sacks et al. \cite{Sacks_pml} suggested a PML which did not require that the computation of the individual and fields be split into two components. This was demonstrated on a finiteelement code. Zhao and Cangellaris \cite{Zhao_pml} formulated this into the FDTD method and demonstrated it in a two-dimensional FDTD code. In this works implements a three-dimensional (3-D) unsplit step PML following the theory of Sacks in a formulation similar to Zhao and Cangellaris. However, it
+varies in one important aspect: the PML is implemented using the magnetic field and the electrical displacement instead of the electric field , which makes the PML completely impervious to the background medium and completely separate from any \lq\lq real\rq\rq conductivity of the medium. Its accuracy and robustness were demonstrated in three-dimensional (3-D) problems with different background media in \cite{Sullivan_book_00,Sullivan_unsplit_3d_pml}. Furthermore, this PML is implemented with no additional computational resources.
+
+
+\subsection{The Perfectly Matched Layer(PML)}\label{PML}
+%\subsubsection{Two Dimensions PML}\label{PML_2d} 
+%One of the most flexible and efficient ABC\rq s is the perfectly matched layer (PML) developed by Berenger\cite{Berebger_PML},\cite{Prabir_thesis}.In the PML medium, each component of the electromagnetic field is split into two parts. In cartesian coordinates, the six components yield $12$ subcomponents denoted as $E_{xy}$, $E_{xz}$, $E_{yz}$, $E_{yx}$, $E_{zx}$, $E_{zy}$, $H_{xy}$, $H_{xz}$, $H_{yz}$ $H_{yx}$, $H_{zx}$, $H_{zy}$, and the Maxwell equations are replaced by 12 equations. For large scattering problem Berengers PML leads requires increasingly large time and memory. References \cite{Sullivan_book_00, Sullivan_simp_pml} and \cite{Sullivan_unsplit_3d_pml} have suggested a new unsplit step PML. We have considered this unsplit PML in one, two and three dimensions, and use them in the D and H fields. This has the advantage of isolating the PML from the rest of the FDTD computation, but unlike the split step formulation, requires almost no additional computational resources.The optimization of various parameters of PML is one of the main tasks. Here we optimized those and we got the reflection coefficient $–100~db$ or more for 15 point PML, which is good enough for our computation.
+
+The basic idea behind the PML \cite{Berenger_PML} is this: if a wave is propagating in media A and it impinges upon  media B, the amount of reflection is dictated by the intrinsic impedance of the two media
+\be\label{pml_11}
+\Gamma=\frac{\eta_A-\eta_B}{\eta_A+\eta_B}
+\ee
+which are determined by the dielectric constant $\varepsilon$ and $\mu$ of the two media
+\be\label{pml_12}
+\eta=\sqrt{\frac{\varepsilon}{\mu}}
+\ee
+Up to now, we have assumed the $\mu$ was a constant, so when a propagating pulse went from $\varepsilon=1$ to $\varepsilon=4$, as in Fig.~\ref{Fig:2d_yee_cell} , it saw a change in impedance and reflected a portion of the pulse given by (\ref{pml_11}). However if $\mu$ changed with $\varepsilon $ so $\eta$ remained constant, $\Gamma$ would be zero and no reflection would occur. This still doesn\rq t solve our problem because the pulse will continue propagating in the new medium. What we really want is a medium that is also lossy so that the pulse will die out before it hits the boundary. This is accomplished by making both $varepsilon$ and $\mu$ of (\ref{pml_12}) complex, because the imaginary part present the part that causes decay.
+
+Then from (\ref{Faraday_eqn3}) \& (\ref{Ampere_eqn3}),but move everything to the $Fourier domain$. The $Fourier domain$ in time replacing $\frac{d}{dt}$ by $j\omega$ which does not effect the spatial derivative.
+\begin{subequations}\label{pml_13}
+\begin{eqnarray}
+j\omega D_z&=&c_0\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\label{pml_13a}\\
+D_z\left(\omega\right)&=&\varepsilon_r^\ast\left(\omega\right)\cdot E_z\left(\omega\right)\label{pml_13b}\\
+j\omega H_x&=&-c_0\frac{\partial E_z}{\partial y}\label{pml_13c}\\
+j\omega H_y&=&c_0\frac{\partial E_z}{\partial x}\label{pml_13d}
+\end{eqnarray}
+\end{subequations}
+It is shown that we have eliminated $\varepsilon$ and $\mu$ from the spatial derivatives in Eqn~(\ref{pml_13a}),(\ref{pml_13c}) and (\ref{pml_13d}) for the normalized units.Instead of putting them back to implement the $PML$, we will add fictitious dielectric constants and permeabilities $\varepsilon^\ast_{Fz}$, $\mu^\ast_{Fx}$ and $\mu^\ast_{Fy}$ \cite{Sullivan_simp_pml} 
+\begin{subequations}\label{pml_14}
+\begin{eqnarray}
+j\omega D_z\cdot\varepsilon^\ast_{Fz}\left(x\right)\cdot\varepsilon^\ast_{Fz}\left(y\right)&=&c_0\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\label{pml_14a}\\
+D_z\left(\omega\right)&=&\varepsilon_r^\ast\left(\omega\right)\cdot E_z\left(\omega\right)\label{pml_14b}\\
+j\omega H_x\cdot\mu^\ast_{Fx}\left(x\right)\cdot\mu^\ast_{Fx}\left(y\right)&=&-c_0\frac{\partial E_z}{\partial y}\label{pml_14c}\\
+j\omega H_y\cdot\mu^\ast_{Fy}\left(x\right)\cdot\mu^\ast_{Fy}\left(y\right)&=&c_0\frac{\partial E_z}{\partial x}\label{pml_14d}
+\end{eqnarray}
+\end{subequations}
+A few things are worth noting: First, the value $\varepsilon_F$ is associated with the flux density $D$, not the electric field $E$; secondly, we have added two values each of the $\varepsilon_F$ in (\ref{pml_14a}) and $\mu_F$ in (\ref{pml_14c}) and (\ref{pml_14d}), one for the $x$ direction and one for the $y$ direction; and finally, nothing was added to (\ref{pml_14b}). These fictitious values to implement the $PML$ have nothing to do with the real values of $\varepsilon^\ast_r\left(\omega\right)$ which specify the medium.\\
+Sack, et al.\cite{Sacks_pml} shows that there are two conditions to form a $PML$:
+\begin{enumerate}
+\item The impedance going from the background medium to the $PML$ must be constant,
+\be\label{pml_15}
+\eta_0=\eta_m=\sqrt{\frac{\mu^\ast_{Fx}}{\varepsilon^\ast_{Fx}}}=1
+\ee
+The impedance is $1$ because of our normalized units.
+\item In the direction perpendicular to the boundary 9the x direction, for instance), the relative dielectric constant and relative permeability must be the inverse of those in the other directions; ie.,
+\begin{subequations}\label{pml_16}
+\begin{eqnarray}
+\varepsilon^\ast_{Fx}=\frac{1}{\varepsilon^\ast_{Fy}}\label{pml_16a}\\
+\mu^\ast_{Fx}=\frac{1}{\mu^\ast_{Fy}}\label{pml_16b}
+\end{eqnarray}
+\end{subequations}
+\end{enumerate}
+We will assume that each of these is a complex quantity of the form
+\begin{subequations}\label{pml_17}
+\begin{eqnarray}
+\varepsilon^\ast_{Fx}&=&\varepsilon_{Fm}+\frac{\sigma Dm}{j\omega\varepsilon_0}~~~~for~m=x~or~y\label{pml_17a}\\
+\mu^\ast_{Fx}&=&\mu_{Fm}+\frac{\sigma Dm}{j\omega\mu_0}~~~~for~m=x~or~y\label{pml_17b}
+\end{eqnarray}
+\end{subequations}
+The following selection of parameters satisfies (\ref{pml_16})\cite{Sullivan_unsplit_3d_pml}
+\begin{subequations}\label{pml_18}
+\begin{eqnarray}
+\varepsilon_{Fm}&=&\mu_{Fm}=1\label{pml_18a}\\
+\frac{\sigma_{Dm}}{\varepsilon_o}&=&\frac{\sigma_{Hm}}{\mu_0}=\frac{\sigma_D}{\varepsilon_0}\label{pml_18b}
+\end{eqnarray}
+\end{subequations}
+Substituting (\ref{pml_18}) into (\ref{pml_17}), the value in (\ref{pml_15}) becomes
+\be\label{pml_19}
+\eta_0=\eta_m=\sqrt{\frac{\mu^\ast_{Fx}}{\varepsilon^\ast_{Fx}}}=\sqrt{\frac{1+\sigma\left(x\right)/j\omega\varepsilon_0}{1+\sigma\left(x\right)/j\omega\varepsilon_0}}=1
+\ee
+This fullfills the first requirement above. If $\sigma$ increases gradually as it goes into the $PML$. (\ref{pml_14a}), (\ref{pml_14c}) and (\ref{pml_14d}) will cause $D_z$ and $H_y$ to be attenuated. 
+
+\subsubsection{The PML in One Dimensions}\label{PML_1d}
+We will start by implementing a PML only in the x-direction. Therefore, we will retain only the x dependent value of $\varepsilon_F^*$ and $\mu_F^*$ in (\ref{pml_14})
+\begin{subequations}\label{pml_20}
+\begin{eqnarray}
+j\omega D_z\cdot\varepsilon^\ast_{Fz}\left(x\right)&=&c_0\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\label{pml_20a}\\
+j\omega H_x\cdot\mu^\ast_{Fx}\left(x\right)&=&-c_0\frac{\partial E_z}{\partial y}\label{pml_20b}\\
+j\omega H_y\cdot\mu^\ast_{Fy}\left(x\right)&=&c_0\frac{\partial E_z}{\partial x}\label{pml_20c}
+\end{eqnarray}
+\end{subequations}
+and use the value of (\ref{pml_18})
+\begin{subequations}\label{pml_21}
+\begin{eqnarray}
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)D_z&=&c_0\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\label{pml_21a}\\
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)^{-1}H_x&=&-c_0\frac{\partial E_z}{\partial y}\label{pml_21b}\\
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)H_y&=&c_0\frac{\partial E_z}{\partial x}\label{pml_21c}
+\end{eqnarray}
+\end{subequations}
+The permeability of $H_x$ in (\ref{pml_21b}) is the inverse of that in (\ref{pml_21c}) in keeping with (\ref{pml_16b}). Therefore, we have fulfilled the second requirement for the PML. ((\ref{pml_16a}) is irrelevant for this 2D case, because we only have an E field in the z direction, which is perpendicular to both x and y, the direction of propagation.)
+
+Now Eqns.~(\ref{pml_21}) have to be put into the FDTD formulation. First, look at the left side of (\ref{pml_21a})
+\begin{eqnarray}\label{pml_22}
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)D_z=j\omega D_z+ \frac{\sigma_D(x)}{\varepsilon_0}D_z
+\end{eqnarray}
+Moving to the time domain, and then taking the finite difference approximations, we get the following:
+\begin{eqnarray}\label{pml_23}
+\frac{\partial D_z}{\partial t}+\frac{\sigma_D(i)}{\varepsilon_0}D_z&\cong& \frac{D_z^{n+1/2}(i,j)-D_z^{n-1/2}(i,j)}{\bigtriangleup t}\frac{\sigma_D(i)}{\varepsilon_0}\frac{D_z^{n+1/2}(i,j)+D_z^{n+1/2}(i,j)}{2}\\
+&=&D_z^{n+1/2}(i,j)\frac{1}{\bigtriangleup t}\left[1+\frac{\sigma_D(i)\bigtriangleup t}{2\varepsilon_0}\right]-D_z^{n-1/2}(i,j)\frac{1}{\bigtriangleup t}\left[1-\frac{\sigma_D(i)\bigtriangleup t}{2\varepsilon_0}\right]\nonumber
+\end{eqnarray}
+If we put this into (\ref{pml_21}) along with the spatial derivations, we get
+\begin{eqnarray}\label{pml_24}
+&&D_z^{n+1/2}(i,j)=gi3(i)\cdot D_z^{n-1/2}(i,j)\\
+&+&gi2(i)\cdot 0.5\left[H_y^n(i+1/2,j)-H_y^n(i-1/2,j)-H_x^n(i,j+1/2)+H_x^n(i,j-1/2) \right]\nonumber
+\end{eqnarray}
+where once again we have used the fact that
+\begin{eqnarray}\label{pml_25}
+\frac{\bigtriangleup t}{\bigtriangleup x}c_0=\frac{\bigtriangleup x/(2\cdot c_0)}{\bigtriangleup x}c_0=\frac{1}{2}
+\end{eqnarray}
+The new parameters gi2 and gi3 are given by
+\begin{subequations}\label{pml_26}
+\begin{eqnarray}
+gi2(i)=\frac{1}{1+\sigma_D(i)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}\label{pml_26a}\\
+gi3(i)=\frac{1-\sigma_D(i)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}{1+\sigma_D(i)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}\label{pml_26b}
+\end{eqnarray}
+\end{subequations}
+An almost identical treatment of (\ref{pml_21c}) gives
+\begin{eqnarray}\label{pml_27}
+H_y^{n+1}(i+1/2,j)&=&fi3(i+1/2)\cdot H_y^n(i+1/2,j)\nonumber\\
+&+&fi2(i+1/2)\cdot 0.5\cdot\left[E_z^{n+1/2}(i+1,j)-E_z^{n+1/2}(i+0,j)\right]~~~~
+\end{eqnarray}
+where
+\begin{subequations}\label{pml_28}
+\begin{eqnarray}
+fi2(i+1/2)=\frac{1}{1+\sigma_D(i+1/2)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}\label{pml_28a}\\
+fi3(i+1/2)=\frac{1-\sigma_D(i+1/2)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}{1+\sigma_D(i+1/2)\cdot\bigtriangleup t/(2\cdot\varepsilon_0)}\label{pml_28b}
+\end{eqnarray}
+\end{subequations}
+Notice that these parameters are calculated at i+1/2 because of the position of $H_y$ in the FDTD grid (Fig.~\ref{Fig:2d_yee_cell}).
+
+(\ref{pml_21b}) will require a somewhat different treatment than the other two. Start by rewriting it as
+\begin{eqnarray}\label{pml_29}
+j\omega H_x=-c_0\left[\frac{\partial E_z}{\partial y}+\frac{\sigma_D(x)}{\varepsilon_0}\frac{1}{j\omega}\frac{\partial E_z}{\partial y}\right]
+\end{eqnarray}
+Remember $(1/j\omega)$ may be regarded as an integration operator over time and $j\omega$ as a derivative over time. The spatial derivative will be written as
+\begin{eqnarray}\label{pml_30}
+\frac{\partial E_z}{\partial y}\cong\frac{E_z^{n+1/2}(i,j+1)-E_z^{n+1/2}(i,j)}{\bigtriangleup x}=-\frac{curl_{-}e}{\bigtriangleup x}
+\end{eqnarray}
+Implementing this into an FDTD formulation gives
+\begin{eqnarray}\label{pml_31}
+\frac{H_x^{n+1/2}(i,j+1/2)-H_x^{n}(i,j+1/2)}{\bigtriangleup t}=-c_0\left[-\frac{curl_{-}e}{\bigtriangleup x}-\frac{\sigma_D(x)}{\varepsilon_0}\bigtriangleup t\sum_{n=0}^{T}\frac{curl_{-}e}{\bigtriangleup x}\right]
+\end{eqnarray}
+The extra $\bigtriangleup t$ in front of the summation. This is part of the approximation of the time domain integral. Finally we get
+\begin{eqnarray}\label{pml_32}
+H_x^{n+1}(i,j+1/2)&=&H_x^{n}(i,j+1/2)+\frac{c_0\cdot\bigtriangleup t}{\bigtriangleup x}curl_{-}e\nonumber\\
+&&+\frac{\bigtriangleup t\cdot c_0}{\bigtriangleup x}\frac{\sigma_D(x)\bigtriangleup t}{\varepsilon_0}I_{H_x}^{n+1/2}(i,j+1/2)\nonumber\\
+&=&H_x^{n}(i,j+1/2)+\frac{c_0\cdot\bigtriangleup t}{\bigtriangleup x}curl_{-}e\nonumber\\
+&&+\frac{\sigma_D(x)\bigtriangleup t}{2\varepsilon_0}I_{H_x}^{n+1/2}(i,j+1/2)
+\end{eqnarray}
+(\ref{pml_21c}) is implemented as following series of equations:
+\begin{subequations}\label{pml_33}
+\begin{eqnarray}
+curl_{-}e&=&\left[E_z^{n+1/2}(i,j)-E_z^{n+1/2}(i,j+1)\right]\label{pml_33a}\\
+I_{H_x}^{n+1/2}(i,j+1/2)&=&I_{H_x}^{n-1/2}(i,j+1/2)+curl_{-}e\label{pml_33b}\\
+H_x^{n+1}(i,j+1/2)&=&H_x^{n}(i,j+1/2)+0.5\cdot curl_{-}e\nonumber\\
+&&+fi1(i)\cdot I_{H_x}^{n+1/2}(i,j+1/2)\label{pml_33c}
+\end{eqnarray}
+\end{subequations}
+with
+\begin{eqnarray}\label{pml_34}
+fi1(i)=\frac{\sigma(i)\cdot\bigtriangleup t}{2\varepsilon_0}
+\end{eqnarray}
+
+
+
+
+
+
+
+
+\subsubsection{The PML in Two Dimensions}\label{PML_2d}
+So far, the implementation of the PML in the x-direction is shown. Obviously, it must also be done in the y-direction. Therefore, we have to go back and add the y dependent terms from (\ref{pml_14}) that were set aside. So instead of (\ref{pml_21b}) we have
+\begin{subequations}\label{pml_2d_1}
+\begin{eqnarray}
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_D(y)}{j\omega\varepsilon_0}\right)D_z&=&c_0\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\label{pml_2d_1a}\\
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)^{-1}\left(1+\frac{\sigma_D(y)}{j\omega\varepsilon_0}\right)H_x&=&-c_0\frac{\partial E_z}{\partial y}\label{pml_2d_1b}\\
+j\omega \left(1+\frac{\sigma_D(x)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_D(y)}{j\omega\varepsilon_0}\right)^{-1}H_y&=&c_0\frac{\partial E_z}{\partial x}\label{pml_2d_1c}
+\end{eqnarray}
+\end{subequations}
+Using the same procedure as before, the following replace (\ref{pml_24}):
+\begin{eqnarray}\label{pml_2d_2}
+D_z^{n+1/2}(i,j)&=&gi3(i)\cdot gj3(j)\cdot D_z^{n-1/2}(i)\nonumber\\
+&+&gi2(i)\cdot gj2(j)\cdot(0.5)\cdot\left[H_y^n(i+1/2,j)-H_y^n(i-1/2,j)\right.\nonumber\\
+&&\left.-H_x^n(i,j+1/2)+H_x^n(i,j-1/2)\right]
+\end{eqnarray}
+In the y direction, $H_y$ will require, an implementation similar to the one used for $H_x$ in the x direction giving
+\begin{subequations}\label{pml_2d_3}
+\begin{eqnarray}
+curl_-e&=&\left[E_z^{n+1/2}(i+1,j)-E_z^{n+1/2}(i,j)\right]\label{pml_2d_3a}\\
+I_{H_y}^{n+1/2}(i+1/2,j)&=&I_{H_y}^{n-1/2}(i+1/2,j)+curl_-e\label{pml_2d_3b}\\
+H_y^{n+1}(i+1/2,j)&=&fi3(i+1/2)\cdot H_y^{n}(i+1/2,j) \nonumber\\
+&&-fi2(i+1/2)\cdot 0.5\cdot curl_-e-fj1(j)\cdot I_{H_y}^{n+1/2}(i+1/2,j)~~~~~~~~~\label{pml_2d_3c}
+\end{eqnarray}
+\end{subequations}
+Finally, the $H_x$ in the x direction becomes
+\begin{subequations}\label{pml_2d_4}
+\begin{eqnarray}
+curl_-e&=&\left[E_z^{n+1/2}(i,j)-E_z^{n+1/2}(i,j+1)\right]\label{pml_2d_4a}\\
+I_{H_x}^{n+1/2}(i,j+1/2)&=&I_{H_x}^{n-1/2}(i,j+1/2)+curl_-e\label{pml_2d_4b}\\
+H_y^{n+1}(i,j+1/2)&=&fj3(j+1/2)\cdot H_x^{n}(i,j+1/2) \nonumber\\
+&&-fj2(j+1/2)\cdot 0.5\cdot curl_-e-fi1(j)\cdot I_{H_x}^{n+1/2}(i,j+1/2)~~~~~~~~~\label{pml_2d_4c}
+\end{eqnarray}
+\end{subequations}
+
+
+
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.4]{2d_cross_section_of_pml}
+    \caption{ 2-D cross section of PML.}
+    \label{Fig:2d_cross_section_of_pml}
+  \end{center}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\subsubsection{The PML in Three Dimensions}\label{PML_3d} 
+The $PML$ for three dimensions closly follows the two-dimensional version. The only difference is that we have to deal with three directions instead of two\cite{Sullivan_simp_pml}. For instance, (\ref{pml_2d_1a}) becomes
+\begin{eqnarray}\label{pml_3d_1}
+j\omega \left(1+\frac{\sigma_x(x)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_y(y)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_z(z)}{j\omega\varepsilon_0}\right)^{-1}D_z&=&c_0\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)
+\end{eqnarray}
+and implementing it will closely follow the two-dimensional development. Start by rewriting (\ref{pml_3d_1}) as
+\begin{eqnarray}\label{pml_3d_2}
+j\omega \left(1+\frac{\sigma_x(x)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_y(y)}{j\omega\varepsilon_0}\right)D_z&=&c_0\left(1+\frac{\sigma_z(z)}{j\omega\varepsilon_0}\right)\cdot\left(\frac{\partial H_y}{\partial x}-\frac{\partial H_x}{\partial y}\right)\nonumber\\
+&=&c_0\cdot curl_-h+c_0\cdot\frac{\sigma_z(z)}{\varepsilon_0}\frac{1}{j\omega}curl_-h
+\end{eqnarray}
+Define
+\begin{eqnarray}\label{pml_3d_3}
+I_{D_z}=\frac{1}{j\omega}curl_-h
+\end{eqnarray}
+which is an integration when it goes to the time domain, so (\ref{pml_3d_2}) becomes
+\begin{eqnarray}\label{pml_3d_4}
+j\omega \left(1+\frac{\sigma_x(x)}{j\omega\varepsilon_0}\right)\left(1+\frac{\sigma_y(y)}{j\omega\varepsilon_0}\right)D_z=c_0\cdot \left (curl_-h+\frac{\sigma_z(z)}{\varepsilon_0}I_{D_z}\right)
+\end{eqnarray}
+The implantation of this into FDTD parallel that of the two-dimensional PML, except the right side contains the integration term $I_{D_z}$. Therefore, following the same math we used in for two dimensional case, we get
+\begin{subequations}\label{pml_3d_5}
+\begin{eqnarray}
+curl_-h&=&H_y^n(i+1/2,j,k+1/2)-H_y^n(i-1/2,j,k+1/2)\nonumber\\
+&-&H_x^n(i,j+1/2,k+1/2)+H_x^n(i,j-1/2,k+1/2)\label{pml_3d_5a}\\
+I_{D_z}^n(i,j,k+1/2)&=&I_{D_z}^{n-1}(i,j,k+1/2)+curl_-h\label{pml_3d_5b}\\
+D_z^{n+1/2}(i,j,k+1/2)&=&gi3(i)gi3(j)D_z^{n+1/2}(i,j,k+1/2)\nonumber\\
+&+&gi2(i)gj2(j) 0.5\left(curl_-h+gk1(k)I_{D_z}^n(i,j,k+1/2)\right)~~~~\label{pml_3d_5c}
+\end{eqnarray}
+\end{subequations}
+In calculating the f and g parameters, it is not necessary to actually vary conductivities. Instead, we calculate an auxiliary parameter,
+\begin{eqnarray}\label{pml_3d_6}\\
+xn=\frac{\sigma\bigtriangleup t}{2\varepsilon_0}
+\end{eqnarray}
+that increases as it goes into the PML. The f and g parameters are then calculated:
+\begin{eqnarray}\label{pml_3d_7}\\
+xn(i)=0.333\times\left(\frac{i}{length_{-}pml}\right)^3~~~~~~i=1,2,3,.......,length_{-}pml
+\end{eqnarray}
+\begin{subequations}\label{pml_3d_8}
+\begin{eqnarray}
+fi1(i)&=&xn(i)\label{pml_3d_8a}\\
+gi2(i)&=&\frac{1}{1+xn(i)}\label{pml_3d_8b}\\
+gi3(i)&=&\frac{1-xn(i)}{1+xn(i)}\label{pml_3d_8c}
+\end{eqnarray}
+\end{subequations}
+The quantity in parenthesis in (\ref{pml_3d_7}) ranges between 0 and 1. The factor \lq\lq 0.333\rq\rq was found empirically to be the largest number that remained stable \cite{Sullivan_unsplit_3d_pml}. Similarly, the cubic factor in (\ref{pml_3d_7}) was found empirically to be the most effective variation-fi2 and fi3 are different only because they are computed at the half intervals, i+1/2. The parameters vary in the following manner:
+\begin{subequations}\label{pml_3d_9}
+\begin{eqnarray}
+fi1(i),gi1(i),fj1(j),gj1(j),fk1(k)~\&~gk1(k)~~~&&~~~\mathrm{from~0~to~0.333} \label{pml_3d_9a}\\
+fi2(i),gi2(i),fj2(j),gj2(j),fk2(k)~\&~gk2(k)~~~&&~~~\mathrm{from~0~to~0.75} \label{pml_3d_9b}\\
+fi3(i),gi3(i),fj3(j),gj3(j),fk3(k)~\&~gk3(k)~~~&&~~~\mathrm{from~0~to~0.5} \label{pml_3d_9c}
+\end{eqnarray}
+\end{subequations}
+
+Though the main problem space, fi1(i), gi1(i), fj1(j), gj1(j), fk1(k) \& gk1(k) are zero and fi2(i), gi2(i), fj2(j), gj2(j), fk2(k), gk2(k), fi3(i), gi3(i), fj3(j), gj3(j), fk3(k) \& gk3(k) are one. Therefore, there is a \lq\lq seamless\rq\rq transition from the main part of the program to the PML(Fig.~\ref{Fig:2d_cross_section_of_pml}), but it suffers from main drawback: the integral parameter $I_{D_z}$ is an additional three-dimensional array that is dimensioned through the problem space, but used only two edges. The three-dimensional implementation will have a total six such arrays, which clearly is a waste of computer resources. For this reason, $I_{D_z}$ will be broken up into two smaller three-dimensional arrays, one define at the low value of i,j or k and one define at the high values of i, j or k as in \cite{Sullivan_book_00}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

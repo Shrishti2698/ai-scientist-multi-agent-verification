@@ -1,0 +1,41 @@
+\subsection{Wire Antennas as EM Field Sensors}\label{LR_Wire_Antenna_sensor}\index{EM field sensor!wire antenna} 
+
+%Though the theoretical underpinnings upon which antenna theory is based were laid by the contributions of Faraday, Maxwell, Hertz, and Pocklington, to name only four, in the 19th Century \cite{Pocklington_Electrical_oscillations_wire}, another three decades passed before scientists and engineers began to develop analytical methods that enabled them to acquire a quantitative understanding of the simplest of antennas \cite{Butler_wire_antennas_simple_powerful}. In the interim, mathematical analyses of the free oscillations of conducting bodies appeared in the literature but were limited to shapes consistent with coordinate systems in which the wave equation is separable. The progress in the investigation on practical antennas accelerated in the late 1930s when E. Hallen published his study on the integral equation and its solution for a cylindrical wire antenna \cite{Balanis_book_antenna_theory_and_degine}. Beginning primarily in the early 1960\rq s, numerical methods were introduced that allowed previously intractable complex antenna system configurations to be analyzed and designed very accurately. The numerical methods like method of moment (MoM) \cite{Mei_integral_equations_wire_antennas}, \cite{Harrington_Matrix_methods_field_problems}, \cite{Harringlon_Field_Computation_MoM}, finite-difference \cite{Richtmyer_FD_nitial_value_Problems}, \cite{Smith_FDM}, \cite{Rynne_Instabilities_methods_scattering_problems}, \cite{Steger_FD_inverse_matrix_method}, finite-difference time-domain (FDTD) \cite{lee_Algorithm}, \cite{Taflove_FDTD_sinusoidal_steady_state_em_problems}, \cite{Taflove_Numerical_Solution_Steady_State_Electromagnetic_Scattering}, finite element \cite{Courant_Variational_solution_equilibrium_vibrations}, \cite{Desai_Introduction_FEM_Numerical_Engg_Analysis}, \cite{Sadiku_simple_fem_em_problems} and asymptotic methods like geometrical theory of diffraction (GTD) \cite{Keller_gtd}, uniform theory of diffraction (UTD) \cite{Pathak_utd, McNamara_book_90}, \cite{Y_T_Lo_edited_book}, uniform asymptotic theory of diffraction (UAT) \cite{Boersma_uat}, \cite{Ahluwalia_uat}, \cite{Lee_uat_curved_wedge}, \cite{Deschamps_3_D_uat} physical theory of diffraction (PTD) \cite{Knott_progression_high_frequency_RCS}, \cite{Shung_Wu_Lee_Comparison_of_uat}, \cite{Ufimtsev_Comments_Comparison_three_high_freq_techniques} contributes significantly to the maturity of the antenna field. These numerical techniques are analytically simple, versatile but require large amount of computations. Advances made in computer architecture and technology during the 1960-1980s has a major impact in the use of numerical techniques in the modern antenna design technology. It had an even grater influence on antenna engineering in 1990\rq s and beyond \cite{Balanis_book_antenna_theory_and_degine}. The usefulness of numerical methods of solutions of antenna and scattering problems was investigated by different researches \cite{George_Numerical_Sol_Antenna_Scattering_Problems}. The relative merits of the various integral equations applicable to thin-wire scatterers and the methods for solving them had been delineated by C. M. Butler and Wilton \cite{Butler_Analysis_various_numerical_tech_wire_scatterers}. Numerous other researchers contributed refinements to enhance the solution accuracy, and the wire antenna in its various configurations rapidly become the workhouse of communications. The input impedance of simple wire antennas \cite{Harrington_Matrix_methods_field_problems}, \cite{Balanis_book}, \cite{Popovic_Analysis_synthesis_wire_antennas}, moderately thick wires \cite{Werner_MoM_modeling_thick_cylindrical_wire_antennas}, long dipole \cite{Chen_studies_long_dipole_antenna} was evaluating using MoM \cite{Mittra_Book_Computer_Techniques_for_Electro}, \cite{Tsai_MoM_Electromagnetics_Undergradcuates}, \cite{Moore_MoM_Techniques_Applications}, \cite{Wang_Generalised_MoM_electromagnetics}. Also hybrid technique was used for combining the MoM of wire antennas with GTD for curved surfaces \cite{Thiele_hybrid_technique_combining_MoM_GTD}, \cite{Ekelman_hybrid_technique_MoM_wire_antennas}, \cite{Sahalos_application_GTD_MoM_limitations}. First antenna analyzed with the FDTD methods were simple structure such as rotationally symmetric, perfectly conducting, cylindrical and conical monopole in free space \cite{Maloney_simple_antennas_FDTD_method}. A partial list of the different types of antennas includes loaded linear elements \cite{Maloney_resistive_monopole_FDTD_measurements, Montoya_several_broad_band_loaded_monopoles} and arras of linear elements \cite{Boonzaaier_Thin_wire_Yagi_antenna_FDTD}, \cite{Luebbers_FDTD_antenna_mutual_coupling}, \cite{Kashiwa_Time_domain_Yagi_Uda_FDTD}. A more complete accounting is in the detailed review in \cite{Shlager_survey_FDTD_Method}.  
+
+
+The wire antenna has important and wide applications as an EMFS. The performance of wire antenna as an EMFS are analyzed in terms of free-space AF or CAF using method of moments (MoM) in \cite{S_Ghosh_Loaded_wire_antenna_as_EMI_sensor}, \cite{S_Ghosh_antenna_factor_of_wire}, \cite{S_Ghosh_thesis}, \cite{Fujii_free_space_AF_VHF_EMI_antennas}. In this work, we first use FDTD to predict the performance of wire antenna as an EMFS in terms of free-space CAF. Next the microstrip antenna is considered as an EMFS.
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

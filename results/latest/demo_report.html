@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI-Scientist Demo Report</title>
+  <style>
+    :root { --bg:#f5f1e8; --ink:#1e2430; --accent:#0d6b6b; --card:#fffdf8; --border:#d8cfbf; }
+    body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:linear-gradient(135deg,#f5f1e8,#e6efe9); color:var(--ink); }
+    main { max-width: 980px; margin: 0 auto; padding: 32px 20px 48px; }
+    h1,h2,h3 { margin:0 0 12px; }
+    .hero { padding:24px; background:rgba(255,253,248,.85); border:1px solid var(--border); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:20px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,.05); }
+    ul { padding-left:20px; }
+    .muted { color:#4d5a65; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>AI-Scientist Demo Report</h1>
+      <p><strong>Question:</strong> Do critic-guided verification loops improve research claim checking?</p>
+      <p class="muted">Research question: Do critic-guided verification loops improve research claim checking? Supported findings: 5 claim(s) have meaningful evidence in the current corpus. Critique summary: weakly supported or contradicted claims should be reported cautiously.</p>
+    </section>
+    <section class="grid">
+      <section class="card">
+        <h2>Orchestration Trace</h2>
+        <ul><li>Pass 1 retrieved 3 paper(s) for the original question.</li><li>Critic requested targeted re-verification for 5 claim(s).</li><li>Pass 2 revisited claim &#x27;Adding a critic stage improves final answer caution and surfaces unsup&#x27; because single-source support needs corroboration; checked 6 paper(s).</li><li>Pass 2 revisited claim &#x27;Critic feedback reduces overconfident reporting in ambiguous cases.&#x27; because single-source support needs corroboration; checked 5 paper(s).</li><li>Pass 2 revisited claim &#x27;The approach does not eliminate all factual errors, but it improves tr&#x27; because single-source support needs corroboration; checked 6 paper(s).</li><li>Pass 2 revisited claim &#x27;We present a lightweight claim extraction approach for computer scienc&#x27; because single-source support needs corroboration; checked 5 paper(s).</li><li>Pass 2 revisited claim &#x27;The method identifies hypothesis, improvement, limitation, and result &#x27; because single-source support needs corroboration; checked 6 paper(s).</li></ul>
+      </section>
+      <section class="card">
+        <h2>Critique Notes</h2>
+        <ul><li><strong>medium</strong>: Support comes from a single source; stronger verification needs additional corroboration. (Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains.)</li><li><strong>medium</strong>: Support comes from a single source; stronger verification needs additional corroboration. (Critic feedback reduces overconfident reporting in ambiguous cases.)</li><li><strong>medium</strong>: Support comes from a single source; stronger verification needs additional corroboration. (The approach does not eliminate all factual errors, but it improves transparency.)</li><li><strong>medium</strong>: Support comes from a single source; stronger verification needs additional corroboration. (We present a lightweight claim extraction approach for computer science abstracts.)</li><li><strong>medium</strong>: Support comes from a single source; stronger verification needs additional corroboration. (The method identifies hypothesis, improvement, limitation, and result statements with interpretable rules.)</li></ul>
+      </section>
+    </section>
+    <section style="margin-top:20px;">
+      <h2>Verified Claims</h2>
+      <div class="grid">
+        
+                <section class="card">
+                  <h3>Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains.</h3>
+                  <p><strong>Type:</strong> performance | <strong>Verdict:</strong> supported | <strong>Confidence:</strong> 0.95</p>
+                  <p><strong>Source:</strong> Critic-Guided Verification Loops for Research Assistants</p>
+                  <p>Retrieved evidence aligns with the claim, with confidence weighted by evidence strength and diversity.</p>
+                  <ul><li><strong>Critic-Guided Verification Loops for Research Assistants</strong>: Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains. <em>(overlap=1.0)</em></li></ul>
+                </section>
+                
+                <section class="card">
+                  <h3>Critic feedback reduces overconfident reporting in ambiguous cases.</h3>
+                  <p><strong>Type:</strong> performance | <strong>Verdict:</strong> supported | <strong>Confidence:</strong> 0.95</p>
+                  <p><strong>Source:</strong> Critic-Guided Verification Loops for Research Assistants</p>
+                  <p>Retrieved evidence aligns with the claim, with confidence weighted by evidence strength and diversity.</p>
+                  <ul><li><strong>Critic-Guided Verification Loops for Research Assistants</strong>: Critic feedback reduces overconfident reporting in ambiguous cases. <em>(overlap=1.0)</em></li></ul>
+                </section>
+                
+                <section class="card">
+                  <h3>The approach does not eliminate all factual errors, but it improves transparency.</h3>
+                  <p><strong>Type:</strong> limitation | <strong>Verdict:</strong> supported | <strong>Confidence:</strong> 0.95</p>
+                  <p><strong>Source:</strong> Critic-Guided Verification Loops for Research Assistants</p>
+                  <p>Retrieved evidence aligns with the claim, with confidence weighted by evidence strength and diversity.</p>
+                  <ul><li><strong>Critic-Guided Verification Loops for Research Assistants</strong>: The approach does not eliminate all factual errors, but it improves transparency. <em>(overlap=1.0)</em></li></ul>
+                </section>
+                
+                <section class="card">
+                  <h3>We present a lightweight claim extraction approach for computer science abstracts.</h3>
+                  <p><strong>Type:</strong> observation | <strong>Verdict:</strong> supported | <strong>Confidence:</strong> 0.95</p>
+                  <p><strong>Source:</strong> Claim Extraction from Computer Science Abstracts</p>
+                  <p>Retrieved evidence aligns with the claim, with confidence weighted by evidence strength and diversity.</p>
+                  <ul><li><strong>Claim Extraction from Computer Science Abstracts</strong>: We present a lightweight claim extraction approach for computer science abstracts. <em>(overlap=1.0)</em></li></ul>
+                </section>
+                
+                <section class="card">
+                  <h3>The method identifies hypothesis, improvement, limitation, and result statements with interpretable rules.</h3>
+                  <p><strong>Type:</strong> performance | <strong>Verdict:</strong> supported | <strong>Confidence:</strong> 0.95</p>
+                  <p><strong>Source:</strong> Claim Extraction from Computer Science Abstracts</p>
+                  <p>Retrieved evidence aligns with the claim, with confidence weighted by evidence strength and diversity.</p>
+                  <ul><li><strong>Claim Extraction from Computer Science Abstracts</strong>: The method identifies hypothesis, improvement, limitation, and result statements with interpretable rules. <em>(overlap=1.0)</em></li></ul>
+                </section>
+                
+      </div>
+    </section>
+  </main>
+</body>
+</html>

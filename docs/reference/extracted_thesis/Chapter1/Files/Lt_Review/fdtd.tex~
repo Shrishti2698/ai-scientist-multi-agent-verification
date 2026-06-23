@@ -1,0 +1,25 @@
+\subsection{Finite Difference Time Domain (FDTD) Technique}\label{LR_fdtd}\index{FDTD}
+
+The finite difference time domain (FDTD) technique has exploded in popularity in recent years as illustrated by the steady increase in conference presentations and journal articles because it is simple, efficient, robust, and highly accurate, and it easily treats general time domain excitations and objects with complicated shape and/or material composition. FDTD technique has been used to simulate a wide variety of electromagnetic phenomena because of its flexibility and versatility. A detailed review of the FDTD technique is available in \cite{Shlager_survey_FDTD_Method}, \cite{Taflove_book_05}, \cite{Mittra_CFDTD_04}.  
+
+
+In this thesis, we apply FDTD technique not only to radiation by horn problem but also to EMFS analysis where the antennas are used in the receiving mode to make a modest attempt to show that the FDTD technique can be a useful tool in solving EMFS problems. In this thesis FDTD is used to evaluate the AF of aperture antennas in Chapter \ref{Chapter_Aperture_Antenna_EMI_Sensor}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+\thispagestyle{empty}%
+\vspace*{0.25\textheight}
+\begin{center}
+%{\AlgoFont{14} {\it Dedicated to}}\\
+\vspace*{0.5\baselineskip}
+{\AlgoFont{16} {\sf This work is dedicated to my parents, Family and Friends for their Support, Sacrifice Encouragement, love and prayers}}\\
+\end{center}

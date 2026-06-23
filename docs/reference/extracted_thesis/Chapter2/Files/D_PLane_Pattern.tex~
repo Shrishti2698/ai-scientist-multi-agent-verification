@@ -1,0 +1,32 @@
+\subsection{Diagonal-Plane Radiation Patten of Pyramidal Horn Antenna}\label{FDTD_results_D_Plane_Horn_Pattern}\index{Diagonal plane horn radiation pattern!FDTD}\index{Horn radiation pattern!diagonal plane}\index{FDTD!diagonal plane horn radiation pattern}
+Here, diagonal plane radiation patterns of pyramidal horn antennas are computed using FDTD technique. To the best of the author\rq s knowledge, neither measured nor theoretical computed result for this diagonal plane horn radiation patterns is available in open literature. Diagonal plane radiation patterns of three horn antennas are computed using FDTD technique and the results are shown in Figs.~\ref{Fig:field_d_plane_rudduk_normalished_both_color}, \ref{Fig:field_d_plane_balanis_normalished_both_color}, \ref{Fig:field_d_plane_Lab_Horn_1_normalished_both_color} .
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_d_plane_rudduk_normalished_both_color}}
+\caption[Diagonal plane radiation pattern of horn antenna using FDTD technique.]{\label{Fig:field_d_plane_rudduk_normalished_both_color}Diagonal plane radiation pattern of horn antenna using FDTD technique.}
+\end{center}
+\end{figure}
+
+%\subsubsection{Horn-2}\label{Horn_Balanis_D_Plane}
+%Diagonal-plane radiation pattern of the second horn antenna is computed and shown in the Fig.~\ref{Fig:field_d_plane_balanis_normalished_both_color}. 
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_d_plane_balanis_normalished_both_color}}
+\caption[Diagonal plane radiation pattern of horn antenna using FDTD]{\label{Fig:field_d_plane_balanis_normalished_both_color}Diagonal plane radiation pattern of horn antenna using FDTD technique.}
+\end{center}
+\end{figure}
+
+
+%\subsubsection{Horn-3}\label{Horn_Lab_Horn_1_D_Plane}
+%Diagonal--plane radiation pattern of the third horn antenna is computed and shown in Fig.~\ref{Fig:field_d_plane_Lab_Horn_1_normalished_both_color}. 
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_d_plane_Lab_Horn_1_normalished_both_color}}
+\caption[Diagonal plane radiation pattern of antenna using FDTD technique]{\label{Fig:field_d_plane_Lab_Horn_1_normalished_both_color}Diagonal plane radiation pattern of horn antenna using FDTD technique.}
+\end{center}
+\end{figure}
+
+

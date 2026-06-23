@@ -1,0 +1,25 @@
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\renewcommand{\chaptername}{Chapter}
+	\addcontentsline{toc}{chapter}{References}
+
+\chapter*{References}
+\chaptermark{References}
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,/home/maifuzali/LaTex/References/references}
+%\bibliography{IEEEfull,/home/maifuzali/LaTex/References/references}
+
+
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+
+
+
+
+
+
+%\chapter*{References}
+%\chaptermark{References}
+%\bibliographystyle{IEEEtran}
+%\bibliography{IEEEabrv,/home/maifuzali/LaTex/References/references}
+%\bibliography{IEEEfull,/home/maifuzali/LaTex/References/references}
+

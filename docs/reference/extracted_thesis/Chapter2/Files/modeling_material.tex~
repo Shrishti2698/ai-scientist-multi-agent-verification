@@ -1,0 +1,10 @@
+\section{Modeling of the Materials}\label{Modeling_Materials}\index{FDTD!modeling of materials}
+The dielectric material dealt in this work are assumed to be lossless and have a relative dielectric constant of $\epsilon_r$. The electric field written in terms of the electric flux density and electric field is then (as in \cite{Sullivan_book_00})  
+\be\label{Material_Modeling_1}
+Ex\left(i,j,k\right)=gax\left(i,j,k\right)\times Dx\left(i,j,k\right)
+\ee 
+where
+\be\label{Material_Modeling_2}
+gax\left(i,j,k\right)=\frac{1}{\varepsilon_r}
+\ee
+By setting $gax$, $gay$ or $gaz$ equal to zero at points inside metal we ensure that $E$ fields inside the metal remains zero. We model free space by setting $gax$, $gay$ or $gaz$ equal to unity at points within free space thus ensuring $Ex\left(i,j,k\right)=Dx\left(i,j,k\right)$..

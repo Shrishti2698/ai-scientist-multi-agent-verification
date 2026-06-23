@@ -1,0 +1,8 @@
+{
+  "paper_id": "P6",
+  "title": "Critic-Guided Verification Loops for Research Assistants",
+  "abstract": "Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains. Critic feedback reduces overconfident reporting in ambiguous cases. The approach does not eliminate all factual errors, but it improves transparency.",
+  "year": 2025,
+  "authors": ["S. Iyer", "D. Patel"],
+  "topics": ["critic agent", "verification loops", "research assistants"]
+}

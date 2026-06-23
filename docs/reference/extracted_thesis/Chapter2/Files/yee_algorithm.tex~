@@ -1,0 +1,114 @@
+\section{Yee Algorithm}\index{FDTD!Yee algorithm}
+%After Kane Yee first introduce the FDTD technique in 1966, people began to realize its accuracy and flexibility for solving electromagnetic problems \cite{lee_Algorithm} and keep using it up to the present.
+
+The basic idea of Yee\rq s algorithm is to discretize both the physical region and the time interval of the differential-form three-dimensional Maxwell\rq s equations (in \ref{Maxwells_equations}) on uniformed grids. Then the space and time models are established so the algorithm can update electromagnetic field values step by step from two parts: field values calculated in previous time steps and field values in the adjacent space cells. This model made possible the utilization of modern computation resources on Maxwell\rq s equations, and created a new area of electromagnetic scientific research.
+
+The 3D grid shown in Fig.~\ref{Fig:3d_yee_cell}, named the \lq\lq Yee-Cell\rq\rq, is very helpful for understanding the discretized electromagnetic space. As illustrated in Fig.~\ref{Fig:3d_yee_cell}, the \lq\lq Yee-Cell\rq\rq is a small cube, can be treated as one single cell picked up from discretized model space. $\bigtriangleup x,~\bigtriangleup y~\&~\bigtriangleup z$ are the three dimensions of this cube. We use (i, j, k) to denote the point whose real coordinate is ($i\bigtriangleup x,j\bigtriangleup y,k\bigtriangleup z$) in the model space. Instead of placing $\overrightarrow{E}$  and $\overrightarrow{H}$ components in the center of each cell, they are interlaced here so that every $\overrightarrow{E}$ component is surrounded by four circulating $\overrightarrow{H}$ components, and every $\overrightarrow{H}$ components is surrounded by four circulating $\overrightarrow{E}$ components.
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.55]{3d_yee_cell}
+    \caption[Position of the electric and magnitude field vector components about a cubic unit cell of the Yee space lattice.]{Field vector components about a cubic unit cell of the Yee space lattice.}
+    \label{Fig:3d_yee_cell}
+  \end{center}
+\end{figure}
+
+The operation $\bigtriangledown\times$ or \lq\lq curl\rq\rq~in (\ref{Faraday_eqn2}) and (\ref{Ampere_eqn2}) can be easily interpreted using this Yee-cell. For example, the $H_x$ component located at point (i,j+1/2,k+1/2) is surrounded by four circulating $\overrightarrow E$ components (two $E_y$ components and two $E_z$ components), exactly matching to the (\ref{FE_3a}), which states that the $H_x$ component increases directly in response to a curl of $\overrightarrow E$ components in x direction with a constant $\mu$. The constant $\mu$ specifies the magnetic permeability of the material at the location of this unit cell. Similarly, the $\overrightarrow E$ components increase directly in response to the curl of $\overrightarrow H$ components too, with a constant proportional to the electrical permittivity $\varepsilon$ of the material at the current location. Maxwell\rq s equations in rectangular coordinates, (\ref{FE_3a}) to (\ref{AE_3c}), can also be illustrated by Yee\rq s cell clearly.
+
+As illustrated in Fig.~\ref{Fig:2d_yee_cell}, $\overrightarrow E$ and $\overrightarrow H$ components are interlaced not only in space but also in time. All $\overrightarrow E$ components are updated at $N\bigtriangleup t$ and all $\overrightarrow H$ components are updated at $(N+1/2)\bigtriangleup t$. In more detail, the $\overrightarrow E$ components in the N-th time step are updated and stored in memory using previously stored $\overrightarrow H$ data, and then the $\overrightarrow H$ components in the $(N + \frac{1}{2})$-th time step are updated and stored in memory also using the $\overrightarrow E$ data which are just calculated. This calculation can be iterated through time steps so the electromagnetic field values can be updated at any time interval. In this thesis, we represent an electric component $E_z$ at the discretized three-dimensional coordination $(i\bigtriangleup x, j\bigtriangleup y, (k+1/2)\bigtriangleup z)$ as $E_z(i,j,k+1/2)$, and when the current time is in the discretized n-th time step, we denote the same component as $E_z^n(i,j,k+1/2)$. The magnetic components are placed on a half time step; so the superscripts are half indicated as $H_x^{n+1/2}(i,j+1/2,k+1/2)$.
+
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.550]{2d_yee_cell}
+    \caption[Diagram shows how the Yee algorithm interlaces the $E$ and $H$ components in space and time.]{The Yee algorithm interlaces the $\overrightarrow E$ and $\overrightarrow H$ components in space and time.}
+    \label{Fig:2d_yee_cell}
+  \end{center}
+\end{figure}
+
+A difference approximation of the space and time derivatives is needed in order to discretize the differential form of Maxwell\rq s equations. The Taylor series expansion of a certain variable at the current space location and time step is given by
+\begin{eqnarray}\label{Taylor_series_expansion}
+\frac{\partial f(x_0)}{\partial x}=\frac{f(x_0+\bigtriangleup x)-f(x_0-\bigtriangleup x)}{2\bigtriangleup x}+0[(\bigtriangleup x)^2]
+\end{eqnarray}
+Here, the first part of the Taylor series expansion or the central difference approximation is chosen because it is computationally simple and has relatively good second-order accuracy. So the discretized Maxwell\rq s equations can be derived from (\ref{Faraday_eqn3}) to (\ref{Ampere_eqn3}) using the notation of (\ref{Taylor_series_expansion}) and difference approximations. For single electromagnetic components in Maxwell\rq s equations, for example $H_x$, the averaging of the two consecutive time step\rq s value is applied in discretized equations.
+%\begin{small}
+\begin{subequations}\label{E_3d}
+\begin{align}
+&E_x^{n+1}(i+1/2,j,k)=E_x^{n+0}(i+1/2,j,k)\label{Ex_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup y \varepsilon_0\varepsilon_r(i+1/2,j,k)}}\right)\left[H_z^{n+1/2}(i+1/2,j+1/2,k)-H_z^{n+1/2}(i+1/2,j-1/2,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup z \varepsilon_0\varepsilon_r(i+1/2,j,k)}}\right)\left[H_y^{n+1/2}(i+1/2,j,k+1/2)-H_y^{n+1/2}(i+1/2,j,k-1/2)\right]\\
+&E_y^{n+1}(i,j+1/2,k)=E_y^{n+0}(i,j+1/2,k)\label{Ey_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup z \varepsilon_0\varepsilon_r(i,j+1/2,k)}}\right)\left[H_x^{n+1/2}(i,j+1/2,k+1/2)-H_x^{n+1/2}(i,j+1/2,k-1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup x \varepsilon_0\varepsilon_r(i,j+1/2,k)}}\right)\left[H_z^{n+1/2}(i+1/2,j+1/2,k)-H_y^{n+1/2}(i-1/2,j+1/2,k)\right]\\
+&E_z^{n+1}(i,j,k+1/2)=E_z^{n+0}(i,j,k+1/2)\label{Ez_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup x \varepsilon_0\varepsilon_r(i,j,k+1/2)}}\right)\left[H_y^{n+1/2}(i+1/2,j,k+1/2)-H_y^{n+1/2}(i-1/2,j,k+1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup y \varepsilon_0\varepsilon_r(i,j,k+1/2)}}\right)\left[H_x^{n+1/2}(i,j+1/2,k+1/2)-H_x^{n+1/2}(i,j-1/2,k+1/2)\right]
+\end{align}
+\end{subequations}
+\begin{subequations}\label{H_3d}
+\begin{align}
+&H_x^{n+1/2}(i,j+1/2,k+1/2)=H_x^{n-1/2}(i,j+1/2,k+1/2)\label{Hx_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup z \mu_0\mu_r(i,j+1/2,k+1/2)}}\right)\left[E_y^{n}(i,j+1/2,k+1)-E_y^{n}(i,j+1/2,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup y \mu_0\mu_r(i,j+1/2,k+1/2)}}\right)\left[E_z^{n}(i,j+1,k+1/2)-E_z^{n}(i,j,k+1/2)\right]\\
+&H_y^{n+1/2}(i+1/2,j+1/2,k)=H_y^{n-1/2}(i+1/2,j+1/2,k)\label{Hy_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup x \mu_0\mu_r(i+1/2,j,k+1/2)}}\right)\left[E_z^{n}(i+1,j,k+1/2)-E_z^{n}(i,j,k+1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup z \mu_0\mu_r(i+1/2,j,k+1/2)}}\right)\left[E_x^{n}(i+1/2,j,k+1)-E_x^{n}(i+1/2,j,k)\right]\\
+&H_z^{n+1/2}(i+1/2,j+1/2,k)=H_z^{n-1/2}(i+1/2,j+1/2,k)\label{Hz_3d}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup y \mu_0\mu_r(i+1/2,j+1/2,k)}}\right)\left[E_x^{n}(i+1/2,j+1,k)-E_x^{n}(i+1/2,j,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup x \mu_0\mu_r(i+1/2,j+1/2,k)}}\right)\left[E_y^{n}(i+1,j+1/2,k)-E_y^{n}(i,j+1/2,k)\right]
+\end{align}
+\end{subequations}
+%\end{small}
+The Eqns.~(\ref{E_3d}) and (\ref{H_3d}) are very similar, but because $\varepsilon_0$ and $\mu_0$ differ by several orders of magnitude, $\overrightarrow E$ and $\overrightarrow H$ will differ by several orders of magnitude \cite{Taflove_Numerical_Solution_Steady_State_Electromagnetic_Scattering}, \cite{Sullivan_book_00}. This is circumvented by making the following change of variable: 
+\begin{eqnarray}\label{E_nor}
+\overrightarrow E=\sqrt{\frac{\varepsilon_0}{\mu_0}}\overrightarrow E
+\end{eqnarray}
+Substituting (\ref{E_nor}) into (\ref{E_3d}) and (\ref{H_3d}) gives
+\begin{small}
+\begin{subequations}\label{E_3d2}
+\begin{align}
+&E_x^{n+1}(i+1/2,j,k)=E_x^{n+0}(i+1/2,j,k)\label{Ex_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup y \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i+1/2,j,k)}}\right)\left[H_z^{n+1/2}(i+1/2,j+1/2,k)-H_z^{n+1/2}(i+1/2,j-1/2,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup z \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i+1/2,j,k)}}\right)\left[H_y^{n+1/2}(i+1/2,j,k+1/2)-H_y^{n+1/2}(i+1/2,j,k-1/2)\right]\\
+&E_y^{n+1}(i,j+1/2,k)=E_y^{n+0}(i,j+1/2,k)\label{Ey_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup z \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i,j+1/2,k)}}\right)\left[H_x^{n+1/2}(i,j+1/2,k+1/2)-H_x^{n+1/2}(i,j+1/2,k-1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup x \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i,j+1/2,k)}}\right)\left[H_z^{n+1/2}(i+1/2,j+1/2,k)-H_y^{n+1/2}(i-1/2,j+1/2,k)\right]\\
+&E_z^{n+1}(i,j,k+1/2)=E_z^{n+0}(i,j,k+1/2)\label{Ez_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup x \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i,j,k+1/2)}}\right)\left[H_y^{n+1/2}(i+1/2,j,k+1/2)-H_y^{n+1/2}(i-1/2,j,k+1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup y \sqrt{\varepsilon_0\mu_0}\varepsilon_r(i,j,k+1/2)}}\right)\left[H_x^{n+1/2}(i,j+1/2,k+1/2)-H_x^{n+1/2}(i,j-1/2,k+1/2)\right]
+\end{align}
+\end{subequations}
+\begin{subequations}\label{H_3d2}
+\begin{align}
+&H_x^{n+1/2}(i,j+1/2,k+1/2)=H_x^{n-1/2}(i,j+1/2,k+1/2)\label{Hx_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup z \sqrt{\varepsilon_0\mu_0}\mu_r(i,j+1/2,k+1/2)}}\right)\left[E_y^{n}(i,j+1/2,k+1)-E_y^{n}(i,j+1/2,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup y \sqrt{\varepsilon_0\mu_0}\mu_r(i,j+1/2,k+1/2)}}\right)\left[E_z^{n}(i,j+1,k+1/2)-E_z^{n}(i,j,k+1/2)\right]\\
+&H_y^{n+1/2}(i+1/2,j+1/2,k)=H_y^{n-1/2}(i+1/2,j+1/2,k)\label{Hy_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup x \sqrt{\varepsilon_0\mu_0}\mu_r(i+1/2,j,k+1/2)}}\right)\left[E_z^{n}(i+1,j,k+1/2)-E_z^{n}(i,j,k+1/2)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup z \sqrt{\varepsilon_0\mu_0}\mu_r(i+1/2,j,k+1/2)}}\right)\left[E_x^{n}(i+1/2,j,k+1)-E_x^{n}(i+1/2,j,k)\right]\\
+&H_z^{n+1/2}(i+1/2,j+1/2,k)=H_z^{n-1/2}(i+1/2,j+1/2,k)\label{Hz_3d2}\nonumber\\
+&\quad+\left({\frac{\bigtriangleup t}{\bigtriangleup y \sqrt{\varepsilon_0\mu_0}\mu_r(i+1/2,j+1/2,k)}}\right)\left[E_x^{n}(i+1/2,j+1,k)-E_x^{n}(i+1/2,j,k)\right]\nonumber\\
+&\quad-\left({\frac{\bigtriangleup t}{\bigtriangleup x \sqrt{\varepsilon_0\mu_0}\mu_r(i+1/2,j+1/2,k)}}\right)\left[E_y^{n}(i+1,j+1/2,k)-E_y^{n}(i,j+1/2,k)\right]
+\end{align}
+\end{subequations}
+\end{small}
+This algorithm is accurate and flexible and its most appealing characteristic is its simplicity of computation and structure. All the operations in (\ref{Ex_3d2}) to (\ref{Hz_3d2}) are additions, subtractions and multiplications, which are easy to compute and cost relative few resources in a hardware implementation. The structures of these six equations are almost the same, making it possible to apply various methods to speed up the algorithm, such as custom hardware implementation and parallel computing. A complete FDTD model can be structured as shown in Fig.~\ref{Fig:structure_diagram_FDTD}. The algorithm simply iterates the same procedures for each time step in the time domain making the computation regular.
+\begin{figure}
+  \begin{center}
+    \leavevmode
+      \includegraphics[scale=0.5]{structure_diagram_FDTD}
+    \caption[A complete structure diagram of the FDTD technique.]{A complete structure diagram of the FDTD technique.}
+    \label{Fig:structure_diagram_FDTD}
+  \end{center}
+\end{figure}
+%A complete FDTD model can be structured as shown in Fig.~\ref{Fig:structure_diagram_FDTD}. 
+The model space is first divided into appropriately sized unit cells, each having electrical permittivity $\epsilon$ and magnetic permeability $\mu$ and other necessary parameters. Then all the electromagnetic field components are initialized and the parameters affiliated to each cell will be set up. Excitation will be given later so there will be a power source in the model space. The algorithm then iterates the updating computations for each time step. Notice the $\overrightarrow E$ and $\overrightarrow H$ are interlaced in the time domain so the $\overrightarrow E$ components will be updated first and then the $\overrightarrow H$ components. The boundary condition part is a special algorithm deals with the unit cells located on the boundary of the model space. For these cells, some of the adjacent cells may not exist, so special methods are needed to update them appropriately. Finally, the algorithm gives the result of the electromagnetic space characteristics for the time ranges we are interested in.
+
+%As this method can solve Maxwell\rq s equations on any scale with almost all kinds of environments, it has become a powerful method for solving a wide variety of different electromagnetic problems.
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+\subsection{H-Plane Radiation Patten of Pyramidal Horn Antenna}\label{FDTD_results_H_Plane_Horn_Pattern}\index{H-plane horn radiation pattern!FDTD}\index{FDTD!H-plane horn radiation pattern}\index{Horn radiation pattern!H-Plane}
+H-plane radiation patterns of several horns are computed using FDTD technique and compared with the available measured results.
+
+
+%\subsubsection{Horn-1}\label{Horn_Rudduk_H_Plane}
+The radiation pattern of the first horn antenna is computed and compared with the measurement of \cite{Rudduck_hp_horn} shown in Fig.~\ref{Fig:field_h_plane_rudduk_normalished_both_color}. The FDTD predicted radiation pattern of the H-plane horn antenna is in good agreement with measured results at all angles. However, at and near $180^\circ$ FDTD results fail to predict the dip in the measurement.
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_h_plane_rudduk_normalished_both_color}}
+\caption[H-plane radiation pattern of horn antenna using FDTD compared with the published measurement]{\label{Fig:field_h_plane_rudduk_normalished_both_color}H-plane radiation pattern of horn antenna using FDTD technique compared with the measured pattern of \cite{Rudduck_hp_horn}.}
+\end{center}
+\end{figure}
+
+%\subsubsection{Horn-2}\label{Horn_Balanis_H_Plane}
+The radiation pattern of the second horn antenna is computed and compared with the measurement of \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane} shown in Fig.~\ref{Fig:field_h_plane_balanis_normalished_both_color}. The FDTD predicted radiation pattern of the H-plane horn antenna is in good agreement with measured results at all angles. 
+
+\begin{figure}[tb!]
+\begin{center}
+\centerline{\includegraphics[scale=1.0]{field_h_plane_balanis_normalished_both_color}}
+\caption[H-plane radiation pattern of horn antenna using FDTD compared with the published measurement]{\label{Fig:field_h_plane_balanis_normalished_both_color}H-plane radiation pattern of horn antenna using FDTD technique compared with the measured pattern of \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane}.}
+\end{center}
+\end{figure}
+
+
+%\subsubsection{Horn-3}\label{Horn_Taflove}
+%The numerical values of these parameters defined in the Fig.~\ref{Fig:geo_fdtd_horn_all_1}~for the second horn \cite{Taflove_book_05} are A=10.95 cm, B=7.85 cm, a=2.286 cm, b=1.02 cm, D=22.84 cm, $l_w$=5.08 cm, $\rho_E$=10.97$\lambda_0$, $\rho_H$=12.14$\lambda_0$, $\theta_E=8.508^\circ$ and $\theta_H=10.74^\circ$ corresponding to the frequency 12.4 GHz. The normalized H-plane pattern of the horn antenna is computed and shown in Fig.~\ref{Fig:field_h_plane_taflove_normalished_color}.
+
+
+%\begin{figure}[tb!]
+%\begin{center}
+%\centerline{\includegraphics[scale=1.0]{field_h_plane_taflove_normalished_color}}
+%\caption{\label{Fig:field_h_plane_taflove_normalished_color}H-plane radiation pattern of horn antenna using FDTD technique.}
+%\end{center}
+%\end{figure}
+
+%\subsubsection{Horn-3}\label{Horn_Lab_Horn_1_H_Plane}
+%H-plane radiation pattern of the third horn antenna is computed and shown in Fig.~\ref{Fig:field_h_plane_Lab_Horn_1_normalished_both_color}.
+
+%\begin{figure}[tb!]
+%\begin{center}
+%\centerline{\includegraphics[scale=1.0]{field_h_plane_Lab_Horn_1_normalished_both_color}}
+%\caption[H-plane radiation pattern of the third horn antenna using FDTD technique.]{\label{Fig:field_h_plane_Lab_Horn_1_normalished_both_color}H-plane radiation pattern of the third horn antenna using FDTD technique.}
+%\end{center}
+%\end{figure}
+
+

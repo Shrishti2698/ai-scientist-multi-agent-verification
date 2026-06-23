@@ -1,0 +1,112 @@
+{
+  "benchmark_cases": [
+    {
+      "case_id": "C1",
+      "claim": "Retrieval-augmented generation improves factual grounding in large language models.",
+      "expected_verdict": "supported",
+      "query_hint": "rag factual grounding",
+      "category": "retrieval",
+      "difficulty": "easy",
+      "source_note": "P1 core finding"
+    },
+    {
+      "case_id": "C2",
+      "claim": "Direct prompting alone is sufficient for scientific verification.",
+      "expected_verdict": "contradicted",
+      "query_hint": "prompting scientific verification",
+      "category": "verification",
+      "difficulty": "easy",
+      "source_note": "P2 directly argues against this"
+    },
+    {
+      "case_id": "C3",
+      "claim": "Multi-agent reasoning improves evidence coverage on knowledge-intensive tasks.",
+      "expected_verdict": "supported",
+      "query_hint": "multi-agent evidence coverage",
+      "category": "multi_agent",
+      "difficulty": "easy",
+      "source_note": "P3 core positive result"
+    },
+    {
+      "case_id": "C4",
+      "claim": "Retrieval always reduces hallucination, regardless of retriever quality.",
+      "expected_verdict": "contradicted",
+      "query_hint": "retrieval hallucination quality",
+      "category": "retrieval",
+      "difficulty": "medium",
+      "source_note": "P4 limitation on retrieval quality"
+    },
+    {
+      "case_id": "C5",
+      "claim": "Critic feedback improves transparency in ambiguous research cases.",
+      "expected_verdict": "supported",
+      "query_hint": "critic feedback transparency",
+      "category": "critic",
+      "difficulty": "easy",
+      "source_note": "P6 direct support"
+    },
+    {
+      "case_id": "C6",
+      "claim": "This corpus proves that agentic systems solve all factual errors.",
+      "expected_verdict": "insufficient_evidence",
+      "query_hint": "agentic systems factual errors",
+      "category": "generalization",
+      "difficulty": "hard",
+      "source_note": "Overbroad claim unsupported by corpus"
+    },
+    {
+      "case_id": "C7",
+      "claim": "Structured evidence collection is better than single-pass generation for scientific verification.",
+      "expected_verdict": "supported",
+      "query_hint": "structured evidence collection scientific verification",
+      "category": "verification",
+      "difficulty": "medium",
+      "source_note": "P2 supports structured evidence collection"
+    },
+    {
+      "case_id": "C8",
+      "claim": "The gains of multi-agent reasoning are limited when the evidence corpus is sparse.",
+      "expected_verdict": "supported",
+      "query_hint": "multi-agent sparse evidence corpus",
+      "category": "multi_agent",
+      "difficulty": "medium",
+      "source_note": "P3 limitation statement"
+    },
+    {
+      "case_id": "C9",
+      "claim": "Critic stages eliminate all factual errors in research assistants.",
+      "expected_verdict": "contradicted",
+      "query_hint": "critic factual errors research assistants",
+      "category": "critic",
+      "difficulty": "medium",
+      "source_note": "P6 explicitly says errors remain"
+    },
+    {
+      "case_id": "C10",
+      "claim": "Claim extraction from computer science abstracts supports downstream verification.",
+      "expected_verdict": "supported",
+      "query_hint": "claim extraction downstream verification",
+      "category": "extraction",
+      "difficulty": "easy",
+      "source_note": "P5 direct support"
+    },
+    {
+      "case_id": "C11",
+      "claim": "Retrieval quality has little effect on hallucination behavior in RAG systems.",
+      "expected_verdict": "contradicted",
+      "query_hint": "retrieval quality hallucination rag",
+      "category": "retrieval",
+      "difficulty": "medium",
+      "source_note": "P4 says poor retrieval quality matters"
+    },
+    {
+      "case_id": "C12",
+      "claim": "This corpus shows that multimodal agents outperform all text-only systems.",
+      "expected_verdict": "insufficient_evidence",
+      "query_hint": "multimodal agents text only systems",
+      "category": "generalization",
+      "difficulty": "hard",
+      "source_note": "Outside corpus scope"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+\subsection{Aperture Antennas as EM Field Sensors}\label{LR_Aperture_Antenna_sensor}\index{EM field sensor!aperture antenna} 
+The wire antenna has important and wide applications as an EMFS. The performance of wire antenna as an EMFS are analyzed in terms of free-space AF or CAF using method of moments (MoM) in \cite{S_Ghosh_Loaded_wire_antenna_as_EMI_sensor}, \cite{S_Ghosh_antenna_factor_of_wire}, \cite{S_Ghosh_thesis}, \cite{Fujii_free_space_AF_VHF_EMI_antennas}. But unfortunately they are effective only up to a frequency of 1~GHz. Due to broad-band nature, aperture antennas can be used as an efficient EMFS at high frequencies beyond 1~GHz. In this frequency region no compact probe for EM field measurements, where antenna is analyzed in receiving mode in terms of AF, has come to the author\rq s notice, except for some MoM based analysis of waveguides based EMFS in \cite{A_Bhattacharya_rec_wg_emi_sensors}.
+
+
+Since the field strength can, alternatively, be measured in terms of antenna gain, the antenna factor can be also expressed as a function of antenna gain \cite{Seo_Cho_disk_loaded_cylindrical_dipole_EMC}. The gain of the open-ended waveguide is given in \cite{Kanda_Near_Field_Open_Ended_waveguide}. From this gain formula an empirical formula for quick calculation of AF of open-ended waveguide is given in \cite{A_Bhattacharya_rec_wg_emi_sensors}. The experimental results in \cite{A_Bhattacharya_rec_wg_emi_sensors}, show a better match with the MoM formulation at the higher frequency band, compared to the empirical formula used by EMC practitioners. The theoretical result using MoM in \cite{A_Bhattacharya_rec_wg_emi_sensors} starts showing significant variation from empirical formula beyond 10 GHz. As the empirical formula assumes only far-field type fields, the deviation from the empirical formula underlines the effect of non far-field type fields at the sensing plane of the sensor.
+
+Horn antenna invented in 1890 \cite{Emerson_work_of_Jagadis_Chandra_Bose}, still poses a challenge to researchers to analyze and characterize completely. The horn antenna is analyzed in transmitting mode using GTD in \cite{Russo_Rudduck_computing_E_plane}, \cite{Yu_Rudduck_E_plane}, \cite{Rudduck_hp_horn}, using UAT analysis in \cite{Sanyal_Bhatt_E-plane_horn}, \cite{S_Sanyal_thesis} and using equivalent current concept in \cite{Mentzer_s_diff}. The FDTD technique is used to analyze the horn antenna in transmitting mode in \cite{Katz_FDTD_Analysis_Horn_Antennas}, \cite{Tirkas_Contour_Path_FDTD_Pyramidal_Horns_E_Plane}, \cite{Thiele_FDTD_Vivaldi_flared_horn_arrays}, \cite{Shlager_TEM_pulse_radiation}. The advantages of using a horn antenna rather than conventional EMC antennas such as the log-periodic, hybrid, or bi-conical antennas are discussed in\cite{Grosvenor_TEM_horn_antennas_compliance_testing}. Important issues such as frequency coverage, linearity, time domain solution of events, cost, and antenna factor are also addressed in \cite{Grosvenor_TEM_horn_antennas_compliance_testing}. 
+
+
+
+%In this work pyramidal horn, conical horn, dielectric horn and dielectric loaded pyramidal horn antennas are analyzed in receiving mode as an EMFS using FDTD technique. The formula to calculate the gain of pyramidal horn antenna is given in \cite{Maybell_Pyramidal_horn_gain_calculation}, \cite{Najjar_Optimum_Gain_Pyramidal_Horn_Swarm_Optimization}. Based on this gain formula, an empirical formula for quick calculation of AF of pyramidal horn is given. Similar empirical formula for conical horn antenna based on gain formula \cite{Chin_An_improved_gain_formula_conical_horn} is also given.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

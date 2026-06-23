@@ -1,0 +1,62 @@
+% ------------ Starting of Preamble Pages---------------------
+	%\pagenumbering{none}
+	\include{HeadTail/blank}
+	\cleardoublepage
+	\include{HeadTail/coverpage}
+	\cleardoublepage
+	\include{HeadTail/title}
+	\cleardoublepage
+	\begin{spacing}{1.4}
+	\include{HeadTail/dedication}
+	\cleardoublepage
+	%\begin{spacing}{1.4}
+	%\include{HeadTail/cer_approval}
+        \include{HeadTail/cer_approval_scane}
+	\cleardoublepage
+	%\include{HeadTail/declaration}
+        \include{HeadTail/declaration_scane}
+	\cleardoublepage
+	%\include{HeadTail/cert}
+        \include{HeadTail/cert_2}
+	\cleardoublepage
+	\setcounter{page}{1}
+	\pagenumbering{roman}
+%
+	\include{HeadTail/ack}
+	\include{HeadTail/abstract}
+
+	\tableofcontents
+	\cleardoublepage
+
+	%%%%%%%%%%%%%%%% LIST OF ABBREVIATIONS %%%%%%%%%%%%%%%%%%
+	\addcontentsline{toc}{chapter}{Abbreviations} %%%%%%%%
+	\markboth{List of Abbreviations}{List of Abbreviations}  %%%%%%%%%%%
+	\include{Symbol/abbreviation} %%%%%%%%%%%%%%%%%%%%%%%%%
+	\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%% LIST OF SYMBOLS %%%%%%%%%%%%%%%%%%%%%
+    \addcontentsline{toc}{chapter}{List of Notations and Operations} %%%%%%%%
+	\markboth{List of Notations and Operations}{List of Notations and Operations}  %%%%%%%%%%%
+	\include{Symbol/listofsymbol} %%%%%%%%%%%%%%%%%%%%%%%%%
+	\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%% LIST OF FIGURES %%%%%%%%%%%%%%%%%%%%%
+	\addcontentsline{toc}{chapter}{List of Figures} %%%%%%%%%%%%%%%%%%
+	\listoffigures%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%% LIST OF TABLES %%%%%%%%%%%%%%%%%%%%%%
+	\addcontentsline{toc}{chapter}{List of Tables} %%%%%%%%%%%%%%%%%%%
+	\listoftables %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%% LIST OF ALGO %%%%%%%%%%%%%%%%%%%%%%%%
+  %  \addcontentsline{toc}{chapter}{List of Algorithms} % Added by Sandipan
+  %  \listofalgorithms % Added by Sandipan for list of algorithms
+  %  \clearpage{\pagestyle{empty}\cleardoublepage} %%%%%%%%%%%%%%%%%%%% % Added by Sandipan
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%------------- End of Preamble Pages----------------------------
+%------------- Starting of Actual Thesis -----------------------
+	\setcounter{page}{1}
+	\pagenumbering{arabic}

@@ -1,0 +1,40 @@
+% Give Abbreviations alphabatically
+\chapter*{List of Abbreviations}\label{LstAbb}
+\begin{flushleft}
+\begin{longtable}{lp{8.7cm}}
+ABC&	: absorbing boundary condition\\
+AF&	: antenna factor\\
+BC&	: boundary condition\\
+CAF&	: complex antenna factor\\
+CSD&	: corner slope diffraction\\
+EDSB&	: edge-diffraction shadow boundary\\
+EM&	: electromagnetic\\
+EMI&  	: electromagnetic interference\\
+EMC&  	: electromagnetic compatibility\\
+EMFS&	: electromagnetic field sensor\\
+FDTD&	: finite difference time domain\\
+FFT&  	: fast Fourier transform\\
+GO&	: geometric optics\\
+GTD&	: geometrical theory of diffraction\\
+ISB&	: incident shadow boundary\\
+MoM&	: method of moments\\
+PEC&	: perfect electric conductor\\
+PML&	: perfect matched layer\\
+PO&	: physical optics\\
+PTD&    : physical optics of diffraction\\ 
+RCS&	: radar cross section\\
+RSB&	: reflection shadow boundary\\
+SB&	: shadow boundary\\
+TDR&  	: time domain response\\
+TE&	: transverse electric\\
+TEM&	: transverse electromagnetic\\
+TM&	: transverse magnetic\\
+UAT&	: uniform asymptotic theory of diffraction\\
+UPML&	: uniaxial Perfect matched layer\\
+UTD&	: uniform theory of diffraction\\
+%IFT&	: inverse Fourier transform\\
+%FSS&	: frequency selective surface or frequency selective structure\\
+%MPML&	: modified Perfect matched layer\\
+%PMC&	: perfect magnetic conductor\\
+\end{longtable}
+\end{flushleft}

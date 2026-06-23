@@ -1,0 +1,22 @@
+\subsection{Corner Diffraction for Mobile Channel Modeling}\index{Channel modeling}
+The deployment of high-speed digital communication systems in urban environments has placed new demands on propagation models for designing such systems. The objective of most propagation
+models is to predict the median path loss from the transmitter to the receiver. For signal transmission bandwidths that are sufficiently narrow, this approach is adequate because multipath reflections from elements of the propagation environment can be treated as variations or fading in the received signal envelope. However, for high-speed digital or other signals where the bandwidth of the signal is sufficiently wide, multipath propagation results in a frequencyselective channel response corresponding to multipath echoes at the receiver that can be resolved into separate signal pulses. Depending on the receiver design, these delayed signal pulses lead to inter symbol
+interference (ISI) when the detector in the receiver attempts to decode a transmitted data pulse. Consequently, there is strong motivation to develop propagation models that can accurately predict the amplitude and delay of multipath echoes in real propagation environments.
+
+
+The technique that has emerged as being well suited to this task is ray-tracing based on geometric optics. In addition to predicting signal levels, ray-tracing inherently provides pulse-delay information as a function of total ray path length. A number of papers have appeared in the literature that discussed the use of ray-tracing for predicting signal levels and time dispersion in communication channels operating in urban environments [1]–[4]. These models generally employ a
+combination of \lq\lq propagation primitives\rq\rq, including smooth-surface specular reflection, uniform theory of diffraction (UTD), through-wall transmission, and scattering.
+
+
+
+As with any model, it is important to obtain experimental verification. The experimental work published thus far has focused on those \lq\lq macroscopic\rq\rq~effects which are of most interest to communication systems designers—the mean signal level and the \lq\lq root mean square (RMS) delay spread\rq\rq~of the channel. However, relatively little work has been done to experimentally verify the elemental propagation constructs that are used in the ray-tracing models, especially UTD. Measurements of diffraction fields have been done under laboratory
+conditions achieving satisfactory agreement with wedge diffraction predictions [5]. No measurements of diffraction around a single isolated corner of a real building have appeared in the literature.
+
+
+The objective of the work described here is to investigate the viability of the UTD corner model primitive when it is applied to real building corners. An experiment was designed to measure the electric field in the vicinity of the corner of a stone building. Comparison of the resulting measurements with predictions based on the UTD are presented.
+
+
+
+
+
+

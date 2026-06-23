@@ -1,0 +1,52 @@
+{
+  "papers": [
+    {
+      "paper_id": "P1",
+      "title": "Retrieval-Augmented Language Models for Factual Grounding",
+      "abstract": "This study shows that retrieval-augmented generation improves factual grounding in large language models. The approach reduces unsupported statements when relevant documents are retrieved at inference time. However, performance depends heavily on retriever quality and corpus coverage.",
+      "year": 2024,
+      "authors": ["A. Verma", "L. Chen"],
+      "topics": ["rag", "hallucination", "language models"]
+    },
+    {
+      "paper_id": "P2",
+      "title": "Limits of Naive Prompting for Scientific Verification",
+      "abstract": "We demonstrate that direct prompting often produces fluent but weakly verified scientific answers. The model frequently cites plausible sounding but unsupported claims. Better verification requires structured evidence collection rather than single-pass generation.",
+      "year": 2023,
+      "authors": ["M. Rao", "K. Singh"],
+      "topics": ["scientific verification", "prompting", "hallucination"]
+    },
+    {
+      "paper_id": "P3",
+      "title": "Multi-Agent Debate for Evidence-Sensitive Reasoning",
+      "abstract": "A multi-agent reasoning pipeline improves evidence coverage by assigning separate roles for retrieval, critique, and synthesis. The system achieves more consistent justifications than a single-agent baseline on knowledge-intensive tasks. The gains are limited when the evidence corpus is sparse.",
+      "year": 2024,
+      "authors": ["J. Malik", "T. Howard"],
+      "topics": ["multi-agent", "reasoning", "evidence synthesis"]
+    },
+    {
+      "paper_id": "P4",
+      "title": "When Retrieval Fails: Error Cascades in RAG Systems",
+      "abstract": "This paper shows that retrieval-augmented systems do not reliably reduce hallucination when the retriever surfaces low-relevance documents. Poor retrieval quality can propagate into confident but incorrect generations. Robust verification needs explicit contradiction handling in addition to retrieval.",
+      "year": 2025,
+      "authors": ["N. Das", "F. Lopez"],
+      "topics": ["rag", "retrieval failure", "verification"]
+    },
+    {
+      "paper_id": "P5",
+      "title": "Claim Extraction from Computer Science Abstracts",
+      "abstract": "We present a lightweight claim extraction approach for computer science abstracts. The method identifies hypothesis, improvement, limitation, and result statements with interpretable rules. It performs well on short scientific summaries and supports downstream verification.",
+      "year": 2022,
+      "authors": ["R. Sen", "P. Ahmed"],
+      "topics": ["claim extraction", "nlp", "scientific text mining"]
+    },
+    {
+      "paper_id": "P6",
+      "title": "Critic-Guided Verification Loops for Research Assistants",
+      "abstract": "Adding a critic stage improves final answer caution and surfaces unsupported reasoning chains. Critic feedback reduces overconfident reporting in ambiguous cases. The approach does not eliminate all factual errors, but it improves transparency.",
+      "year": 2025,
+      "authors": ["S. Iyer", "D. Patel"],
+      "topics": ["critic agent", "verification loops", "research assistants"]
+    }
+  ]
+}

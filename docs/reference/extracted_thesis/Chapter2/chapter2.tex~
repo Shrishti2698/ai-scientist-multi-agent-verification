@@ -1,0 +1,10 @@
+%\chapter{FDTD}
+    
+%Studies carried using finite difference time domain (FDTD) technique.
+
+\chapter[The FDTD Method: Formulation]{The FDTD Method: Formulation for Analysis of Antenna in Transmitting \& Receiving Mode}{The FDTD Method: Formulation for Analysis of Antenna in Transmitting \& Receiving Mode}\label{Ch:Basic_FDTD_Formulation}
+
+\input{Chapter2/articles_Ch_2}
+
+%\bibliographystyle{IEEEtran}
+%\bibliography{/home/maifuzali/LaTex/References/references}

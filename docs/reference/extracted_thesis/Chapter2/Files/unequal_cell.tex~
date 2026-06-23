@@ -1,0 +1,20 @@
+\section{Unequal Cell size}
+Accuracy of FDTD analysis depends upon the space cell size that must be less than the smallest dimension of the scatterer. If $\bigtriangleup x\neq\bigtriangleup y\neq\bigtriangleup z$ and $\bigtriangleup z$ is the smallest among the three, then the time step will be
+\be \bigtriangleup t=\frac{\bigtriangleup z}{2\cdot c_0} \ee
+Here, $\bigtriangleup z$ is used instate of $\bigtriangleup x$ and $\bigtriangleup y$ as the basic cell size for FDTD algorithm, and the modification in spatial derivative in X or Y direction is with the following factors \cite{Sullivan_book_00}:
+\begin{subequations}\label{unequal_cell_1}
+\begin{eqnarray}
+ra\_x=\frac{\bigtriangleup z}{\bigtriangleup x}\label{unequal_cell_1x}\\
+ra\_y=\frac{\bigtriangleup z}{\bigtriangleup y}\label{unequal_cell_1y}
+\end{eqnarray}
+\end{subequations}
+
+
+
+
+
+
+
+
+
+

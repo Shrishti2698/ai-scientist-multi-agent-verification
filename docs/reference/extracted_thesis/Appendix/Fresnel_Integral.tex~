@@ -1,0 +1,109 @@
+\chapter[Appendix \ref{appen_Fresnal_Int}]{Fresnel Integral}{Fresnel Integral}\label{appen_Fresnal_Int}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+Appendix \ref{appen_Fresnal_Int} presents Fresnal integral and its modified forms.\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+
+%\textbf{Fresnel Integral:}
+{\LARGE F}resnel integrals are transcendental functions named after Augustin-Jean Fresnel that are used in diffraction phenomena, and are defined through the following integral representations \cite{Boersma_fri_i}\index{Fresnel integral}:
+%{\LARGE T}he Fresnel Integral \cite{Boersma_fri_i} define in the form of
+\begin{eqnarray}\label{fresnel_appendix_1}
+f\left(X\right)=\int_0^X \frac{e^{-\imath t}}{\sqrt{2\pi t}}\mathrm{dt}
+\end{eqnarray}
+Two approximations, one valid for $X$ less than $4$ and the other valid for $X$ larger than $4$ for the Fresnel integration are the following:
+\begin{subequations}\label{fresnel_appendix_2}
+\begin{enumerate}
+\item For $0\leq X\leq 4$
+\begin{eqnarray}\label{fresnel_appendix_2a}
+f\left(X\right)=e^{-\imath X}\sqrt{\frac{X}{4}}\sum_{n=0}^{11}\left(a_n+\imath b_n\right)\left(\frac{X}{4}\right)^n
+\end{eqnarray}
+\item For $X\geq 4$
+\begin{eqnarray}\label{fresnel_appendix_2b}
+f\left(X\right)=\frac{1-\imath}{2}+e^{-\imath X}\sqrt{\frac{4}{X}}\sum_{n=0}^{11}\left(c_n+\imath d_n\right)\left(\frac{4}{X}\right)^n
+\end{eqnarray}
+\end{enumerate}
+\end{subequations}
+The numerical values of $a_n,~b_n,~c_n,~d_n$ \cite{Boersma_fri_i} are given in the Table~\ref{tab:Fresnel_integral}.
+\begin{table}[h]
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{1}{|p{2.5cm}|}{\centering $a_n$}
+& \multicolumn{1}{p{2.5cm}|}{\centering $b_n$}
+& \multicolumn{1}{p{2.5cm}|}{\centering $c_n$}
+& \multicolumn{1}{p{2.5cm}|}{\centering $d_n$}\\
+\hline
+$a_0=+1.595769140$& $b_0=-0.000000033$ & $c_0=+0.0$ & $d_0=+0.199471140$ \\
+\hline
+$a_1=-0.000001702$& $b_1=+4.255387524$ & $c_1=-0.024933975$ & $d_1=+0.000000023$  \\
+\hline
+$a_2=-6.808568854$& $b_2=-0.000092810$ & $c_2=+0.000003936$ & $d_2=-0.009351341$  \\
+\hline
+$a_3=-0.000576361$& $b_3=-7.780020400$ & $c_3=+0.005770956$ & $d_3=+0.000023006$  \\
+\hline
+$a_4=+6.920691902$& $b_4=-0.009520895$ & $c_4=+0.000689892$ & $d_4=+0.004851466$  \\
+\hline
+$a_5=-0.016898675$& $b_5=+5.075161298$ & $c_5=-0.009497136$ & $d_5=+0.001903213$  \\
+\hline
+$a_6=-3.050485660$& $b_6=-0.138341947$ & $c_6=+0.011948809$ & $d_6=-0.017122914$  \\
+\hline
+$a_7=-0.075752419$& $b_7=-1.363729124$ & $c_7=-0.006748873$ & $d_7=+0.029064067$  \\
+\hline
+$a_8=+0.850663781$& $b_8=-0.403349276$ & $c_8=+0.000246420$ & $d_8=-0.027928955$  \\
+\hline
+$a_9=-0.025639041$& $b_9=+0.702222016$ & $c_9=+0.002102967$ & $d_9=+0.016497308$  \\
+\hline
+$a_{10}=-0.150230960$& $b_{10}=-0.216195929$ & $c_{10}=-0.001217930$ & $d_{10}=-0.005598515$  \\
+\hline
+$a_{11}=+0.034404779$& $b_{11}=+0.019547013$ & $c_{11}=+0.000233939$ & $d_{11}=+0.000838386$  \\
+\hline
+\end{tabular}
+\caption[Numerical values of the coefficients of the Fresnel integral]{The numerical values of the coefficients of the Fresnel integral \cite{Boersma_fri_i}}
+\label{tab:Fresnel_integral}
+\end{center}
+\end{table} 
+
+The modified Fresnel integral $F\left(X\right)$ in \cite{Pathak_utd} is
+\be\label{fresnel__appendix_3} 
+F\left(X\right)=2j\sqrt{X}\exp{\left(jX\right)}\int^\infty_{\sqrt{X}}\exp{\left(-j\tau^2\right)d\tau} 
+\ee 
+Taking $\tau^2=t$
+\be\label{fresnel_appendix_3} 
+F\left(X\right)&=&j\sqrt{X}\exp{\left(jX\right)}\int^\infty_X\frac{\exp{\left(-jt\right)}}{\sqrt{t}}dt\nonumber\\ 
+&=&j\sqrt{2\pi X}\exp{\left(jX\right)}\int^\infty_X\frac{\exp{\left(-jt\right)}}{\sqrt{2\pi t}}dt\nonumber\\ 
+&=&j\sqrt{2\pi X}\exp{\left(jX\right)}\left[\int^\infty_0\frac{\exp{\left(-jt\right)}}{\sqrt{2\pi t}}dt-\int^X_0\frac{\exp{\left(-jt\right)}}{\sqrt{2\pi t}}dt\right]\nonumber\\ 
+&=&j\sqrt{2\pi X}\exp{\left(jX\right)}\left[\left(\frac{1-j}{2}\right)-\int^X_0\frac{\exp{\left(-jt\right)}}{\sqrt{2\pi t}}dt\right]
+\ee  
+From the Eqns.~(\ref{fresnel_appendix_1}) \& (\ref{fresnel__appendix_3})
+\be\label{fresnel_appendix_5} 
+F\left(X\right)=j\sqrt{2\pi X}\exp{\left(jX\right)}\left[\left(\frac{1-j}{2}\right)-f(X)\right]
+\ee  
+The modified Fresnel integral $F_s\left(X\right)$ in slope diffraction coefficient \cite{Balanis_book}, \cite{Y_T_Lo_edited_book} is
+\be\label{slfres_appendix_1} 
+F_s\left(X\right)=2jX\left[1-j2\sqrt{X}e^{jX}\int^\infty_{\sqrt{X}}\exp{\left(-j\tau^2\right)d\tau}\right]=2jX\left[1-F\left(X\right)\right]
+\ee
+
+
+
+%\input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Ph/Appendix/Fresnel_Integral_Deravative}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

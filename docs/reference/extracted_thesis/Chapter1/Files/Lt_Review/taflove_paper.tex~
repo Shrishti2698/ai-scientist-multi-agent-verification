@@ -1,0 +1,47 @@
+%\section{Taflove \& Korada Umashankar \cite{Katz_FDTD_Analysis_Horn_Antennas}}
+Since then numerical techniques like FDTD have come to the fore. Taflove \& Korada Umashankar applied the finite-difference time-domain (FDTD) technique to various radiating structures including two- and three-dimensional waveguides and flared horns \cite{Katz_FDTD_Analysis_Horn_Antennas}. Numerical results were compared with results from method of moments (MoM).\index{Horn radiation pattern!FDTD}\index{Method of moments} 
+
+%This paper will attempt to validate the finite-difference time domain (FDTD) code when used for the modeling of both two- and three-dimensional radiating structures. It will use waveguides, flared horns, and parabolic reflectors as examples that will be validated against method of moments (MoM) codes. There are no published examples of previous use of the FDTD technique to solve problems involving a radiating object.
+
+
+%For parabolas, \textbf{asymptotic physical optics (APO)} has been used to solve for far fields, with various correction factors. Knop and Ostertag \cite{Knop_A_note_asymptotic_PO_paraboloidal_reflector} showed that APO gave good results compared with experimental data, except in the backscattering region, and that the disagreements were caused by faulty edge-current approximations. They corrected the diffraction coefficients and showed that these corrections had negligible effects in the forward scattering region, and greatly improved the results in the rear region.
+
+%It has been shown that MoM and FDTD are equally valid methods for finding far-field patterns and radar cross section (RCS) due to scatterers [8], but in the case of very large structures, MoM is limited by the amount of computer time and memory available and the possible error accumulation of the matrix solution. Even though MoM problems of a large size can be solved with the supercomputers available today, the matrix inversion contained in MoM can be a fundamental limit on the use of this method.
+
+
+
+
+%One aspect of both FDTD and MoM that is only now being studied for the first time is that of dynamic range. 
+
+The examination of the radiation patterns of the antennas in this paper formed a study of dynamic range of both FDTD and MoM for objects with a broad angular region of low response. They showed that FDTD and MoM can both pick up sharp nulls in radiation patterns that are caused by cancellation of field values. The low-response region of the horn antenna studied was both very broad and also very gradual. In a region such as this, where the far fields are 50 dB down from peak values, power levels are a factor of $10^{-5}$ down. This implied required accuracy in the electric and magnetic fields was approximately 0.3 $\%$, to effectively model these low fields emanating in this direction. They demonstrated that the FDTD technique is valid for use in modeling of radiating structures.
+
+%Modeling this huge dynamic range is currently becoming important in many areas: specifically, in two. The first is the design of antennas where side lobe suppression can be important, and the second is for the design of aerospace vehicles intended to scatter an extremely low fraction of the power of the incident field over a broad angular range. In some cases, especially in the second area, the problems to be solved cannot be studied in the open literature, so it is important to have canonical problems that permit us to examine the important aspects of physics and computational methodology. \textbf{The horn antenna systems are good canonical problems, because they naturally have this desired broad range of low response in the backward direction.}
+
+
+%The results shown here also have applications to other systems of partial differential equations where the desired solutions are required to be accurate to similar levels: namely, one part in three hundred. One example of a system of this type may be found in computational fluid dynamics. In solving the problem of turbulence in air flow near a wing, it may be necessary to have accuracies of one part in one thousand relative to a unit average flow around the wing. A difference of one one-thousandth may make the difference between the flow separating or not. To solve any system with this level of accuracy is a challenge to most numerical methods.
+
+%This demonstrated that the FDTD technique is valid for use in modeling of radiating structures. %Based on this validity, the contour FDTD technique was been proven to be a new and useful tool for modeling various reflector systems and some biologic problems. %While it is recognized that this method has some limitations, the authors can foresee a time in the future when these problems will have been solved, and FDTD will be a standard tool for the analysis of electromagnetic interactions involving large objects.
+
+They discussed several important issues affecting computational dynamic range. From the discussion of the $26.6^\circ$ horn, they concluded that neither MoM nor the then FDTD techniques could be blindly applied to antennas or scatterers which have a broad angular range of far fields lower than -40 dB relative to the main lobe or the incident beam. Changing the FDTD gridding to a finer spatial sampling, using brute-force methods to eliminate the effects of the radiation boundary conditions (RBC)\rq s, and calculating the best integration from the near-field points were found to be ways to achieve more accurate results, and hence, greater dynamic range. However, this reasoning was stated to be valid only in two dimensions.
+
+In the case of three dimensions, they noted that MoM matrix size would increase by an order of magnitude and cause the inversion or solution time to increase by three orders of magnitude. For the FDTD code, time-gating out the RBC reflections was found to be impractical, because it increased the volume of space in which the time marching takes place and was much worse than simply increasing the area in two dimensions. As the fields change in three dimensions, going from an $r^{-0.5}$ dependence to an $r^{-1}$ dependence, it was hoped that this would reduce the negative effects of the RBC\rq s because the fields would be weaker upon reaching the grid boundaries. Also it was pointed out that for antenna problems, FDTD and MoM are similar in that after one large solution is worked out (time marching of fields or matrix inversion,) finding the antenna pattern was simply a matter of a number of integrations or a number of matrix multiplications.
+
+%It was suggested that improved RBC\rq s must be examined in both two and three dimensions in the context of problems of this class. They fell that as the standard second-order Yee differencing algorithm may itself be unsuitable for problems such as these. It would be necessary to use a fourth-order scheme to achieve the requisite accuracy while maintaining $0.1 \lambda_0$, (relatively coarse) spatial resolution.% This also must be examined in both two and three dimensions.
+
+%Finally, they hoped that the suggested modifications would be sufficient and large 3-D problems may be attempted and models verified experimentally, as the MoM equivalent models were too large to run on the then available computers in a reasonable amount of time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

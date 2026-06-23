@@ -1,0 +1,113 @@
+Metadata-Version: 2.4
+Name: ai-scientist
+Version: 0.1.0
+Summary: A research-oriented multi-agent framework for claim verification over AI and CS literature.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.111.0
+Requires-Dist: openai>=1.86.0
+Requires-Dist: pydantic>=2.7.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: pypdf>=5.0.0
+Requires-Dist: streamlit>=1.36.0
+Requires-Dist: uvicorn>=0.30.0
+Provides-Extra: dev
+
+# AI-Scientist
+
+AI-Scientist is a research-oriented multi-agent prototype for scientific claim verification over AI and computer science literature. The repository is intentionally built around research comparison, not just application development.
+
+## What this repository includes
+
+- a multi-agent pipeline with orchestrated retrieval, claim extraction, verification, critique, synthesis, and reporting,
+- two baseline systems for research comparison,
+- a small curated AI/CS paper corpus for offline development,
+- a benchmark claim set for early evaluation,
+- a FastAPI interface for experimentation,
+- and phase documents that keep the implementation aligned with thesis goals.
+
+## Research framing
+
+The main research question is whether a multi-agent orchestrated system can improve verification quality and reasoning traceability compared to:
+
+- a direct single-agent baseline,
+- a standard RAG baseline.
+
+## Project structure
+
+- `src/ai_scientist/`: application package
+- `data/`: sample corpus and benchmark claims
+- `docs/`: phase-wise project documents
+- `tests/`: sanity tests for the MVP
+- `scripts/`: quick local demo runner
+
+## Quick start
+
+### Run the demo
+
+```powershell
+@'
+from ai_scientist.corpus import CorpusRepository
+from ai_scientist.config import Settings
+from ai_scientist.agents.orchestrator import MultiAgentResearchSystem
+
+repo = CorpusRepository.from_path("data/sample_corpus.json")
+system = MultiAgentResearchSystem(settings=Settings(), corpus=repo)
+result = system.analyze_question("Do retrieval-augmented systems reduce hallucination in language models?")
+print(result.markdown)
+'@ | python -
+```
+
+### Run the tests
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+### Export thesis assets
+
+```powershell
+$env:PYTHONPATH='src'
+python scripts/export_thesis_assets.py
+python scripts/generate_thesis_assets.py
+```
+
+### Generate demo HTML
+
+```powershell
+$env:PYTHONPATH='src'
+python scripts/generate_demo_html.py --question "Do critic-guided verification loops improve research claim checking?"
+```
+
+### Run the interactive UI
+
+```powershell
+$env:PYTHONPATH='src'
+streamlit run app.py
+```
+
+### Start the API
+
+```powershell
+uvicorn ai_scientist.api:app --reload
+```
+
+## Current implementation strategy
+
+The current MVP uses deterministic heuristics so the pipeline works offline and remains testable. This keeps the research pipeline reproducible during early development. External LLM providers can be plugged in later without rewriting the architecture.
+
+## Corpus ingestion
+
+You can also build a corpus from local raw paper notes:
+
+```powershell
+$env:PYTHONPATH='src'
+python scripts/build_corpus.py --input-dir data/raw_papers --output data/ingested_corpus.json
+```
+
+Supported input formats:
+
+- `.md`
+- `.txt`
+- `.json`
+- `.pdf` if `pypdf` is installed

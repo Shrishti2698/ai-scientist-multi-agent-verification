@@ -1,0 +1,49 @@
+\chapter*{Abbreviations}\label{LstAbb}
+\begin{flushleft}
+\begin{longtable}{lp{8.7cm}}
+ANN& Artificial Neural Network \\
+DCT& Discrete Cosine Transform \\
+DFT&  Discrete Fourier Transform\\
+DTW&  Dynamic Time Warping\\
+E\&M&  Expectation and Maximization\\
+EER&  Equal Error Rate\\
+FFT&  Fast Fourier Transform\\
+FR&  F-Ratio\\
+FS&  Feature Selection\\
+GF&  Gaussian Filter\\
+GIMFCC&  Gaussian Inverted Mel Frequency Cepstral Coefficients\\
+GMFCC&  Gaussian Mel Frequency Cepstral Coefficients\\
+GMM&  Gaussian Mixture Model\\
+GVQ&  Group Vector Quantization\\
+HMM&  Hidden Markov Model\\
+IMFCC&  Inverted Mel Frequency Cepstral Coefficients\\
+KLT&  \\
+LBG&  \\
+LDA&  Linear Discriminative Analysis\\
+LFCC&  \\
+LPC&  \\
+LPCC&  \\
+MC&  \\
+MFCC&  \\
+NIST&  \\
+PC&  \\
+PDF&  \\
+PIA&  \\
+PLP&  \\
+PQ&  \\
+QRcp&  \\
+RCC&  \\
+RF&  \\
+SA&  \\
+SD&  \\
+SI&  \\
+SR&  \\
+SV&  \\
+SVD&  \\
+SVM&  \\
+TDM&  \\
+TF&  \\
+UBM&  \\
+VQ&  \\
+\end{longtable}
+\end{flushleft}

@@ -1,0 +1,13 @@
+\section{Simulation of Plane Wave}\label{T_S_Field_Formulation}\index{FDTD!total/scattered field}\index{FDTD!plane wave simulation}
+
+		FTDD models of receiving antennas need to use a plane-wave source condition to create an incident electromagnetic wave. In order to simulate a plane wave in a FDTD program, the problem space will be divided up into two regions, namely the total field and scattered field regions. The reasons behind this division are that the propagating plane wave should not interact with the absorbing boundary conditions and the load on the absorbing boundary conditions should be minimized \cite{Sullivan_book_00}. These boundary conditions are not perfect, i.e., a certain portion of the impinging wave reflects back into the problem space. By subtracting the incident field, the amount of radiating field hitting the boundary is minimized, thereby reducing the amount of error. The method for the simulation of plane wave given in \cite{Sullivan_book_00} is detailed in Appendix \ref{appendix_T_S_Field_Formulation}.
+
+
+
+
+
+
+
+
+
+

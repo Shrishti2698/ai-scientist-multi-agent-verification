@@ -1,0 +1,508 @@
+{
+  "summaries": [
+    {
+      "system_name": "single_agent",
+      "total_cases": 12,
+      "accuracy": 0.583,
+      "average_confidence": 0.604,
+      "average_evidence_count": 0.0,
+      "contradiction_recall": 0.0,
+      "category_accuracy": {
+        "critic": 0.5,
+        "extraction": 1.0,
+        "generalization": 0.5,
+        "multi_agent": 1.0,
+        "retrieval": 0.333,
+        "verification": 0.5
+      },
+      "rows": [
+        {
+          "system_name": "single_agent",
+          "case_id": "C1",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C2",
+          "predicted_verdict": "supported",
+          "expected_verdict": "contradicted",
+          "confidence": 0.6,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C3",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.757,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C4",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C5",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C6",
+          "predicted_verdict": "supported",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.6,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C7",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C8",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C9",
+          "predicted_verdict": "supported",
+          "expected_verdict": "contradicted",
+          "confidence": 0.686,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C10",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C11",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "single_agent",
+          "case_id": "C12",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "system_name": "rag",
+      "total_cases": 12,
+      "accuracy": 0.667,
+      "average_confidence": 0.531,
+      "average_evidence_count": 0.0,
+      "contradiction_recall": 0.0,
+      "category_accuracy": {
+        "critic": 0.5,
+        "extraction": 1.0,
+        "generalization": 1.0,
+        "multi_agent": 1.0,
+        "retrieval": 0.333,
+        "verification": 0.5
+      },
+      "rows": [
+        {
+          "system_name": "rag",
+          "case_id": "C1",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.88,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C2",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C3",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.807,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C4",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C5",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.85,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C6",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C7",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.88,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C8",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.88,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C9",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C10",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.88,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C11",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "rag",
+          "case_id": "C12",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "system_name": "multi_agent_no_critic_loop",
+      "total_cases": 12,
+      "accuracy": 0.833,
+      "average_confidence": 0.577,
+      "average_evidence_count": 1.0,
+      "contradiction_recall": 0.5,
+      "category_accuracy": {
+        "critic": 0.5,
+        "extraction": 1.0,
+        "generalization": 1.0,
+        "multi_agent": 1.0,
+        "retrieval": 0.667,
+        "verification": 1.0
+      },
+      "rows": [
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C1",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.95,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C2",
+          "predicted_verdict": "contradicted",
+          "expected_verdict": "contradicted",
+          "confidence": 0.533,
+          "evidence_count": 2,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C3",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.735,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C4",
+          "predicted_verdict": "contradicted",
+          "expected_verdict": "contradicted",
+          "confidence": 0.511,
+          "evidence_count": 3,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C5",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.749,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C6",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C7",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.928,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C8",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.913,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C9",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C10",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 2,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C11",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "multi_agent_no_critic_loop",
+          "case_id": "C12",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "system_name": "multi_agent",
+      "total_cases": 12,
+      "accuracy": 0.917,
+      "average_confidence": 0.609,
+      "average_evidence_count": 1.083,
+      "contradiction_recall": 0.75,
+      "category_accuracy": {
+        "critic": 1.0,
+        "extraction": 1.0,
+        "generalization": 1.0,
+        "multi_agent": 1.0,
+        "retrieval": 0.667,
+        "verification": 1.0
+      },
+      "rows": [
+        {
+          "system_name": "multi_agent",
+          "case_id": "C1",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.95,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C2",
+          "predicted_verdict": "contradicted",
+          "expected_verdict": "contradicted",
+          "confidence": 0.533,
+          "evidence_count": 2,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C3",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.735,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C4",
+          "predicted_verdict": "contradicted",
+          "expected_verdict": "contradicted",
+          "confidence": 0.511,
+          "evidence_count": 3,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C5",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.749,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C6",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C7",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.928,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C8",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.913,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C9",
+          "predicted_verdict": "contradicted",
+          "expected_verdict": "contradicted",
+          "confidence": 0.589,
+          "evidence_count": 1,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C10",
+          "predicted_verdict": "supported",
+          "expected_verdict": "supported",
+          "confidence": 0.8,
+          "evidence_count": 2,
+          "is_correct": true
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C11",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "contradicted",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": false
+        },
+        {
+          "system_name": "multi_agent",
+          "case_id": "C12",
+          "predicted_verdict": "insufficient_evidence",
+          "expected_verdict": "insufficient_evidence",
+          "confidence": 0.2,
+          "evidence_count": 0,
+          "is_correct": true
+        }
+      ]
+    }
+  ]
+}

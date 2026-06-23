@@ -1,0 +1,17 @@
+\chapter[Introduction]{Introduction}{Introduction}\label{chapter_thesis_introduction}
+\begin{spacing}{1.25}
+\vskip 20pt
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}\\
+{\Large{\textbf{Preface}}}\\
+This chapter presents the introduction of the thesis and an extensive survey of the literature on the problems. The gaps in the works reported so far, as well as the unexplored areas are also deals with. The methodology to compute H-plane radiation pattern of horn antenna and analysis an antenna in receiving mode to predict the performance of it as an EM field sensor are also mentioned here. How the thesis is organized is also details in this chapter.
+\\
+\rule{0.49\textwidth}{0.75pt} $_{\Diamond}$ \rule{0.49\textwidth}{0.75pt}
+\end{spacing}
+\newpage
+
+\input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Ph/Chapter1/articles_Ch_1}
+
+
+
+

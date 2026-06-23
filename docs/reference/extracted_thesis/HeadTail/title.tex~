@@ -1,0 +1,34 @@
+\thispagestyle{plain}
+\begin{center}
+ {\huge \bf \input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Title/Thesis_Title}\\}
+\vspace*{1.90cm}
+{\bf{ \textit {Thesis submitted to \\in partial fulfillment
+	of the requirements\\ for the degree}}}\\ 
+\vspace*{0.725cm}
+{\bf{ \textit {of}}}\\
+\vspace*{0.725cm}
+{\Large {\bf Doctor\ \ of\ \ Philosophy}}\\
+\vspace*{0.725cm}
+{\bf{ \textit { by}}}\\
+\vspace*{0.725cm}
+{\Large{\bf Maifuz Ali}}\\
+\vspace*{1.1250cm}
+\bf{ \textit { Under the guidance of }}\\
+\vspace*{0.725cm}
+{{\bf Prof. Subrata Sanyal}}\\
+\vspace*{0.7250cm}
+\begin{figure}[htbp]
+  \centerline{\psfig{figure=IITLOGO.eps,height=3.75cm,width=3.75cm}}
+\end{figure}
+\vspace*{0.7250cm}
+{\Large \bf Department of Electronics \& Electrical Communication Engineering\\
+Indian Institute of Technology, Kharagpur\\
+%West Bengal, INDIA 721\ 302 \\
+February 2010}\\
+\textcopyright 2010 Maifuz Ali. All rights reserved.
+\end{center}
+
+\clearpage
+
+\thispagestyle{plain}
+\clearpage

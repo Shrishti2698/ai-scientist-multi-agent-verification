@@ -1,0 +1,39 @@
+\thispagestyle{empty}
+
+\begin{figure}[htbp]
+  \psfig{figure=IITLOGO.eps,height=1.8cm,width=1.8cm}
+\end{figure}
+
+\vspace*{-4.0\baselineskip}
+
+\hspace*{2cm} {\large{\bf{\sf Department of Department of Electronics \& Electrical Communication}}} \\ 
+\hspace*{2.6cm} {\large{\bf{\sf Engineering}}} \\
+\hspace*{2.6cm}   {\large{\bf{\sf Indian Institute of Technology, Kharagpur}}}\\
+\hspace*{2.6cm}   {\large{\sf Kharagpur, West Bengal, India 721\ 302.}}\\
+\vspace*{0.5cm}
+\rule{\textwidth}{0.75pt}
+
+\vskip 2.0\baselineskip
+\centerline{\underline{\Large{\bf Certificate}}}
+\vskip 2.0\baselineskip
+\noindent
+This is to certify that the thesis entitled~\lq\lq\textbf{\input{/home/maifuzali/LaTex/report/Thesis_Ph/Thesis_Title/Thesis_Title}}\rq\rq, submitted by \textbf{Maifuz Ali}, a Research Scholar, in the \emph{Department of Electronics \& Electrical Communication Engineering, Indian Institute of Technology, Kharagpur, India}, for the award of the degree of \textbf{Doctor of Philosophy}, is a record of an original research work carried out by him under my supervision and guidance during July 2003 - May 2008. The thesis fulfills all requirements as per the regulations of this Institute and in my opinion has reached the standard needed for submission. Neither this thesis nor any part of it has been submitted for any degree or academic award elsewhere.
+
+\vspace*{1.5cm}
+\begin{flushright}
+\raisebox{0.1cm}[3cm][0cm]{
+\begin{minipage}{7.8cm}
+\rule{\textwidth}{0.5pt}\\
+{\bf Dr. Subrata Sanyal}\\
+Professor\\
+Department of Electronics \& Electrical Communication Engineering,\\
+Indian Institute of Technology, Kharagpur, West Bengal,\\
+{\sf INDIA} 721\ 302.
+\end{minipage}
+}
+\end{flushright}
+\vspace*{0.3cm}
+Place: I.I.T.,  Kharagpur\\
+Date: \noindent{\today}\\
+
+
