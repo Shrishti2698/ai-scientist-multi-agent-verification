@@ -85,10 +85,17 @@ class MultiAgentResearchSystem:
                 iteration_trace=iteration_trace,
             )
 
+        iteration_trace.append(
+            f"Extracted {len(claims)} candidate claim(s) from the retrieved paper(s) for verification."
+        )
         assessments = self._refine_assessments(claims=claims, initial_papers=papers, iteration_trace=iteration_trace)
 
         notes = self.critic_agent.critique(assessments)
+        iteration_trace.append(
+            f"Critic reviewed {len(assessments)} verified claim(s) and raised {len(notes)} critique note(s)."
+        )
         summary = self.synthesis_agent.synthesize(question=question, assessments=assessments, notes=notes)
+        iteration_trace.append("Synthesis agent composed the final grounded summary from the verified claims.")
         return self.report_agent.build(
             question=question,
             summary=summary,

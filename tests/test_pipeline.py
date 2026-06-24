@@ -79,31 +79,30 @@ class PipelineTests(unittest.TestCase):
         confidences = {item.confidence for item in report.verified_claims}
         self.assertGreater(len(confidences), 1)
 
-    def test_out_of_scope_medical_question_stops_early(self) -> None:
+    def test_research_question_from_any_domain_is_in_scope(self) -> None:
+        # Multi-domain system: a medical research question is accepted (not rejected).
         report = self.system.analyze_question(
             "What is the best treatment for diabetes according to recent research?"
         )
-        self.assertFalse(report.verified_claims)
-        self.assertFalse(report.retrieved_papers)
-        self.assertIn("validated only for AI and computer science", report.summary)
+        self.assertNotIn("outside the research domain", report.summary)
 
-    def test_mixed_domain_judicial_ai_question_is_rejected(self) -> None:
+    def test_non_research_commercial_question_stops_early(self) -> None:
         report = self.system.analyze_question(
-            "What does recent research say about bias in judicial AI systems?"
+            "What is the best phone to buy this year for gaming?"
         )
         self.assertFalse(report.verified_claims)
         self.assertFalse(report.retrieved_papers)
-        self.assertIn("judicial", report.summary.lower())
+        self.assertIn("research-oriented questions only", report.summary)
 
-    def test_out_of_scope_claim_returns_explicit_scope_verdict(self) -> None:
+    def test_non_research_claim_returns_explicit_scope_verdict(self) -> None:
         result = self.system.verify_claim(
-            "Which medicine is most effective for diabetes treatment?"
+            "Which celebrity has the best fashion sense this year?"
         )
         self.assertEqual(result.verdict, "out_of_scope")
         self.assertEqual(result.confidence, 0.0)
 
-    def test_baselines_reject_out_of_scope_claims(self) -> None:
-        claim = "How should courts interpret constitutional contracts in modern law?"
+    def test_baselines_reject_non_research_claims(self) -> None:
+        claim = "What movie should I watch tonight for entertainment?"
         self.assertEqual(self.single_agent.verify_claim(claim).verdict, "out_of_scope")
         self.assertEqual(self.rag.verify_claim(claim).verdict, "out_of_scope")
 

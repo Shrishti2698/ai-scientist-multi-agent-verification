@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 from typing import Literal
 
@@ -12,6 +13,15 @@ except ModuleNotFoundError:  # pragma: no cover - fallback for environments with
 
 from ai_scientist.config import Settings
 from ai_scientist.models import ClaimAssessment, CritiqueNote, EvidenceSnippet, PaperDocument, StructuredClaim
+
+logger = logging.getLogger(__name__)
+
+
+def _model_supports_reasoning(model: str) -> bool:
+    """Reasoning models (gpt-5.x, o-series) accept a `reasoning.effort` param;
+    chat models like gpt-4o reject it with a 400 error."""
+    name = model.lower()
+    return name.startswith("gpt-5") or name.startswith(("o1", "o3", "o4"))
 
 
 class VerificationRefinement(BaseModel):
@@ -130,16 +140,21 @@ class OpenAIResearchLLM:
         return OpenAI(api_key=api_key)
 
     def _parse_response(self, instructions: str, input_text: str, response_model):
+        kwargs = dict(
+            model=self.model,
+            instructions=instructions,
+            input=input_text,
+            max_output_tokens=self.settings.openai_max_output_tokens,
+            text_format=response_model,
+        )
+        # Only reasoning-capable models accept the reasoning param (gpt-4o rejects it).
+        if _model_supports_reasoning(self.model):
+            kwargs["reasoning"] = {"effort": self.reasoning_effort}
         try:
-            response = self.client.responses.parse(
-                model=self.model,
-                instructions=instructions,
-                input=input_text,
-                reasoning={"effort": self.reasoning_effort},
-                max_output_tokens=self.settings.openai_max_output_tokens,
-                text_format=response_model,
-            )
-        except Exception:
+            response = self.client.responses.parse(**kwargs)
+        except Exception as exc:
+            # Fall back to heuristics, but make the failure visible instead of silent.
+            logger.warning("OpenAI call failed (model=%s); falling back to heuristics: %s", self.model, exc)
             return None
         return getattr(response, "output_parsed", None)
 

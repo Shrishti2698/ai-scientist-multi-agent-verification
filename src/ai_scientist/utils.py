@@ -64,6 +64,20 @@ def overlap_score(left: str, right: str) -> float:
     return intersection / union
 
 
+def coverage_score(query: str, document: str) -> float:
+    """Fraction of the query's content tokens that appear in the document.
+
+    Unlike Jaccard `overlap_score`, this is robust to document length, which makes
+    it a much better signal for ranking/filtering papers (whose abstracts are long)
+    against a short query.
+    """
+    query_tokens = set(tokenize(query))
+    document_tokens = set(tokenize(document))
+    if not query_tokens:
+        return 0.0
+    return len(query_tokens & document_tokens) / len(query_tokens)
+
+
 def keyword_counts(text: str) -> Counter[str]:
     return Counter(tokenize(text))
 

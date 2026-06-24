@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import json
+import logging
+import os
 import time
-from typing import Dict, List
+from typing import List
 from urllib.parse import quote_plus
 import requests
 import xml.etree.ElementTree as ET
@@ -11,13 +12,52 @@ from ai_scientist.models import PaperDocument
 from ai_scientist.config import Settings
 from ai_scientist.utils import normalize_text
 
+logger = logging.getLogger(__name__)
+
 
 class LiveRetrievalAgent:
     def __init__(self, settings: Settings):
         self.settings = settings
         self.pubmed_base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
         self.arxiv_base = "http://export.arxiv.org/api/query"
-        
+        # NCBI raises the rate limit from 3 to 10 req/s when an API key is supplied,
+        # and asks callers to identify themselves via `tool` and `email`.
+        self.ncbi_api_key = os.getenv("NCBI_API_KEY")
+        self.ncbi_email = os.getenv("NCBI_EMAIL")
+        self.ncbi_tool = os.getenv("NCBI_TOOL", "ai-scientist")
+        # Tighter pacing without a key (3 req/s), looser with one (10 req/s).
+        self._pubmed_delay = 0.12 if self.ncbi_api_key else 0.34
+
+    def _ncbi_params(self, params: dict) -> dict:
+        """Attach NCBI identification/auth params to an eutils request."""
+        enriched = dict(params)
+        enriched["tool"] = self.ncbi_tool
+        if self.ncbi_email:
+            enriched["email"] = self.ncbi_email
+        if self.ncbi_api_key:
+            enriched["api_key"] = self.ncbi_api_key
+        return enriched
+
+    def _ncbi_get(self, url: str, params: dict, *, retries: int = 3) -> requests.Response:
+        """GET an eutils endpoint with exponential backoff on 429 / transient errors."""
+        delay = 0.5
+        last_exc: Exception | None = None
+        for attempt in range(retries):
+            try:
+                response = requests.get(url, params=self._ncbi_params(params), timeout=10)
+                if response.status_code == 429:
+                    raise requests.HTTPError("429 Too Many Requests", response=response)
+                response.raise_for_status()
+                return response
+            except requests.RequestException as exc:
+                last_exc = exc
+                if attempt == retries - 1:
+                    break
+                logger.debug("NCBI request retry %d after error: %s", attempt + 1, exc)
+                time.sleep(delay)
+                delay *= 2
+        raise last_exc if last_exc else RuntimeError("NCBI request failed")
+
     def retrieve_live_papers(self, query: str, max_papers: int = 15) -> List[PaperDocument]:
         """Retrieve papers from live APIs across multiple databases."""
         papers = []
@@ -27,14 +67,14 @@ class LiveRetrievalAgent:
             pubmed_papers = self._retrieve_from_pubmed(query, max_papers // 2)
             papers.extend(pubmed_papers)
         except Exception as e:
-            print(f"PubMed retrieval failed: {e}")
-            
-        # Try arXiv (physics/math/CS)  
+            logger.warning("PubMed retrieval failed: %s", e)
+
+        # Try arXiv (physics/math/CS)
         try:
             arxiv_papers = self._retrieve_from_arxiv(query, max_papers // 2)
             papers.extend(arxiv_papers)
         except Exception as e:
-            print(f"arXiv retrieval failed: {e}")
+            logger.warning("arXiv retrieval failed: %s", e)
             
         return papers[:max_papers]
     
@@ -48,20 +88,20 @@ class LiveRetrievalAgent:
             'db': 'pmc',
             'term': query,
             'retmax': max_results,
-            'retmode': 'json'
+            'retmode': 'json',
+            'sort': 'relevance',  # default is by date, which surfaces off-topic recent papers
         }
         
-        response = requests.get(search_url, params=search_params, timeout=10)
-        response.raise_for_status()
+        response = self._ncbi_get(search_url, search_params)
         search_data = response.json()
-        
+
         paper_ids = search_data.get('esearchresult', {}).get('idlist', [])
         if not paper_ids:
             return papers
-            
-        # Rate limiting
-        time.sleep(0.34)  # 3 requests per second limit
-        
+
+        # Rate limiting (key-aware)
+        time.sleep(self._pubmed_delay)
+
         # Step 2: Get paper details
         fetch_url = f"{self.pubmed_base}esummary.fcgi"
         fetch_params = {
@@ -69,9 +109,8 @@ class LiveRetrievalAgent:
             'id': ','.join(paper_ids),
             'retmode': 'json'
         }
-        
-        response = requests.get(fetch_url, params=fetch_params, timeout=10)
-        response.raise_for_status()
+
+        response = self._ncbi_get(fetch_url, fetch_params)
         fetch_data = response.json()
         
         # Parse results
@@ -104,37 +143,37 @@ class LiveRetrievalAgent:
     def _get_pubmed_abstract(self, paper_id: str) -> str:
         """Get full abstract from PubMed."""
         try:
-            time.sleep(0.34)  # Rate limiting
-            
+            time.sleep(self._pubmed_delay)  # Rate limiting (key-aware)
+
             fetch_url = f"{self.pubmed_base}efetch.fcgi"
             params = {
                 'db': 'pmc',
                 'id': paper_id,
                 'retmode': 'xml'
             }
-            
-            response = requests.get(fetch_url, params=params, timeout=10)
-            response.raise_for_status()
-            
+
+            response = self._ncbi_get(fetch_url, params)
+
             # Parse XML to extract abstract
             root = ET.fromstring(response.content)
-            
-            # Look for abstract in different possible locations
+
+            # Look for abstract in different possible locations. In JATS/PMC XML the
+            # text lives in nested <p>/<sec> children, so we must gather all descendant
+            # text (itertext), not just elem.text.
             abstract_elements = (
-                root.findall('.//abstract') + 
-                root.findall('.//AbstractText') +
-                root.findall('.//sec[@sec-type="abstract"]')
+                root.findall('.//abstract')
+                + root.findall('.//AbstractText')
+                + root.findall('.//sec[@sec-type="abstract"]')
             )
-            
-            if abstract_elements:
-                abstract_text = ' '.join([
-                    elem.text or '' for elem in abstract_elements
-                ])
-                return abstract_text[:2000]  # Limit length
-                
+
+            for elem in abstract_elements:
+                text = ' '.join(part.strip() for part in elem.itertext() if part and part.strip())
+                text = normalize_text(text)
+                if len(text) >= 40:  # skip empty / boilerplate matches
+                    return text[:2000]
         except Exception:
             pass
-            
+
         return "Abstract not available via API"
     
     def _retrieve_from_arxiv(self, query: str, max_results: int = 10) -> List[PaperDocument]:

@@ -1,0 +1,236 @@
+{
+  "papers": [
+    {
+      "paper_id": "AI001",
+      "title": "Hybrid Retrieval for Hallucination Mitigation in Large Language Models: A Comparative Analysis",
+      "abstract": "Large Language Models (LLMs) excel in language comprehension and generation but are prone to hallucinations, producing factually incorrect or unsupported outputs. Retrieval Augmented Generation (RAG) systems address this issue by grounding LLM responses with external knowledge. This study evaluates the relationship between retriever effectiveness and hallucination reduction in LLMs using three retrieval approaches: sparse retrieval based on BM25 keyword search, dense retrieval using semantic search with Sentence Transformers, and a proposed hybrid retrieval module. The hybrid module incorporates query expansion and combines the results of sparse and dense retrievers through a dynamically weighted Reciprocal Rank Fusion score. Using the HaluBench dataset, a benchmark for hallucinations in question answering tasks, we assess retrieval performance with metrics such as mean average precision and normalised discounted cumulative gain, focusing on the relevance of the top three retrieved documents. Results show that the hybrid retriever achieves better relevance scores, outperforming both sparse and dense retrievers. Further evaluation of LLM-generated answers against ground truth using metrics such as accuracy, hallucination rate, and rejection rate reveals that the hybrid retriever achieves the highest accuracy on fails, the lowest hallucination rate, and the lowest rejection rate. These findings highlight the hybrid retriever's ability to enhance retrieval relevance, reduce hallucination rates, and improve LLM reliability, emphasising the importance of advanced retrieval techniques in mitigating hallucinations and improving response accuracy.",
+      "year": 2025,
+      "authors": [
+        "Chandana Sree Mala",
+        "Gizem Gezici",
+        "Fosca Giannotti"
+      ],
+      "topics": [
+        "rag",
+        "hallucination",
+        "language models"
+      ]
+    },
+    {
+      "paper_id": "AI002",
+      "title": "A Survey of Multimodal Retrieval-Augmented Generation",
+      "abstract": "Multimodal Retrieval-Augmented Generation (MRAG) enhances large language models (LLMs) by integrating multimodal data (text, images, videos) into retrieval and generation processes, overcoming the limitations of text-only Retrieval-Augmented Generation (RAG). While RAG improves response accuracy by incorporating external textual knowledge, MRAG extends this framework to include multimodal retrieval and generation, leveraging contextual information from diverse data types. This approach reduces hallucinations and enhances question-answering systems by grounding responses in factual, multimodal knowledge. Recent studies show MRAG outperforms traditional RAG, especially in scenarios requiring both visual and textual understanding. This survey reviews MRAG's essential components, datasets, evaluation methods, and limitations, providing insights into its construction and improvement. It also identifies challenges and future research directions, highlighting MRAG's potential to revolutionize multimodal information retrieval and generation. By offering a comprehensive perspective, this work encourages further exploration into this promising paradigm.",
+      "year": 2025,
+      "authors": [
+        "Lang Mei",
+        "Siyu Mo",
+        "Zhihan Yang"
+      ],
+      "topics": [
+        "rag",
+        "hallucination",
+        "language models"
+      ]
+    },
+    {
+      "paper_id": "AI003",
+      "title": "Stop Overvaluing Multi-Agent Debate -- We Must Rethink Evaluation and Embrace Model Heterogeneity",
+      "abstract": "Multi-agent debate (MAD) has gained significant attention as a promising line of research to improve the factual accuracy and reasoning capabilities of large language models (LLMs). Despite its conceptual appeal, current MAD research suffers from critical limitations in evaluation practices, including limited benchmark coverage, weak baseline comparisons, and inconsistent setups. This paper presents a systematic evaluation of 5 representative MAD methods across 9 benchmarks using 4 foundational models. Surprisingly, our findings reveal that MAD often fail to outperform simple single-agent baselines such as Chain-of-Thought and Self-Consistency, even when consuming significantly more inference-time computation. To advance MAD research, we further explore the role of model heterogeneity and find it as a universal antidote to consistently improve current MAD frameworks. Based on our findings, we argue that the field must stop overvaluing MAD in its current form; for true advancement, we must critically rethink evaluation paradigms and actively embrace model heterogeneity as a core design principle.",
+      "year": 2025,
+      "authors": [
+        "Hangfan Zhang",
+        "Zhiyao Cui",
+        "Jianhao Chen"
+      ],
+      "topics": [
+        "multi-agent",
+        "reasoning",
+        "verification"
+      ]
+    },
+    {
+      "paper_id": "PHY001",
+      "title": "Quantum error correction with fractal topological codes",
+      "abstract": "Recently, a class of fractal surface codes (FSCs), has been constructed on fractal lattices with Hausdorff dimension $2+ε$, which admits a fault-tolerant non-Clifford CCZ gate. We investigate the performance of such FSCs as fault-tolerant quantum memories. We prove that there exist decoding strategies with non-zero thresholds for bit-flip and phase-flip errors in the FSCs with Hausdorff dimension $2+ε$. For the bit-flip errors, we adapt the sweep decoder, developed for string-like syndromes in the regular 3D surface code, to the FSCs by designing suitable modifications on the boundaries of the holes in the fractal lattice. Our adaptation of the sweep decoder for the FSCs maintains its self-correcting and single-shot nature. For the phase-flip errors, we employ the minimum-weight-perfect-matching (MWPM) decoder for the point-like syndromes. We report a sustainable fault-tolerant threshold ($\\sim 1.7\\%$) under phenomenological noise for the sweep decoder and the code capacity threshold (lower bounded by $2.95\\%$) for the MWPM decoder for a particular FSC with Hausdorff dimension $D_H\\approx2.966$. The latter can be mapped to a lower bound of the critical point of a confinement-Higgs transition on the fractal lattice, which is tunable via the Hausdorff dimension.",
+      "year": 2022,
+      "authors": [
+        "Arpit Dua",
+        "Tomas Jochym-O'Connor",
+        "Guanyu Zhu"
+      ],
+      "topics": [
+        "quantum computing",
+        "error correction"
+      ]
+    },
+    {
+      "paper_id": "PHY002",
+      "title": "Low overhead fault-tolerant quantum error correction with the surface-GKP code",
+      "abstract": "Fault-tolerant quantum error correction is essential for implementing quantum algorithms of significant practical importance. In this work, we propose a highly effective use of the surface-GKP code, i.e., the surface code consisting of bosonic GKP qubits instead of bare two-dimensional qubits. In our proposal, we use error-corrected two-qubit gates between GKP qubits and introduce a maximum likelihood decoding strategy for correcting shift errors in the two-GKP-qubit gates. Our proposed decoding reduces the total CNOT failure rate of the GKP qubits, e.g., from $0.87\\%$ to $0.36\\%$ at a GKP squeezing of $12$dB, compared to the case where the simple closest-integer decoding is used. Then, by concatenating the GKP code with the surface code, we find that the threshold GKP squeezing is given by $9.9$dB under the the assumption that finite-squeezing of the GKP states is the dominant noise source. More importantly, we show that a low logical failure rate $p_{L} < 10^{-7}$ can be achieved with moderate hardware requirements, e.g., $291$ modes and $97$ qubits at a GKP squeezing of $12$dB as opposed to $1457$ bare qubits for the standard rotated surface code at an equivalent noise level (i.e., $p=0.36\\%$). Such a low failure rate of our surface-GKP code is possible through the use of space-time correlated edges in the matching graphs of the surface code decoder. Further, all edge weights in the matching graphs are computed dynamically based on analog information from the GKP error correction using the full history of all syndrome measurement rounds. We also show that a highly-squeezed GKP state of GKP squeezing $\\gtrsim 12$dB can be experimentally realized by using a dissipative stabilization method, namely, the Big-small-Big method, with fairly conservative experimental parameters. Lastly, we introduce a three-level ancilla scheme to mitigate ancilla decay errors during a GKP state preparation.",
+      "year": 2021,
+      "authors": [
+        "Kyungjoo Noh",
+        "Christopher Chamberland",
+        "Fernando G. S. L. Brandão"
+      ],
+      "topics": [
+        "quantum computing",
+        "error correction"
+      ]
+    },
+    {
+      "paper_id": "ENV001",
+      "title": "A Dynamic Strategic Plan for Transition to Campus-Scale Clean Electricity Using Multi-Stage Stochastic Programming",
+      "abstract": "The decarbonization of energy systems at energy-intensive sites is an essential component of global climate mitigation, yet such transitions involve substantial capital requirements, ongoing technological progress, and the operational complexities of renewable integration. This study presents a dynamic strategic planning framework that applies multi-stage stochastic programming to guide clean electricity transitions at the campus level. The model jointly addresses technology investment, storage operation, and grid interaction decisions while explicitly incorporating uncertainties in future technology cost trajectories and efficiency improvements. By enabling adaptive, stage-wise decision-making, the framework provides a structured approach for large electricity consumers seeking to achieve self-sufficient and sustainable energy systems. The approach is demonstrated through a case study of Middle East Technical University (Ankara, Turkey), which has committed to achieving carbon-neutral electricity by 2040. Through the integration of solar photovoltaics, wind power, and lithium-ion batteries, the model links long-term investment planning with operational-level dynamics by incorporating high-resolution demand and meteorological data. Our findings from the case study, sensitivity analyses, and comparisons with simplified models indicate that accounting for uncertainty and temporal detail is crucial for both the economic viability and operational feasibility of campus-scale clean electricity transitions.",
+      "year": 2025,
+      "authors": [
+        "Ahmet Emir Şener",
+        "Burak Kocuk",
+        "Tuğçe Yüksel"
+      ],
+      "topics": [
+        "renewable energy",
+        "solar",
+        "wind"
+      ]
+    },
+    {
+      "paper_id": "MED001",
+      "title": "Metformin therapy in pediatric type 2 diabetes mellitus and its comorbidities: A review.",
+      "abstract": "Type 2 diabetes (T2D) rates in children and adolescents are rising globally. T2D is a complex and aggressive disease in children with several comorbidities, high treatment failure rates, and insulin needs within a few years from diagnosis. While myriads of pharmacotherapies are licensed to treat adults with T2D, treatments accessible to children and adolescents have been limited until recently. Metformin is an old drug with multiple beneficial metabolic health effects beyond glycemic control. This review discusses Metformin’s origins, its mechanisms of action, and evidence for its use in the pediatric population to treat and prevent T2D. We also explore the evidence for its use as an obesity therapy, which is the primary driver of T2D, and T2D-driven comorbidities. While emerging therapies create new horizons for managing pediatric T2D, Metformin remains an inexpensive and safe part of the treatment plans of many T2D children globally for its beneficial metabolic effects.",
+      "year": 2022,
+      "authors": [
+        "Alfaraidi H",
+        "Samaan MC"
+      ],
+      "topics": [
+        "diabetes",
+        "metformin",
+        "treatment"
+      ]
+    },
+    {
+      "paper_id": "MED002",
+      "title": "Metformin improves skeletal muscle microvascular insulin resistance in metabolic syndrome.",
+      "abstract": "Microvascular insulin resistance is present in metabolic syndrome and may contribute to increased cardiovascular disease risk and the impaired metabolic response to insulin observed. Metformin improves metabolic insulin resistance in humans. Its effects on macro and microvascular insulin resistance have not been defined. Eleven subjects with nondiabetic metabolic syndrome were studied four times (before and after 12 wk of treatment with placebo or metformin) using a crossover design, with an 8-wk washout interval between treatments. On each occasion, we measured three indices of large artery function [pulse wave velocity (PWV), radial pulse wave separation analysis (PWSA), brachial artery endothelial function (flow-mediated dilation-FMD)] as well as muscle microvascular perfusion [contrast-enhanced ultrasound (CEU)] before and at 120 min into a 150 min, 1 mU/min/kg euglycemic insulin clamp. Metformin decreased body mass index (BMI), fat weight, and % body fat ( P < 0.05, each), however, placebo had no effect. Metformin (not placebo) improved metabolic insulin sensitivity, (clamp glucose infusion rate, P < 0.01), PWV, and FMD after insulin were unaffected by metformin treatment. PWSA improved with insulin only after metformin P < 0.01). Insulin decreased muscle microvascular blood volume measured by contrast ultrasound both before and after placebo and before metformin ( P < 0.02 for each) but not after metformin. Short-term metformin treatment improves both metabolic and muscle microvascular response to insulin. Metformin’s effect on microvascular insulin responsiveness may contribute to its beneficial metabolic effects. Metformin did not improve aortic stiffness or brachial artery endothelial function, but enhanced radial pulse wave properties consistent with relaxation of smaller arterioles. NEW & NOTEWORTHY Metformin, a first-line treatment for type 2 diabetes, is often used in patients with insulin resistance and metabolic syndrome. Here, we provide the first ev",
+      "year": 2022,
+      "authors": [
+        "Jahn LA",
+        "Hartline L",
+        "Liu Z"
+      ],
+      "topics": [
+        "diabetes",
+        "metformin",
+        "treatment"
+      ]
+    },
+    {
+      "paper_id": "MED003",
+      "title": "Clinicodemographic Profile and Clinical Outcome of Children Presenting to Telemedicine Center at Institute of National Importance of India: A Prospective Observational Study.",
+      "abstract": "Background There is a global shortage of healthcare professionals, especially in developing countries, leading to disparities in access to healthcare, worsened by the pandemic. Telemedicine is emerging as a solution, with growing adoption worldwide due to advancements in technology and increased awareness. Research Problem . The establishment of telemedicine depends on resources, infrastructure, and knowledge about healthcare needs. Further studies are needed to monitor and address evolving issues in telemedicine. The Overall Purpose of the Study . Rural health disparities stem from multiple factors, like limited healthcare access, workforce shortages, lifestyle choices, and lower socioeconomic status, leading to higher mortality and chronic diseases. Addressing these challenges is vital for rural community well-being. Telemedicine centers present a promising solution, bridging gaps, and improving healthcare outcomes for underserved remote populations. Methodology . Objective: This study assessed the clinicodemographic profile and clinical outcome of children presenting to the telemedicine center at the Institute of National Importance in India. Design: Prospective observational study. Setting: A single-center tertiary care level. Participants: This study included 79 children aged up to 18 years. Major Findings and Summary of Interpretations . In our study, 79 children using telemedicine found a near-equal gender distribution. 8.9% needed emergency care, with common complaints being respiratory issues, fever, abdominal pain, and vomiting. After two weeks, 83.5% showed improvement, emphasizing telemedicine's effectiveness in pediatric care. Conclusion Our study underscores telemedicine's positive impact on pediatric healthcare, emphasizing its potential to enhance access, outcomes, and cost-efficiency. Wider telemedicine adoption can reduce morbidity and mortality, support preventive care, and streamline posttreatment services, alleviating pressure on specialized fac",
+      "year": 2024,
+      "authors": [
+        "Yankappa N",
+        "Kumar A",
+        "Prasad A"
+      ],
+      "topics": [
+        "telemedicine",
+        "healthcare access"
+      ]
+    },
+    {
+      "paper_id": "BIO001",
+      "title": "CRISPR/Cas9-Mediated Correction of the Sickle Mutation in Human CD34+ cells.",
+      "abstract": "Targeted genome editing technology can correct the sickle cell disease mutation of the β-globin gene in hematopoietic stem cells. This correction supports production of red blood cells that synthesize normal hemoglobin proteins. Here, we demonstrate that Transcription Activator-Like Effector Nucleases (TALENs) and the Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR)/Cas9 nuclease system can target DNA sequences around the sickle-cell mutation in the β-globin gene for site-specific cleavage and facilitate precise correction when a homologous donor template is codelivered. Several pairs of TALENs and multiple CRISPR guide RNAs were evaluated for both on-target and off-target cleavage rates. Delivery of the CRISPR/Cas9 components to CD34+ cells led to over 18% gene modification in vitro . Additionally, we demonstrate the correction of the sickle cell disease mutation in bone marrow derived CD34+ hematopoietic stem and progenitor cells from sickle cell disease patients, leading to the production of wild-type hemoglobin. These results demonstrate correction of the sickle mutation in patient-derived CD34+ cells using CRISPR/Cas9 technology.",
+      "year": 2016,
+      "authors": [
+        "Hoban MD",
+        "Lumaquin D",
+        "Kuo CY"
+      ],
+      "topics": [
+        "crispr",
+        "gene therapy",
+        "sickle cell"
+      ]
+    },
+    {
+      "paper_id": "PSY001",
+      "title": "Social Media Use as a Predictor of Positive and Negative Affect: An Ecological Momentary Assessment Study of Adolescents with and without Clinical Depression.",
+      "abstract": "Social media use is common in adolescents, with implications for psychosocial development and the emergence of depression. Yet, little is known about the time-linked connections between social media use and adolescents’ affective experiences and how they may differ between depressed and non-depressed youth. We leveraged ecological momentary assessment in adolescents oversampled for current depression to examine (1) associations between social media use and concurrent and later positive and negative affect and (2) sex and presence of a depressive disorder as moderators of these associations. Adolescents aged 14–17 with ( n = 48) and without ( n = 97) clinical depression, as indicated via clinical interview, reported momentary social media use and positive and negative affect seven times per day for one week. Multilevel modeling indicated that social media use was associated with reduced positive affect both concurrently and at the next assessment. Further, among clinically depressed youth only, social media use was associated with reduced negative affect at the next assessment. Results suggest that social media use may reduce both positive and negative affect, highlighting the nuanced relation between adolescent social media use and emotional health and laying the groundwork for future research to address several open questions.",
+      "year": 2024,
+      "authors": [
+        "Politte-Corn M",
+        "Dickey L",
+        "Abitante G"
+      ],
+      "topics": [
+        "social media",
+        "depression",
+        "adolescents"
+      ]
+    },
+    {
+      "paper_id": "NEURO001",
+      "title": "Practice makes perfect, but to what end? Computerised brain training has limited cognitive benefits in healthy ageing.",
+      "abstract": "Whether brain training programmes are effective and have transferable benefits to wider cognitive abilities is controversial, especially in older adult populations. We assessed, in a randomised controlled intervention study, whether a commercially available brain training programme can induce cognitive improvements in a sample of healthy older adults ( N = 103). Participants completed a three-month intervention of either an adaptive computerised cognitive training programme (through a brain training app) or active control. Cognition was measured through a comprehensive battery of tasks pre- and post-intervention to assess working memory, processing speed, attention, and language functioning. Participants in the intervention group significantly improved on all tasks that were trained specifically within the brain training programme (i.e. practice effects). However, for the cognitive tasks assessed pre- and post-intervention there was no evidence of any of these practice effects transferring to improvements in cognitive outcome measures compared to the active control group (i.e. transfer effects). Our results indicate that the benefits of brain training programmes appear to be limited to practice effects of trained tasks, while no evidence is found for transfer effects to other, related or unrelated, untrained cognitive tasks.",
+      "year": 2025,
+      "authors": [
+        "Sutton E",
+        "Catling J",
+        "Zanten JJCSVV"
+      ],
+      "topics": [
+        "cognitive training",
+        "older adults"
+      ]
+    },
+    {
+      "paper_id": "CHEM001",
+      "title": "Solvent Sustainability in Drug Discovery: Where Are We Now, and How Can We Improve?",
+      "abstract": "Solvent selection plays a critical role in promoting synthetic chemistry reactions. Metrics from the ACS-GCIPR have led to an estimate that solvents utilized contribute 80–90% of the waste streams of pharmaceutical manufacturing processes. The medicinal chemistry team of the ACS-GCIPR has performed a systematic study of the most common transformations (over 400k reactions) utilized in the drug discovery phase examining the solvents in which these reactions are performed. Specifically, we have focused on the use of several solvents that are undesirable based on their hazardous nature and/or known adverse effects on human health. The data have shown that in over 40% of cases, the reactions profiled are conducted in what is an undesirable solvent with the use of methylene chloride and N , N -dimethylformamide being particularly prevalent. The perspective further discusses strategies and resources available to medicinal chemists to enable the selection of more sustainable reaction media.",
+      "year": 2025,
+      "authors": [
+        "Richardson P",
+        "Bryan MC",
+        "Diorazio L"
+      ],
+      "topics": [
+        "green chemistry",
+        "pharmaceuticals"
+      ]
+    },
+    {
+      "paper_id": "EDU001",
+      "title": "Achievement of learning outcomes in non-traditional (online) versus traditional (face-to-face) anatomy teaching in medical schools: A mixed method systematic review.",
+      "abstract": "Abstract In recent years, the logistical challenges posed by the Covid‐19 pandemic have prompted medical educators teaching gross anatomy to explore an expanded use of online instructional modalities. There is concern that this shift to online anatomy education in medical schools could affect long‐term learning outcomes for future healthcare providers. In this systematic review, the educational effectiveness of online anatomy teaching is compared with traditional (“face‐to‐face”) teaching methods, specifically in terms of students' academic performance and satisfaction. A search of four databases identified and screened 162 studies. Subsequently, 31 studies were analyzed, including both (a) teaching outcome measures (test scores) and (b) student satisfaction ratings. Authors chose studies, extracted data, assessed quality and examined risk of bias. Nineteen studies compared students' academic performances between online and face‐to‐face teaching methods. Twenty‐six studies measured students' levels of satisfaction in both teaching methods. Both qualitative and quantitative analyses of the data revealed comparable academic performances with no statistical difference between the two teaching methods, but a higher level of satisfaction with face‐to‐face teaching. The findings confirm that students can learn from online teaching but are more satisfied with face‐to‐face teaching. The authors conclude that online teaching cannot replace traditional teaching and there is no preference for one type of modality over the other. Therefore, a multi‐modal learning approach combining online with face‐to‐face educational modalities for medical students could be efficient and successful.",
+      "year": 2023,
+      "authors": [
+        "Abualadas HM",
+        "Xu L"
+      ],
+      "topics": [
+        "online learning",
+        "education"
+      ]
+    },
+    {
+      "paper_id": "ECON001",
+      "title": "How does Working from Home Affect Developer Productivity? -- A Case Study of Baidu During COVID-19 Pandemic",
+      "abstract": "Nowadays, working from home (WFH) has become a popular work arrangement due to its many potential benefits for both companies and employees (e.g., increasing job satisfaction and retention of employees). Many previous studies have investigated the impact of working from home on the productivity of employees. However, most of these studies usually use a qualitative analysis method such as survey and interview, and the studied participants do not work from home for a long continuing time. Due to the outbreak of coronavirus disease 2019 (COVID-19), a large number of companies asked their employees to work from home, which provides us an opportunity to investigate whether working from home affects their productivity. In this study, to investigate the difference of developer productivity between working from home and working onsite, we conduct a quantitative analysis based on a dataset of developers' daily activities from Baidu Inc, one of the largest IT companies in China. In total, we collected approximately four thousand records of 139 developers' activities of 138 working days. Out of these records, 1,103 records are submitted when developers work from home due to COVID-19 pandemic. We find that WFH has both positive and negative impacts on developer productivity in terms of different metrics, e.g., the number of builds/commits/code reviews. We also notice that working from home has different impacts on projects with different characteristics including programming language, project type/age/size. For example, working from home has a negative impact on developer productivity for large projects. Additionally, we find that productivity varies for different developers. Based on these findings, we get some feedbacks from developers of Baidu and understand some reasons why WFH has different impacts on developer productivity.",
+      "year": 2020,
+      "authors": [
+        "Lingfeng Bao",
+        "Tao Li",
+        "Xin Xia"
+      ],
+      "topics": [
+        "remote work",
+        "productivity",
+        "economics"
+      ]
+    }
+  ]
+}

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import logging
+
 from ai_scientist.config import Settings
 from ai_scientist.corpus import CorpusRepository
 from ai_scientist.models import PaperDocument
-from ai_scientist.utils import overlap_score
+from ai_scientist.utils import coverage_score, overlap_score
 from ai_scientist.agents.live_retrieval import LiveRetrievalAgent
+
+logger = logging.getLogger(__name__)
 
 
 class RetrievalAgent:
@@ -12,48 +16,63 @@ class RetrievalAgent:
         self.corpus = corpus
         self.settings = settings
         self.live_agent = LiveRetrievalAgent(settings)
-        self.uploaded_papers = []  # Only uploaded papers, no base corpus
+        self.uploaded_papers = []  # Extra papers supplied at runtime (e.g. UI uploads)
 
     def add_uploaded_papers(self, papers: list[PaperDocument]):
-        """Add uploaded papers to the hybrid system."""
+        """Register uploaded papers as part of the local retrieval pool."""
         self.uploaded_papers = papers
+
+    def _local_pool(self) -> list[PaperDocument]:
+        """The always-available grounding: uploaded papers first, then curated corpus (deduped).
+
+        Uploaded papers are listed first so that on a tie they win de-duplication.
+        """
+        pool: list[PaperDocument] = []
+        seen: set[str] = set()
+        for paper in list(self.uploaded_papers) + list(self.corpus.all_papers()):
+            if paper.paper_id in seen:
+                continue
+            seen.add(paper.paper_id)
+            pool.append(paper)
+        return pool
+
+    def _uploaded_ids(self) -> set[str]:
+        return {paper.paper_id for paper in self.uploaded_papers}
+
+    def _local_rank_score(self, paper: PaperDocument, query: str, uploaded_ids: set[str]) -> float:
+        """Coverage plus a source bonus: uploaded papers outrank corpus papers."""
+        base = coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
+        bonus = (
+            self.settings.uploaded_paper_quality_bonus
+            if paper.paper_id in uploaded_ids
+            else self.settings.local_paper_quality_bonus
+        )
+        return min(1.0, base + bonus)
 
     def retrieve(self, query: str, top_k: int | None = None) -> list[PaperDocument]:
         limit = top_k or self.settings.top_k_retrieval
-        
-        # First, search uploaded papers only (no base corpus)
-        uploaded_papers = self._retrieve_from_uploaded(query, limit)
-        print(f"DEBUG: Found {len(uploaded_papers)} relevant uploaded papers for query: {query[:50]}...")
-        
-        # Always try API retrieval for hybrid approach
+
+        # Local corpus + uploads are the deterministic, always-available grounding.
+        local_papers = self._retrieve_from_local(query, limit)
+        logger.debug("Found %d relevant local paper(s) for query: %.50s", len(local_papers), query)
+
+        # Live API retrieval is optional augmentation layered on top of the local pool.
         if self.settings.enable_live_retrieval:
             try:
-                print(f"DEBUG: Attempting API retrieval for query: {query[:50]}...")
-                # Fetch papers from API
-                api_papers = self.live_agent.retrieve_live_papers(
-                    query, 
-                    max_papers=limit * 2  # Get 2x for quality filtering
-                )
-                print(f"DEBUG: API returned {len(api_papers)} papers")
-                
-                # Quality filter API papers
+                api_papers = self.live_agent.retrieve_live_papers(query, max_papers=limit * 2)
+                logger.debug("API returned %d paper(s)", len(api_papers))
+
                 quality_filtered = self._filter_by_quality(api_papers, query)
-                print(f"DEBUG: After quality filtering: {len(quality_filtered)} papers")
-                
-                # Combine uploaded + API papers
-                all_papers = self._merge_and_rank_papers(uploaded_papers, quality_filtered, query)
-                print(f"DEBUG: Final merged result: {len(all_papers)} papers")
-                
+                logger.debug("After quality filtering: %d paper(s)", len(quality_filtered))
+
+                all_papers = self._merge_and_rank_papers(local_papers, quality_filtered, query)
+                logger.debug("Final merged result: %d paper(s)", len(all_papers))
                 return all_papers[:limit]
-                
-            except Exception as e:
-                print(f"DEBUG: API retrieval failed: {e}")
-                return uploaded_papers
-        else:
-            print(f"DEBUG: Live retrieval disabled in settings")
-                
-        return uploaded_papers
-    
+            except Exception as exc:  # pragma: no cover - network failure path
+                logger.warning("Live API retrieval failed, falling back to local pool: %s", exc)
+                return local_papers
+        return local_papers
+
     def _filter_by_quality(self, papers: list[PaperDocument], query: str) -> list[PaperDocument]:
         """Filter API papers by quality metrics to maintain accuracy."""
         quality_papers = []
@@ -62,7 +81,7 @@ class RetrievalAgent:
             quality_score = self._calculate_quality_score(paper, query)
             
             # Only include papers above quality threshold
-            if quality_score >= 0.3:  # Configurable threshold
+            if quality_score >= self.settings.live_paper_quality_threshold:
                 quality_papers.append(paper)
                 
         return quality_papers
@@ -103,33 +122,32 @@ class RetrievalAgent:
         
         return min(1.0, score)
     
-    def _merge_and_rank_papers(self, uploaded_papers: list[PaperDocument], api_papers: list[PaperDocument], query: str) -> list[PaperDocument]:
-        """Merge and rank papers with preference for uploaded papers."""
-        
-        # Score all papers with uploaded bias
+    def _merge_and_rank_papers(self, local_papers: list[PaperDocument], api_papers: list[PaperDocument], query: str) -> list[PaperDocument]:
+        """Merge and rank papers, preferring curated local/uploaded papers."""
+
+        # Score all papers with a bias toward the curated local pool.
         scored_papers = []
-        
-        # Uploaded papers get quality bonus
-        for paper in uploaded_papers:
-            base_score = overlap_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
-            quality_bonus = 0.15  # Uploaded papers get quality boost
-            final_score = min(1.0, base_score + quality_bonus)
-            scored_papers.append((final_score, paper, 'uploaded'))
-            
-        # API papers use standard scoring
+
+        # Local papers (uploads + corpus) get a quality bonus; uploads rank highest.
+        uploaded_ids = self._uploaded_ids()
+        for paper in local_papers:
+            final_score = self._local_rank_score(paper, query, uploaded_ids)
+            scored_papers.append((final_score, paper, 'local'))
+
+        # API papers use standard scoring.
         for paper in api_papers:
             # Skip if we already have this paper (by title similarity)
-            if not self._is_duplicate(paper, uploaded_papers):
-                base_score = overlap_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
+            if not self._is_duplicate(paper, local_papers):
+                base_score = coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
                 scored_papers.append((base_score, paper, 'api'))
         
         # Sort by score (descending)
         scored_papers.sort(key=lambda x: x[0], reverse=True)
         
-        # Filter by relevance threshold
+        # Filter by coverage threshold
         filtered_papers = [
-            paper for score, paper, source in scored_papers 
-            if score >= self.settings.min_query_relevance
+            paper for score, paper, source in scored_papers
+            if score >= self.settings.min_query_coverage
         ]
         
         return filtered_papers
@@ -142,21 +160,26 @@ class RetrievalAgent:
                 return True
         return False
     
-    def _retrieve_from_uploaded(self, query: str, limit: int) -> list[PaperDocument]:
-        """Retrieve papers from uploaded papers only."""
-        if not self.uploaded_papers:
+    def _retrieve_from_local(self, query: str, limit: int) -> list[PaperDocument]:
+        """Retrieve papers from the local pool (curated corpus + uploaded papers)."""
+        local_pool = self._local_pool()
+        if not local_pool:
             return []
-            
+
+        uploaded_ids = self._uploaded_ids()
         scored = sorted(
             (
                 (
-                    overlap_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}"),
+                    self._local_rank_score(paper, query, uploaded_ids),
+                    coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}"),
                     paper,
                 )
-                for paper in self.uploaded_papers
+                for paper in local_pool
             ),
             key=lambda item: item[0],
             reverse=True,
         )
-        filtered = [paper for score, paper in scored if score >= self.settings.min_query_relevance]
+        # Rank by the source-weighted score, but gate on raw query coverage so a
+        # source bonus alone cannot pull in an irrelevant paper.
+        filtered = [paper for _rank, coverage, paper in scored if coverage >= self.settings.min_query_coverage]
         return filtered[:limit]

@@ -1,5 +1,13 @@
+import os
 from dataclasses import dataclass, field
 from dataclasses import replace
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
 @dataclass(slots=True)
@@ -8,6 +16,9 @@ class Settings:
     second_pass_top_k: int = 5
     max_claims_per_question: int = 5
     min_query_relevance: float = 0.05
+    # Minimum fraction of query content tokens a paper must contain to be retrieved.
+    # Length-robust, unlike the Jaccard `min_query_relevance`.
+    min_query_coverage: float = 0.2
     min_support_overlap: float = 0.18
     contradiction_overlap: float = 0.12
     strong_contradiction_score: float = 0.58
@@ -16,8 +27,12 @@ class Settings:
     critic_confidence_threshold: float = 0.6
     critic_min_evidence_count: int = 2
     enable_openai_llm: bool = False
-    enable_live_retrieval: bool = True
+    # Live retrieval is opt-in so the default pipeline stays deterministic and
+    # offline-testable. The app/API enable it explicitly for the hybrid demo.
+    enable_live_retrieval: bool = False
     live_paper_quality_threshold: float = 0.3
+    # Ranking bonuses enforce: user-uploaded papers > curated corpus > live API papers.
+    uploaded_paper_quality_bonus: float = 0.30
     local_paper_quality_bonus: float = 0.15
     openai_model: str = "gpt-5.5"
     openai_reasoning_effort: str = "medium"
@@ -191,6 +206,26 @@ class Settings:
             "proves",
         )
     )
+
+
+    @classmethod
+    def from_env(cls, **overrides) -> "Settings":
+        """Build settings from environment variables, then apply explicit overrides.
+
+        - OPENAI_API_KEY present -> enable the LLM verification/synthesis path.
+        - OPENAI_MODEL / OPENAI_REASONING_EFFORT override the model defaults.
+        - ENABLE_LIVE_RETRIEVAL toggles live PubMed/arXiv augmentation.
+        """
+        env_values: dict[str, object] = {
+            "enable_openai_llm": bool(os.getenv("OPENAI_API_KEY")),
+            "enable_live_retrieval": _env_bool("ENABLE_LIVE_RETRIEVAL", True),
+        }
+        if os.getenv("OPENAI_MODEL"):
+            env_values["openai_model"] = os.environ["OPENAI_MODEL"]
+        if os.getenv("OPENAI_REASONING_EFFORT"):
+            env_values["openai_reasoning_effort"] = os.environ["OPENAI_REASONING_EFFORT"]
+        env_values.update(overrides)
+        return cls(**env_values)
 
 
 def clone_settings(settings: Settings, **changes) -> Settings:

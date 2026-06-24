@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from dataclasses import asdict
 from pathlib import Path
 
@@ -24,7 +23,7 @@ DATA_DIR = BASE_DIR / "data"
 
 load_environment()
 
-settings = Settings(enable_openai_llm=bool(os.getenv("OPENAI_API_KEY")))
+settings = Settings.from_env()
 corpus = CorpusRepository.from_path(DATA_DIR / "sample_corpus.json")
 benchmark_cases = load_benchmark_cases(DATA_DIR / "benchmark_claims.json")
 multi_agent_system = MultiAgentResearchSystem(settings=settings, corpus=corpus)
