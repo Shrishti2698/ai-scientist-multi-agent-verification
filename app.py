@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import time
 from dataclasses import asdict
 from pathlib import Path
 
@@ -16,18 +17,20 @@ from ai_scientist.baselines import RagBaseline, SingleAgentBaseline
 from ai_scientist.config import Settings
 from ai_scientist.corpus import CorpusRepository
 from ai_scientist.ingestion import IngestionError, RawPaperIngestor
+from ai_scientist.accuracy import AccuracyCalculator
 
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_CORPUS = ROOT / "data" / "final_demo_corpus.json"
 SAMPLE_CORPUS = ROOT / "data" / "sample_corpus.json"
 INGESTOR = RawPaperIngestor()
+ACCURACY_TRACKER = AccuracyCalculator()
 
 load_environment()
 
 
 def build_active_corpus(corpus_path: Path, uploaded_files=None):
-    corpus = CorpusRepository.from_path(corpus_path)
+    # Only process uploaded files, no base corpus
     uploaded_papers = []
     upload_errors: list[str] = []
 
@@ -37,16 +40,9 @@ def build_active_corpus(corpus_path: Path, uploaded_files=None):
         except IngestionError as exc:
             upload_errors.append(f"{uploaded_file.name}: {exc}")
 
-    combined_papers = corpus.all_papers() + uploaded_papers
-    deduped_papers = []
-    seen_ids: set[str] = set()
-    for paper in combined_papers:
-        if paper.paper_id in seen_ids:
-            continue
-        deduped_papers.append(paper)
-        seen_ids.add(paper.paper_id)
-
-    return CorpusRepository(deduped_papers), uploaded_papers, upload_errors
+    # Create empty corpus for API-only system
+    empty_corpus = CorpusRepository([])
+    return empty_corpus, uploaded_papers, upload_errors
 
 
 def compute_corpus_signature(corpus_path: Path, uploaded_files=None) -> str:
@@ -59,9 +55,14 @@ def compute_corpus_signature(corpus_path: Path, uploaded_files=None) -> str:
 
 def load_systems(corpus_path: Path, uploaded_files=None, use_llm: bool = False):
     corpus, uploaded_papers, upload_errors = build_active_corpus(corpus_path, uploaded_files)
-    settings = Settings(enable_openai_llm=use_llm)
+    settings = Settings(enable_openai_llm=use_llm, enable_live_retrieval=True)  # Always enable live retrieval for hybrid
+    
+    system = MultiAgentResearchSystem(settings=settings, corpus=corpus)
+    # Pass uploaded papers to the hybrid retrieval system
+    system.add_uploaded_papers(uploaded_papers)
+    
     return (
-        MultiAgentResearchSystem(settings=settings, corpus=corpus),
+        system,
         SingleAgentBaseline(settings=settings, corpus=corpus),
         RagBaseline(settings=settings, corpus=corpus),
         corpus,
@@ -70,17 +71,58 @@ def load_systems(corpus_path: Path, uploaded_files=None, use_llm: bool = False):
     )
 
 
-def render_claim_card(item) -> None:
+def get_paper_source_info(paper, uploaded_papers, base_corpus_papers=None):
+    """Determine detailed source information for a paper - only uploaded or API."""
+    uploaded_ids = {p.paper_id for p in uploaded_papers}
+    
+    if paper.paper_id.startswith("PMC_"):
+        return "api_pubmed", "🏥 PubMed", "#e8f5e8"
+    elif paper.paper_id.startswith("ARXIV_"):
+        return "api_arxiv", "🔬 arXiv", "#e8f4f8"
+    elif paper.paper_id in uploaded_ids:
+        return "uploaded", "📤 Uploaded", "#f0fff0"
+    else:
+        # Fallback for any other papers (shouldn't happen in hybrid mode)
+        return "unknown", "❓ Unknown", "#f8f8f8"
+
+
+def render_paper_source_badge(source_type, source_label, bg_color, paper_title):
+    """Render a paper with source-colored badge."""
+    return f"""
+    <div style="background-color: {bg_color}; padding: 8px; border-radius: 5px; margin: 2px 0;">
+        <strong style="color: green;">{source_label}</strong> 
+        <span style="font-family: monospace;">{paper_title}</span>
+    </div>
+    """
+
+
+def render_claim_card(item, uploaded_papers=None) -> None:
+    uploaded_papers = uploaded_papers or []
+    
     with st.container(border=True):
+        # Determine claim source type
+        claim_source_type, claim_source_label, claim_bg_color = get_paper_source_info(
+            type('obj', (object,), {'paper_id': item.claim.source_paper_id})(),
+            uploaded_papers
+        )
+        
         st.subheader(item.claim.text)
+        
+        # Show claim source with colored badge
+        st.markdown(
+            render_paper_source_badge(
+                claim_source_type, claim_source_label, claim_bg_color, 
+                f"Claim from: {item.claim.source_title}"
+            ), 
+            unsafe_allow_html=True
+        )
+        
         left, right = st.columns(2)
         left.metric("Verdict", item.verdict)
         right.metric("Confidence", f"{item.confidence:.3f}")
         st.caption(
-            f"Type: {item.claim.claim_type} | Claim source: **{item.claim.source_title}**"
+            f"Type: {item.claim.claim_type} | Focus: {', '.join(item.claim.focus_terms) if item.claim.focus_terms else 'None'}"
         )
-        if item.claim.focus_terms:
-            st.write(f"Focus terms: {', '.join(item.claim.focus_terms)}")
         st.write(item.rationale)
 
         if item.evidence:
@@ -90,19 +132,40 @@ def render_claim_card(item) -> None:
             if supporting:
                 st.markdown("**Supporting Evidence** (papers that back this claim)")
                 for snippet in supporting:
-                    st.success(
-                        f"📄 **{snippet.title}** (overlap={snippet.overlap_score})\n\n"
-                        f"> {snippet.sentence}"
+                    # Determine evidence source
+                    evidence_source_type, evidence_source_label, evidence_bg_color = get_paper_source_info(
+                        type('obj', (object,), {'paper_id': snippet.paper_id})(),
+                        uploaded_papers
                     )
+                    
+                    st.markdown(
+                        render_paper_source_badge(
+                            evidence_source_type, evidence_source_label, evidence_bg_color,
+                            f"{snippet.title} (overlap={snippet.overlap_score})"
+                        ),
+                        unsafe_allow_html=True
+                    )
+                    st.success(f"> {snippet.sentence}")
 
             if contradicting:
                 st.markdown("**Contradicting / Verification Sources**")
                 for snippet in contradicting:
-                    st.error(
-                        f"📄 **{snippet.title}** (overlap={snippet.overlap_score})\n\n"
-                        f"> {snippet.sentence}"
+                    # Determine evidence source
+                    evidence_source_type, evidence_source_label, evidence_bg_color = get_paper_source_info(
+                        type('obj', (object,), {'paper_id': snippet.paper_id})(),
+                        uploaded_papers
                     )
+                    
+                    st.markdown(
+                        render_paper_source_badge(
+                            evidence_source_type, evidence_source_label, "#ffe8e8",  # Red tint for contradicting
+                            f"{snippet.title} (overlap={snippet.overlap_score})"
+                        ),
+                        unsafe_allow_html=True
+                    )
+                    st.error(f"> {snippet.sentence}")
 
+            # Show hallucination-related papers with source info
             hallucination_terms = {"hallucination", "hallucinate", "unsupported", "factual", "grounding"}
             hallucination_sources = [
                 e for e in item.evidence
@@ -112,7 +175,17 @@ def render_claim_card(item) -> None:
             if hallucination_sources:
                 st.markdown("**Papers claiming hallucination reduction**")
                 for snippet in hallucination_sources:
-                    st.info(f"🔬 **{snippet.title}**: {snippet.sentence}")
+                    source_type, source_label, bg_color = get_paper_source_info(
+                        type('obj', (object,), {'paper_id': snippet.paper_id})(),
+                        uploaded_papers
+                    )
+                    st.markdown(
+                        render_paper_source_badge(
+                            source_type, source_label, "#e8f4ff",  # Blue tint
+                            f"{snippet.title}: {snippet.sentence}"
+                        ),
+                        unsafe_allow_html=True
+                    )
         else:
             st.write("No evidence snippets available.")
 
@@ -132,7 +205,7 @@ def main() -> None:
     st.title("AI-Scientist")
     st.caption(
         "Interactive multi-agent research verification system. Upload papers from any research domain "
-        "or use the existing corpus for analysis."
+        "or leverage live retrieval from PubMed, arXiv, and other research databases."
     )
 
     with st.sidebar:
@@ -174,7 +247,13 @@ def main() -> None:
         st.sidebar.error(message)
 
     if run_clicked or st.session_state.get("last_run_signature") != corpus_signature:
+        start_time = time.time()
         report = system.analyze_question(question)
+        response_time = time.time() - start_time
+        
+        # Track accuracy metrics
+        ACCURACY_TRACKER.log_query_performance(question, report, response_time)
+        
         st.session_state["last_report"] = report
         st.session_state["baseline_single"] = single_agent.verify_claim(question)
         st.session_state["baseline_rag"] = rag.verify_claim(question)
@@ -190,11 +269,10 @@ def main() -> None:
             st.warning(report.summary)
         st.write(report.summary)
 
-        metrics = st.columns(4)
-        metrics[0].metric("Claims Verified", len(report.verified_claims))
-        metrics[1].metric("Critique Issues", len(report.critique_notes), help="Number of distinct issue categories flagged by the Critic Agent")
-        metrics[2].metric("Retrieved Papers", len(report.retrieved_papers))
-        metrics[3].metric("Corpus Papers", len(corpus.all_papers()), help="Papers from all research domains. Includes both uploaded papers and base corpus.")
+        metrics = st.columns(3)
+        metrics[0].metric("Claims Verified", len(report.verified_claims), help="Number of research claims extracted and verified")
+        metrics[1].metric("Papers Retrieved", len(report.retrieved_papers), help="Total papers used from all sources (local + APIs)")
+        metrics[2].metric("Critique Issues", len(report.critique_notes), help="Number of distinct issue categories flagged by the Critic Agent")
 
         with st.expander("Orchestration Trace", expanded=True):
             for step in report.iteration_trace:
@@ -204,33 +282,61 @@ def main() -> None:
                     st.write(f"- {step}")
 
         with st.expander("Retrieved Papers", expanded=False):
-            for paper in report.retrieved_papers:
-                st.write(f"- `{paper.title}` ({paper.year}) — {', '.join(paper.authors)}")
-
-        with st.expander(
-            f"Corpus Papers ({len(corpus.all_papers())} total papers in active corpus)",
-            expanded=False,
-        ):
-            st.caption(
-                "These papers are stored locally in the active corpus. "
-                "Uploaded papers from any research domain are merged with the base corpus for this session."
-            )
-            for paper in corpus.all_papers():
-                st.write(
-                    f"- **{paper.title}** ({paper.year}) "
-                    f"| {', '.join(paper.authors)} "
-                    f"| Topics: {', '.join(paper.topics)}"
-                )
-
+            st.caption("Papers retrieved from uploaded files + live APIs (PubMed, arXiv) based on query relevance.")
+            
+            # Group papers by source for better presentation
+            uploaded_retrieved = [p for p in report.retrieved_papers if p.paper_id in {up.paper_id for up in uploaded_papers}]
+            api_retrieved = [p for p in report.retrieved_papers if p.paper_id.startswith(("PMC_", "ARXIV_"))]
+            
+            if uploaded_retrieved:
+                st.markdown("**📤 From Uploaded Papers:**")
+                for paper in uploaded_retrieved:
+                    st.success(f"✅ **{paper.title}** ({paper.year}) — {', '.join(paper.authors)}")
+            
+            if api_retrieved:
+                st.markdown("**🌐 From Live APIs:**")
+                for paper in api_retrieved:
+                    if paper.paper_id.startswith("PMC_"):
+                        st.markdown(f"🏥 **PubMed**: {paper.title} ({paper.year}) — {', '.join(paper.authors)}")
+                    elif paper.paper_id.startswith("ARXIV_"):
+                        st.markdown(f"🔬 **arXiv**: {paper.title} ({paper.year}) — {', '.join(paper.authors)}")
+            
+            if not (uploaded_retrieved or api_retrieved):
+                st.write("No papers were retrieved for this query.")
+        
+        # Optional debug section for uploaded papers (only show if papers were uploaded)
         if uploaded_papers:
-            with st.expander("Uploaded Papers", expanded=False):
-                st.caption("These papers were uploaded during this session and merged into the active corpus.")
+            with st.expander(f"📤 Uploaded Papers ({len(uploaded_papers)} total)", expanded=False):
+                st.caption("Papers uploaded this session (may or may not be used depending on query relevance)")
                 for paper in uploaded_papers:
-                    st.write(f"- **{paper.title}** ({paper.year}) | {', '.join(paper.authors)}")
+                    used_icon = "✅ Used" if paper.paper_id in {p.paper_id for p in report.retrieved_papers} else "⚪ Available"
+                    st.write(f"- {used_icon} **{paper.title}** ({paper.year}) | {', '.join(paper.authors)}")
 
+        # Add source breakdown summary - only 2 metrics for hybrid
+        if report.retrieved_papers:
+            with st.container():
+                st.markdown("#### 📊 Source Analysis Summary")
+                
+                uploaded_count = len([p for p in report.retrieved_papers if p.paper_id in {up.paper_id for up in uploaded_papers}])
+                api_count = len([p for p in report.retrieved_papers if p.paper_id.startswith(("PMC_", "ARXIV_"))])
+                
+                source_cols = st.columns(2)
+                source_cols[0].metric("📤 Uploaded Papers Used", uploaded_count, help="Papers you uploaded that were relevant to the query")
+                source_cols[1].metric("🌐 API Papers Retrieved", api_count, help="Papers fetched live from PubMed/arXiv APIs")
+                
+                if api_count > 0 and uploaded_count > 0:
+                    st.success(f"✨ **Hybrid Mode Active**: Found {uploaded_count} uploaded papers + retrieved {api_count} from research databases")
+                elif api_count > 0:
+                    st.info(f"🌐 **API Mode**: Retrieved {api_count} papers from research databases (PubMed/arXiv)")
+                elif uploaded_count > 0:
+                    st.info(f"📤 **Uploaded Mode**: Using {uploaded_count} papers from your uploaded files")
+                else:
+                    st.warning("⚠️ **No Coverage**: No relevant papers found via uploads or APIs for this query")
+        
         st.subheader("Verified Claims")
+        
         for item in report.verified_claims:
-            render_claim_card(item)
+            render_claim_card(item, uploaded_papers)
 
     with right:
         st.subheader("Baseline Snapshot")
@@ -250,6 +356,34 @@ def main() -> None:
             st.caption(rag_result.rationale)
 
         with st.container(border=True):
+            st.markdown("**System Accuracy Metrics**")
+            accuracy_summary = ACCURACY_TRACKER.get_accuracy_summary()
+            if accuracy_summary:
+                acc_cols = st.columns(2)
+                acc_cols[0].metric(
+                    "Retrieval Success", 
+                    f"{accuracy_summary['retrieval_success_rate']:.1%}",
+                    help="Percentage of queries that found relevant papers"
+                )
+                acc_cols[1].metric(
+                    "Claim Extraction", 
+                    f"{accuracy_summary['claim_extraction_rate']:.1%}",
+                    help="Percentage of queries that extracted verifiable claims"
+                )
+                st.metric(
+                    "Avg Confidence", 
+                    f"{accuracy_summary['average_confidence']:.3f}",
+                    help="Average confidence score across recent analyses"
+                )
+                st.metric(
+                    "Response Time", 
+                    f"{accuracy_summary['average_response_time']:.2f}s",
+                    help="Average time to complete analysis"
+                )
+            else:
+                st.write("No performance data available yet. Run some analyses to see metrics.")
+
+        with st.container(border=True):
             st.markdown("**Critique Notes**")
             if report.critique_notes:
                 severity_colors = {"high": "🔴", "medium": "🟡", "low": "🟢"}
@@ -258,9 +392,6 @@ def main() -> None:
                     st.warning(f"{icon} **{note.severity.upper()}**: {note.message}")
             else:
                 st.write("No critique issues identified in this pass.")
-
-        with st.expander("Raw Report Markdown", expanded=False):
-            st.code(report.markdown, language="markdown")
 
         with st.expander("Structured JSON View", expanded=False):
             st.json(

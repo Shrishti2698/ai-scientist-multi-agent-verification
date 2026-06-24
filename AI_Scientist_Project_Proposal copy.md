@@ -83,6 +83,70 @@ Agent        Agent
 # Finance / economic- Can AI research prove that algorithmic trading always beats human traders?
 
 
+# Uploaded Papers (High Confidence):
+# Medicine Domain: 
+Does metformin show better weight management outcomes than insulin in diabetes treatment?
+Is telemedicine effective for rural healthcare delivery?
+Do metformin patients experience fewer hypoglycemic episodes compared to insulin patients?
+(Expected: 85-95% confidence, clear evidence from abstracts)
+
+# 🤖 AI/Computer Science Domain:
+Do critic-guided verification loops improve research claim checking?
+Does retrieval-augmented generation reduce hallucination in language models?
+Do multi-agent systems improve evidence coverage compared to single-agent baselines?
+(Expected: 80-90% confidence, well-supported claims)
+
+#  🧬 Biology Domain:
+Is CRISPR-Cas9 effective for treating sickle cell disease?
+Does CRISPR gene therapy reduce pain crisis frequency in sickle cell patients?
+Do CRISPR treatments show improvement in hemoglobin levels?
+(Expected: 85-92% confidence, numerical evidence available)
+
+# 🧠 Psychology Domain:
+Does social media usage increase depression in adolescents?
+Do brain training apps improve working memory in older adults?
+Is passive social media consumption more harmful than active engagement?
+(Expected: 80-88% confidence, clear statistical findings)
+
+# Demo Script for Maximum Impact:
+#  Does metformin show better weight management than insulin?  90
+#  Do critic-guided verification loops improve claim checking?  85
+
+
+
+# API Retrieval (Medium-High Confidence):
+# 🏥 Medicine Domain (via PubMed API):
+Does vitamin D supplementation reduce COVID-19 severity?
+Is intermittent fasting effective for weight loss in obesity?
+Do statins reduce cardiovascular mortality in elderly patients?
+(Expected: 70-85% confidence, will find multiple PubMed papers)
+
+# ⚛️ Physics Domain (via arXiv API):
+Do quantum computers show advantage over classical computers for optimization problems?
+Is room-temperature superconductivity achievable with high-pressure materials?
+Do neural networks improve particle physics data analysis accuracy?
+(Expected: 75-82% confidence, will retrieve arXiv preprints)
+
+# 🧪 Chemistry Domain (via PubMed API):
+Does green chemistry reduce environmental impact in pharmaceutical manufacturing?
+Do metal-organic frameworks improve hydrogen storage efficiency?
+Is machine learning effective for predicting drug molecular properties?
+(Expected: 70-80% confidence, finds chemistry research papers)
+
+# 🦠 Life Sciences Domain (via PubMed API):
+Do mRNA vaccines provide longer immunity than traditional vaccines?
+Is immunotherapy effective for treating melanoma cancer?
+Do probiotics improve gut health in inflammatory bowel disease?
+(Expected: 75-85% confidence, abundant medical literature)
+
+# 💰 Finance Domain (via SSRN/Academic sources):
+Does algorithmic trading outperform human traders in volatile markets?
+Do ESG investments provide better long-term returns?
+Is cryptocurrency adoption correlated with economic instability?
+(Expected: 60-75% confidence, some papers found)
+
+
+
 
 ## Agent Responsibilities
 

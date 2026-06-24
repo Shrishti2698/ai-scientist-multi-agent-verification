@@ -16,6 +16,9 @@ class Settings:
     critic_confidence_threshold: float = 0.6
     critic_min_evidence_count: int = 2
     enable_openai_llm: bool = False
+    enable_live_retrieval: bool = True
+    live_paper_quality_threshold: float = 0.3
+    local_paper_quality_bonus: float = 0.15
     openai_model: str = "gpt-5.5"
     openai_reasoning_effort: str = "medium"
     openai_max_output_tokens: int = 800

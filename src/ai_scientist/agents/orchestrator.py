@@ -25,6 +25,10 @@ class MultiAgentResearchSystem:
         self.report_agent = ReportGenerationAgent()
         self.scope_guard = DomainScopeGuard(settings=settings)
 
+    def add_uploaded_papers(self, papers: list[PaperDocument]):
+        """Add uploaded papers to the hybrid retrieval system."""
+        self.retrieval_agent.add_uploaded_papers(papers)
+
     def analyze_question(self, question: str) -> FinalReport:
         scope = self.scope_guard.assess(question)
         if not scope.in_scope:
@@ -39,15 +43,24 @@ class MultiAgentResearchSystem:
                 ],
             )
         papers = self.retrieval_agent.retrieve(question)
+        uploaded_papers = self.retrieval_agent.uploaded_papers  # Get uploaded papers count
         iteration_trace = [
             f"Pass 1 retrieved {len(papers)} paper(s) for the original question."
         ]
         if not papers:
-            summary = (
-                "The current corpus does not contain sufficiently relevant literature for this question. "
-                "Please try uploading relevant research papers or reformulating your research question."
-            )
-            iteration_trace.append("Analysis stopped early because no relevant papers were found in the current corpus.")
+            # More informative message for hybrid approach
+            if uploaded_papers:
+                summary = (
+                    f"Found {len(uploaded_papers)} uploaded paper(s), but none were relevant to this question. "
+                    "API retrieval also found no relevant papers. "
+                    "Consider uploading more specific papers or reformulating your research question."
+                )
+            else:
+                summary = (
+                    "No uploaded papers available and API retrieval found no relevant papers for this question. "
+                    "Try uploading relevant research papers or reformulating your research question to be more specific."
+                )
+            iteration_trace.append(f"Analysis stopped: No relevant papers found from uploads or APIs (uploaded: {len(uploaded_papers)}).")
             return self.report_agent.build(
                 question=question,
                 summary=summary,
