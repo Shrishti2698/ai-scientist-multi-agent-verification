@@ -1,0 +1,18 @@
+{
+  "paper_id": "UP_BIOLOGY_03",
+  "title": "Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR)-Cas Unleashed: Transforming Gene Editing With Breakthroughs, Applications, and Ethical Dilemmas.",
+  "abstract": "The most significant breakthrough in gene editing is the advent of the clustered regularly interspaced short palindromic repeats (CRISPR)-Cas system. This innovative technology enables scientists to insert or delete genes using specific enzymes, facilitating modifications to genomes that can influence an organism's phenotype. The Cas9 enzyme is the most widely used within the CRISPR framework and has already received approval for treating sickle cell disease, with many other applications likely to follow. As this rapidly evolving field continues to advance, it holds great promise for addressing genetic disorders and diseases. This article will explore the various enzymes available in the CRISPR system, the range of diseases and conditions that could be treated using this technology, alternative gene therapy methods, and the ethical considerations surrounding its use.",
+  "year": 2025,
+  "authors": [
+    "Ramesh B",
+    "Fakoya AO"
+  ],
+  "topics": [
+    "crispr",
+    "gene therapy",
+    "sickle cell",
+    "hemoglobin",
+    "gene editing"
+  ],
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12594536/"
+}

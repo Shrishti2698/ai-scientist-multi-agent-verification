@@ -1,0 +1,19 @@
+{
+  "paper_id": "UP_BIOLOGY_02",
+  "title": "Applications of Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR) as a Genetic Scalpel for the Treatment of Cancer: A Translational Narrative Review.",
+  "abstract": "Cancer remains a global health challenge with high prevalence and mortality rates, imposing significant financial and emotional burdens on affected families. However, hope lies in genetic manipulation, with a focus on innovative approaches to combat genetically linked cancers. Clustered regularly interspaced short palindromic repeats (CRISPR), an adaptive immune system found in various bacteria and archaea, hold immense potential. We searched articles on PubMed Central, Medline, and PubMed databases indexed journals. The keywords from the research topic, i.e., \"CRISPR AND genetic therapy,\" were searched, and we found 3397 articles. Following this, we explored the medical subject headings (MeSH) glossary and created a search strategy \"Clustered Regularly Interspaced Short Palindromic Repeats\"[Mesh] AND \"Genetic Therapy\"[Majr] and after applying a variety of filters we included 30 studies in our review. CRISPR consists of unique spacers and CRISPR-associated (Cas) genes, operating through acquisition, CRISPR ribonucleic acid (crRNA) biogenesis, and target interference phases. The type II CRISPR-Cas9 system is a well-researched avenue for gene editing, with Cas9 cleaving specific genomic regions and initiating deoxyribonucleic acid (DNA) repair mechanisms. Cancer results from genetic alterations, leading to tumor development with properties like metastasis. CRISPR/Cas9 offers precise genome editing to inhibit tumor formation by removing specific genomic sequences and promoting DNA repair. Challenges in CRISPR's use for cancer therapy, including delivery methods, cell adaptation, and ethical concerns, are recognized. Beyond cancer, CRISPR finds diverse applications in infectious diseases and non-cancerous conditions, signifying its transformative potential in modern medicine. CRISPR technology represents a groundbreaking frontier in cancer therapy and beyond, offering insights into genetic editing, disease mechanisms, and potential cures. Despite challenges and ethical",
+  "year": 2023,
+  "authors": [
+    "Mondal R",
+    "Brahmbhatt N",
+    "Sandhu SK"
+  ],
+  "topics": [
+    "crispr",
+    "gene therapy",
+    "sickle cell",
+    "hemoglobin",
+    "gene editing"
+  ],
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10767422/"
+}

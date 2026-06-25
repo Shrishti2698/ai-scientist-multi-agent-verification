@@ -1,0 +1,19 @@
+{
+  "paper_id": "UP_BIOLOGY_04",
+  "title": "Use of genome-editing tools to treat sickle cell disease.",
+  "abstract": "Recent advances in genome editing techniques have made it possible to modify any desired DNA sequence by employing programmable nucleases. These next generation genome-modifying tools are the ideal candidates for therapeutic applications, especially for the treatment of genetic disorders like sickle cell disease (SCD). SCD is an inheritable monogenic disorder which is caused by a point mutation in the β-globin gene. Substantial success has been achieved in the development of supportive therapeutic strategies for SCD but unfortunately there is still a lack of long-term universal cure. The only existing curative treatment is based on allogeneic stem cell transplantation from healthy donors; however, this treatment is applicable to a limited number of patients only. Hence, a universally applicable therapy is highly desirable. In this review we will discuss the three programmable nucleases that are commonly used for genome editing purposes: zinc finger nucleases (ZFNs), transcription activator-like effector nucleases (TALENs) and clustered regularly interspaced short palindromic repeats (CRISPR)-associated protein 9 (CRISPR/Cas9). We will continue by exemplifying uses of these methods to correct the sickle cell mutation. Additionally, we will present induction of fetal globin expression as an alternative approach to cure sickle cell disease. We will conclude by comparing the three methods and explaining the concerns about their use in therapy.",
+  "year": 2016,
+  "authors": [
+    "Tasan I",
+    "Jain S",
+    "Zhao H"
+  ],
+  "topics": [
+    "crispr",
+    "gene therapy",
+    "sickle cell",
+    "hemoglobin",
+    "gene editing"
+  ],
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5002234/"
+}

@@ -65,7 +65,14 @@ def compute_corpus_signature(corpus_path: Path, uploaded_files=None) -> str:
 def load_systems(corpus_path: Path, uploaded_files=None, use_llm: bool = False, model: str | None = None):
     corpus, uploaded_papers, upload_errors = build_active_corpus(corpus_path, uploaded_files)
     # Hybrid demo: LLM when a key is present, plus live API augmentation on top of the corpus.
-    overrides = {"enable_openai_llm": use_llm, "enable_live_retrieval": True}
+    # A wider retrieval window so uploaded papers AND live-API papers both surface
+    # (with the default top_k=3, a handful of uploads would crowd out every API result).
+    overrides = {
+        "enable_openai_llm": use_llm,
+        "enable_live_retrieval": True,
+        "top_k_retrieval": 8,
+        "second_pass_top_k": 8,
+    }
     if model:
         overrides["openai_model"] = model
     settings = Settings.from_env(**overrides)

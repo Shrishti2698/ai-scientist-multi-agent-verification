@@ -46,6 +46,30 @@ These hit the built-in **Offline Demo Corpus** — 15 **real** paper abstracts (
 
 ## 2. Query → upload **these papers** for the best confidence
 
+### ⭐ Fastest path: the ready-made upload pack (`demo_uploads/`)
+
+Real papers are already downloaded and saved as upload-ready files, 4 per domain, in
+[demo_uploads/](demo_uploads/) — see [demo_uploads/README.md](demo_uploads/README.md) for the
+query→files map and the real source link of every paper. To demo a domain:
+
+1. In the sidebar **Upload paper(s)**, drag in **all 4 files** from the domain folder, e.g. `demo_uploads/medicine/`.
+2. Ask any matching query (listed below). You'll see **📤 Uploaded = 4** plus **🌐 Live APIs** papers on top, with confidence ~0.90+.
+
+| Domain | Folder | Ask (any of) |
+|---|---|---|
+| 🩺 Medicine | `demo_uploads/medicine/` | metformin vs insulin weight management · metformin vs insulin hypoglycemia · telemedicine rural healthcare |
+| 🤖 AI / CS | `demo_uploads/ai_cs/` | RAG reduces hallucination · critic-guided verification loops · multi-agent evidence coverage |
+| 🧬 Biology | `demo_uploads/biology/` | CRISPR-Cas9 for sickle cell · CRISPR reduces pain crises · CRISPR improves hemoglobin |
+| 🧠 Psychology | `demo_uploads/psychology/` | social media & adolescent depression · brain training & working memory · passive vs active social media |
+
+Verified locally: medicine query → **uploaded=4, api=4, avg confidence 0.943**.
+
+To regenerate/refresh the pack: `$env:PYTHONPATH='src'; python scripts/build_demo_uploads.py`
+
+---
+
+### Or build your own from links
+
 Upload format reminder: open a link, grab the **title + abstract**, paste into a `.md` using the template in §4 (or upload the PDF directly). Upload 3–4 of the listed papers before asking the matching question — uploads outrank everything else, so confidence climbs.
 
 ### 🤖 AI / Computer Science
