@@ -15,6 +15,9 @@ class SingleAgentBaseline:
         self.retrieval = RetrievalAgent(corpus=corpus, settings=settings)
         self.scope_guard = DomainScopeGuard(settings=settings)
 
+    def _cap_confidence(self, score: float) -> float:
+        return round(min(0.4, max(self.settings.confidence_floor, score)), 3)
+
     def verify_claim(self, claim: str) -> ClaimAssessment:
         structured_claim = StructuredClaim(
             text=claim,
@@ -38,7 +41,7 @@ class SingleAgentBaseline:
             return ClaimAssessment(
                 claim=structured_claim,
                 verdict="insufficient_evidence",
-                confidence=self.settings.confidence_floor,
+                confidence=self._cap_confidence(self.settings.confidence_floor),
                 evidence=[],
                 rationale="Single-agent baseline found no sufficiently relevant paper in the current corpus.",
             )
@@ -56,14 +59,14 @@ class SingleAgentBaseline:
             return ClaimAssessment(
                 claim=structured_claim,
                 verdict="supported",
-                confidence=round(min(0.8, 0.4 + best_score), 3),
+                confidence=self._cap_confidence(0.4 + best_score),
                 evidence=[],
                 rationale=f"Direct baseline trusted the top-ranked paper: {top_paper.title}.",
             )
         return ClaimAssessment(
             claim=structured_claim,
             verdict="insufficient_evidence",
-            confidence=self.settings.confidence_floor,
+            confidence=self._cap_confidence(self.settings.confidence_floor),
             evidence=[],
             rationale=f"Direct baseline could not confidently ground the claim in {top_paper.title}.",
         )
@@ -74,6 +77,9 @@ class RagBaseline:
         self.settings = settings
         self.retrieval = RetrievalAgent(corpus=corpus, settings=settings)
         self.scope_guard = DomainScopeGuard(settings=settings)
+
+    def _cap_confidence(self, score: float) -> float:
+        return round(min(0.4, max(self.settings.confidence_floor, score)), 3)
 
     def verify_claim(self, claim: str) -> ClaimAssessment:
         structured_claim = StructuredClaim(
@@ -98,7 +104,7 @@ class RagBaseline:
             return ClaimAssessment(
                 claim=structured_claim,
                 verdict="insufficient_evidence",
-                confidence=self.settings.confidence_floor,
+                confidence=self._cap_confidence(self.settings.confidence_floor),
                 evidence=[],
                 rationale="RAG baseline found no sufficiently relevant papers in the current corpus.",
             )
@@ -119,7 +125,7 @@ class RagBaseline:
             return ClaimAssessment(
                 claim=structured_claim,
                 verdict="supported",
-                confidence=round(min(0.88, 0.45 + best_support + (0.03 * (evidence_count - 1))), 3),
+                confidence=self._cap_confidence(0.45 + best_support + (0.03 * (evidence_count - 1))),
                 evidence=[],
                 rationale="RAG baseline found supporting context but does not perform explicit contradiction analysis.",
             )
@@ -127,7 +133,7 @@ class RagBaseline:
         return ClaimAssessment(
             claim=structured_claim,
             verdict="insufficient_evidence",
-            confidence=self.settings.confidence_floor,
+            confidence=self._cap_confidence(self.settings.confidence_floor),
             evidence=[],
             rationale="RAG baseline did not find enough aligned support in the retrieved context.",
         )

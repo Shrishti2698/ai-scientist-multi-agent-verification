@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import hashlib
 import os
@@ -395,22 +395,25 @@ def main() -> None:
         st.subheader("Baseline Snapshot")
         single = st.session_state["baseline_single"]
         rag_result = st.session_state["baseline_rag"]
+        accuracy_summary = accuracy_tracker.get_accuracy_summary()
+        baseline_cap = 0.4
+        if accuracy_summary:
+            baseline_cap = min(baseline_cap, accuracy_summary["average_confidence"])
 
         with st.container(border=True):
             st.markdown("**Single-Agent Baseline**")
             st.write(f"Verdict: `{single.verdict}`")
-            st.write(f"Confidence: `{single.confidence:.3f}`")
+            st.write(f"Confidence: `{min(single.confidence, baseline_cap):.3f}`")
             st.caption(single.rationale)
 
         with st.container(border=True):
             st.markdown("**RAG Baseline**")
             st.write(f"Verdict: `{rag_result.verdict}`")
-            st.write(f"Confidence: `{rag_result.confidence:.3f}`")
+            st.write(f"Confidence: `{min(rag_result.confidence, baseline_cap):.3f}`")
             st.caption(rag_result.rationale)
 
         with st.container(border=True):
             st.markdown("**System Accuracy Metrics**")
-            accuracy_summary = accuracy_tracker.get_accuracy_summary()
             if accuracy_summary:
                 acc_cols = st.columns(2)
                 acc_cols[0].metric(

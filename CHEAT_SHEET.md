@@ -53,7 +53,7 @@ Real papers are already downloaded and saved as upload-ready files, 4 per domain
 query→files map and the real source link of every paper. To demo a domain:
 
 1. In the sidebar **Upload paper(s)**, drag in **all 4 files** from the domain folder, e.g. `demo_uploads/medicine/`.
-2. Ask any matching query (listed below). You'll see **📤 Uploaded = 4** plus **🌐 Live APIs** papers on top, with confidence ~0.90+.
+2. Ask any matching query (listed below). In a good match, you should see **📤 Uploaded = 4** plus **🌐 Live APIs** papers on top, with confidence often around the 0.90 range.
 
 | Domain | Folder | Ask (any of) |
 |---|---|---|

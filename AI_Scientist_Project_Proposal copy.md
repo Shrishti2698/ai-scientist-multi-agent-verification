@@ -68,44 +68,53 @@ Agent        Agent
           Final Output
 
 ---
-# Do critic-guided verification loops improve research claim checking?
-# Does retrieval-augmented generation reduce hallucination?
-# Do multi-agent systems improve evidence coverage?
-# Does structured evidence collection help scientific verification?
+# psychology:-
+How does social media use affect adolescents' positive and negative affect, depression, and stress markers?
+Does social media use by depressed adolescents worsen family functioning and cohesion?
+What clinical and physiological correlates are associated with problematic social media use in adolescents?
 
 
-# Medical- What is the best treatment for diabetes according to recent research?
-#          Can AI verification pipelines improve radiology diagnosis reliability?
-# Biology / Life sciences- Do protein language models outperform traditional      biology models in all tasks?
-# Law- Can AI systems improve legal judgment prediction accuracy?
-# Physics / Chemistry- What do recent physics papers conclude about room-temperature superconductors?
-#                      Do transformer models improve materials discovery in chemistry?
-# Finance / economic- Can AI research prove that algorithmic trading always beats human traders?
+# medicine:-
+Does metformin improve obesity, weight loss, and metabolic outcomes in type 2 diabetes?
+How does BIAsp 30 plus metformin compare with BIAsp 30 monotherapy in cardiovascular risk and BMI profiles?
+Is telemedical follow-up effective and accepted in epilepsy care and pediatric telemedicine centers?
+
+
+# biology:-
+Is CRISPR/Cas9 correction of the sickle mutation in human CD34+ cells a promising treatment for sickle cell disease?
+What genome-editing tools are used to treat sickle cell disease, and what are their therapeutic limitations?
+What do CRISPR translational reviews say about cancer treatment applications, ethical dilemmas, and the broader future of gene editing?
+
+
+# CS/ AI:-
+Does uncertainty detection improve dynamic retrieval-augmented generation when deciding whether to retrieve external knowledge?
+How do THaMES and similar tools mitigate hallucination in large language models?
+How do RAGPart, RAGMask, and query-level robustness studies improve retrieval-augmented generation reliability and defense against corpus poisoning?
 
 
 # Uploaded Papers (High Confidence):
 # Medicine Domain: 
-Does metformin show better weight management outcomes than insulin in diabetes treatment?
-Is telemedicine effective for rural healthcare delivery?
-Do metformin patients experience fewer hypoglycemic episodes compared to insulin patients?
+Does metformin improve obesity, weight loss, and metabolic outcomes in type 2 diabetes?
+How does BIAsp 30 plus metformin compare with BIAsp 30 monotherapy in cardiovascular risk and BMI profiles?
+Is telemedical follow-up effective and accepted in epilepsy care and pediatric telemedicine centers?
 (Expected: 85-95% confidence, clear evidence from abstracts)
 
 # 🤖 AI/Computer Science Domain:
-Do critic-guided verification loops improve research claim checking?
-Does retrieval-augmented generation reduce hallucination in language models?
-Do multi-agent systems improve evidence coverage compared to single-agent baselines?
+Does uncertainty detection improve dynamic retrieval-augmented generation when deciding whether to retrieve external knowledge?
+How do THaMES and similar tools mitigate hallucination in large language models?
+How do RAGPart, RAGMask, and query-level robustness studies improve retrieval-augmented generation reliability and defense against corpus poisoning?
 (Expected: 80-90% confidence, well-supported claims)
 
 #  🧬 Biology Domain:
-Is CRISPR-Cas9 effective for treating sickle cell disease?
-Does CRISPR gene therapy reduce pain crisis frequency in sickle cell patients?
-Do CRISPR treatments show improvement in hemoglobin levels?
+Is CRISPR/Cas9 correction of the sickle mutation in human CD34+ cells a promising treatment for sickle cell disease?
+What genome-editing tools are used to treat sickle cell disease, and what are their therapeutic limitations?
+What do CRISPR translational reviews say about cancer treatment applications, ethical dilemmas, and the broader future of gene editing?
 (Expected: 85-92% confidence, numerical evidence available)
 
 # 🧠 Psychology Domain:
-Does social media usage increase depression in adolescents?
-Do brain training apps improve working memory in older adults?
-Is passive social media consumption more harmful than active engagement?
+How does social media use affect adolescents' positive and negative affect, depression, and stress markers?
+Does social media use by depressed adolescents worsen family functioning and cohesion?
+What clinical and physiological correlates are associated with problematic social media use in adolescents?
 (Expected: 80-88% confidence, clear statistical findings)
 
 # Demo Script for Maximum Impact:

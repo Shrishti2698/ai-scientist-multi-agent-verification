@@ -34,6 +34,46 @@ STOPWORDS = {
     "with",
 }
 
+TOKEN_NORMALIZATION = {
+    "telemedical": "telemedicine",
+    "telemedic": "telemedicine",
+    "depressed": "depression",
+    "depressive": "depression",
+    "adolescents": "adolescent",
+    "hallucinations": "hallucination",
+    "outcomes": "outcome",
+    "findings": "finding",
+    "patients": "patient",
+    "therapies": "therapy",
+    "methods": "method",
+    "models": "model",
+    "studies": "study",
+    "results": "result",
+    "effects": "effect",
+    "systems": "system",
+    "strategies": "strategy",
+    "diseases": "disease",
+    "approaches": "approach",
+    "technologies": "technology",
+}
+
+
+def normalize_token(token: str) -> str:
+    normalized = token.lower()
+    if normalized in TOKEN_NORMALIZATION:
+        return TOKEN_NORMALIZATION[normalized]
+    if normalized.endswith("ies") and len(normalized) > 4:
+        return normalized[:-3] + "y"
+    if normalized.endswith("ing") and len(normalized) > 5:
+        return normalized[:-3]
+    if normalized.endswith("ed") and len(normalized) > 4:
+        return normalized[:-2]
+    if normalized.endswith("es") and len(normalized) > 4:
+        return normalized[:-2]
+    if normalized.endswith("s") and len(normalized) > 4:
+        return normalized[:-1]
+    return normalized
+
 
 def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip())
@@ -48,7 +88,7 @@ def sentence_split(text: str) -> list[str]:
 
 def tokenize(text: str) -> list[str]:
     return [
-        token
+        normalize_token(token)
         for token in re.findall(r"[A-Za-z][A-Za-z0-9\-]+", text.lower())
         if token not in STOPWORDS
     ]

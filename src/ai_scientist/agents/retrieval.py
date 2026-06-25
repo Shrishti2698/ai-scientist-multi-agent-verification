@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import logging
 
@@ -48,6 +48,42 @@ class RetrievalAgent:
             else self.settings.local_paper_quality_bonus
         )
         return min(1.0, base + bonus)
+
+    def _rank_subset(self, papers: list[PaperDocument], query: str, uploaded_ids: set[str]) -> list[PaperDocument]:
+        """Rank a source-specific subset and keep papers that are at least somewhat relevant."""
+        scored = sorted(
+            (
+                (
+                    self._local_rank_score(paper, query, uploaded_ids),
+                    coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}"),
+                    paper,
+                )
+                for paper in papers
+            ),
+            key=lambda item: item[0],
+            reverse=True,
+        )
+        return [paper for _rank, coverage, paper in scored if coverage >= self.settings.min_query_coverage]
+
+    def _relaxed_upload_rank(self, query: str) -> list[PaperDocument]:
+        """Fallback for uploads so a relevant session upload is not dropped entirely."""
+        uploaded_ids = self._uploaded_ids()
+        scored = sorted(
+            (
+                (
+                    self._local_rank_score(paper, query, uploaded_ids),
+                    coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}"),
+                    paper,
+                )
+                for paper in self.uploaded_papers
+            ),
+            key=lambda item: item[0],
+            reverse=True,
+        )
+        relaxed = [paper for _rank, coverage, paper in scored if coverage >= max(0.08, self.settings.min_query_coverage * 0.5)]
+        if relaxed:
+            return relaxed
+        return [paper for _rank, _coverage, paper in scored[:1]]
 
     def _live_rank_score(self, paper: PaperDocument, query: str) -> float:
         """Blend live-paper relevance and quality so good live hits can surface."""
@@ -180,19 +216,31 @@ class RetrievalAgent:
             return []
 
         uploaded_ids = self._uploaded_ids()
-        scored = sorted(
-            (
-                (
-                    self._local_rank_score(paper, query, uploaded_ids),
-                    coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}"),
-                    paper,
-                )
-                for paper in local_pool
-            ),
-            key=lambda item: item[0],
-            reverse=True,
+        upload_ranked = self._rank_subset(self.uploaded_papers, query, uploaded_ids)
+        if not upload_ranked and self.uploaded_papers:
+            upload_ranked = self._relaxed_upload_rank(query)
+
+        corpus_ranked = self._rank_subset(
+            [paper for paper in local_pool if paper.paper_id not in uploaded_ids],
+            query,
+            uploaded_ids,
         )
-        # Rank by the source-weighted score, but gate on raw query coverage so a
-        # source bonus alone cannot pull in an irrelevant paper.
-        filtered = [paper for _rank, coverage, paper in scored if coverage >= self.settings.min_query_coverage]
-        return filtered[:limit]
+
+        selected: list[PaperDocument] = []
+        seen: set[str] = set()
+
+        def append_from(source: list[PaperDocument]) -> None:
+            for paper in source:
+                if paper.paper_id in seen:
+                    continue
+                seen.add(paper.paper_id)
+                selected.append(paper)
+                if len(selected) >= limit:
+                    return
+
+        upload_quota = min(len(upload_ranked), max(1, limit // 2))
+        append_from(upload_ranked[:upload_quota])
+        append_from(corpus_ranked)
+        append_from(upload_ranked[upload_quota:])
+
+        return selected[:limit]

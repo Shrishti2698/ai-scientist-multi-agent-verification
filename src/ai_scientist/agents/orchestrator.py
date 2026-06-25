@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from ai_scientist.agents.claim_extraction import ClaimExtractionAgent
 from ai_scientist.agents.critic import CriticAgent
