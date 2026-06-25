@@ -1,0 +1,19 @@
+{
+  "paper_id": "UP_BIOLOGY_01",
+  "title": "CRISPR/Cas9-Mediated Correction of the Sickle Mutation in Human CD34+ cells.",
+  "abstract": "Targeted genome editing technology can correct the sickle cell disease mutation of the β-globin gene in hematopoietic stem cells. This correction supports production of red blood cells that synthesize normal hemoglobin proteins. Here, we demonstrate that Transcription Activator-Like Effector Nucleases (TALENs) and the Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR)/Cas9 nuclease system can target DNA sequences around the sickle-cell mutation in the β-globin gene for site-specific cleavage and facilitate precise correction when a homologous donor template is codelivered. Several pairs of TALENs and multiple CRISPR guide RNAs were evaluated for both on-target and off-target cleavage rates. Delivery of the CRISPR/Cas9 components to CD34+ cells led to over 18% gene modification in vitro . Additionally, we demonstrate the correction of the sickle cell disease mutation in bone marrow derived CD34+ hematopoietic stem and progenitor cells from sickle cell disease patients, leading to the production of wild-type hemoglobin. These results demonstrate correction of the sickle mutation in patient-derived CD34+ cells using CRISPR/Cas9 technology.",
+  "year": 2016,
+  "authors": [
+    "Hoban MD",
+    "Lumaquin D",
+    "Kuo CY"
+  ],
+  "topics": [
+    "crispr",
+    "gene therapy",
+    "sickle cell",
+    "hemoglobin",
+    "gene editing"
+  ],
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5113113/"
+}
