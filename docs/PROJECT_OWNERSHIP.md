@@ -2,11 +2,11 @@
 
 ## 1. Project Summary
 
-AI-Scientist is an MTech research project for AI and computer science literature verification.
-It takes a research question, retrieves relevant papers from a corpus, extracts claims, verifies them against evidence, critiques weak reasoning, and produces a readable report in Streamlit.
+AI-Scientist is an MTech research project for multi-domain research literature verification.
+It takes a research question, retrieves relevant papers from a local corpus, user uploads, and live research databases, extracts claims, verifies them against evidence, critiques weak reasoning, and produces a readable report in Streamlit.
 
-The project is intentionally scoped to AI and computer science.
-Out-of-scope questions from medicine, law, finance, or other domains are rejected early so the demo does not give misleading confidence.
+The project is intentionally scoped to research-oriented questions across academic domains such as AI/CS, medicine, biology, physics, chemistry, psychology, finance, law, education, and economics.
+Clearly non-research queries such as shopping, entertainment, or casual advice are rejected early so the demo does not give misleading confidence.
 
 ## 2. What Makes It A Research Project
 
@@ -43,7 +43,8 @@ The benchmark, ablation studies, and failure analysis are what make the project 
 
 - File: `src/ai_scientist/agents/retrieval.py`
 - Model: none
-- Method: lexical overlap retrieval over the local corpus
+- Method: hybrid lexical overlap retrieval over uploaded papers, the curated corpus, and live database candidates
+- Priority order: uploaded papers > curated corpus > live APIs
 
 ### Claim Extraction
 
@@ -79,7 +80,7 @@ The benchmark, ablation studies, and failure analysis are what make the project 
 
 | Component | Model/Technique | Notes |
 | --- | --- | --- |
-| RetrievalAgent | None | Keyword and overlap scoring only |
+| RetrievalAgent | None | Hybrid keyword/overlap scoring with source-aware ranking |
 | ClaimExtractionAgent | None | Rule-based |
 | VerificationAgent | `Settings.openai_model` via `OpenAIResearchLLM` | Uses structured outputs when API is available |
 | CriticAgent | None | Heuristic critique and reroute decisions |
@@ -90,6 +91,7 @@ The benchmark, ablation studies, and failure analysis are what make the project 
 
 Current default model value is defined in `src/ai_scientist/config.py`.
 If the API key or SDK is unavailable, the project still runs using heuristic fallback.
+Live retrieval uses PubMed/PMC and arXiv search endpoints as external data sources, not an LLM.
 
 ## 5. Data Flow
 
@@ -107,7 +109,7 @@ If the API key or SDK is unavailable, the project still runs using heuristic fal
 ### Frozen Demo Corpus
 
 - Used for stable presentations and reproducible evaluation
-- Lives in `data/final_demo_corpus.json`
+- Lives in `data/final_demo_corpus.json` and the broader `data/all_domains_corpus.json`
 
 ### Uploaded Papers
 
@@ -136,6 +138,12 @@ If the API key or SDK is unavailable, the project still runs using heuristic fal
 - Uses structured LLM calls for verification and synthesis
 - Falls back automatically if the call fails
 
+### Hybrid Live Mode
+
+- Enabled in the Streamlit app for better recall when uploads or the local corpus are weak
+- Queries PubMed/PMC and arXiv using cleaned search variants
+- Preserves upload priority while still allowing live papers to fill gaps
+
 ## 8. What To Run
 
 - Streamlit UI: `py -3 -m streamlit run app.py`
@@ -163,7 +171,7 @@ If asked what the project contributes, the shortest honest answer is:
 
 ## 11. Maintenance Rules
 
-- Keep AI/CS scope enforcement active.
+- Keep research-domain scope enforcement active across all academic fields.
 - Preserve the frozen corpus for the main demo.
 - Keep uploaded papers as an additive feature, not a replacement for the base corpus.
 - Keep the baselines intact so the research comparison remains valid.

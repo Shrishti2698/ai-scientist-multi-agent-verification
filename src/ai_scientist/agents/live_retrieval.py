@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 
 from ai_scientist.models import PaperDocument
 from ai_scientist.config import Settings
-from ai_scientist.utils import normalize_text
+from ai_scientist.utils import normalize_text, tokenize
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,76 @@ class LiveRetrievalAgent:
         self.ncbi_tool = os.getenv("NCBI_TOOL", "ai-scientist")
         # Tighter pacing without a key (3 req/s), looser with one (10 req/s).
         self._pubmed_delay = 0.12 if self.ncbi_api_key else 0.34
+
+    def _query_variants(self, query: str) -> list[str]:
+        """Create progressively cleaner search strings for live databases.
+
+        Natural-language questions often include filler words like "what", "recent",
+        or "findings" that can hurt ranked search. We keep the original query, then
+        add a content-word-only variant so the live APIs still work when the user
+        asks in plain English.
+        """
+        normalized = normalize_text(query).strip()
+        if not normalized:
+            return []
+
+        generic_terms = {
+            "what",
+            "how",
+            "why",
+            "which",
+            "when",
+            "where",
+            "who",
+            "is",
+            "are",
+            "do",
+            "does",
+            "did",
+            "can",
+            "could",
+            "should",
+            "would",
+            "recent",
+            "latest",
+            "findings",
+            "results",
+            "effect",
+            "effects",
+            "impact",
+            "study",
+            "studies",
+            "research",
+            "paper",
+            "papers",
+        }
+        content_tokens = [token for token in tokenize(normalized) if token not in generic_terms]
+
+        variants = [normalized]
+        if content_tokens:
+            variants.append(" ".join(content_tokens))
+        if len(content_tokens) > 6:
+            variants.append(" ".join(content_tokens[:6]))
+
+        deduped: list[str] = []
+        seen: set[str] = set()
+        for variant in variants:
+            cleaned_variant = normalize_text(variant).strip()
+            if cleaned_variant and cleaned_variant not in seen:
+                seen.add(cleaned_variant)
+                deduped.append(cleaned_variant)
+        return deduped
+
+    def _merge_unique_papers(self, paper_groups: list[list[PaperDocument]]) -> list[PaperDocument]:
+        merged: list[PaperDocument] = []
+        seen: set[str] = set()
+        for group in paper_groups:
+            for paper in group:
+                if paper.paper_id in seen:
+                    continue
+                seen.add(paper.paper_id)
+                merged.append(paper)
+        return merged
 
     def _ncbi_params(self, params: dict) -> dict:
         """Attach NCBI identification/auth params to an eutils request."""
@@ -60,23 +130,28 @@ class LiveRetrievalAgent:
 
     def retrieve_live_papers(self, query: str, max_papers: int = 15) -> List[PaperDocument]:
         """Retrieve papers from live APIs across multiple databases."""
-        papers = []
-        
+        papers: list[PaperDocument] = []
+        variants = self._query_variants(query)
+        if not variants:
+            return papers
+
+        per_variant = max(1, max_papers // max(1, len(variants)))
+
         # Try PubMed Central first (medical/life sciences)
         try:
-            pubmed_papers = self._retrieve_from_pubmed(query, max_papers // 2)
-            papers.extend(pubmed_papers)
-        except Exception as e:
-            logger.warning("PubMed retrieval failed: %s", e)
+            pubmed_groups = [self._retrieve_from_pubmed(variant, per_variant) for variant in variants]
+            papers.extend(self._merge_unique_papers(pubmed_groups))
+        except Exception as exc:
+            logger.warning("PubMed retrieval failed: %s", exc)
 
         # Try arXiv (physics/math/CS)
         try:
-            arxiv_papers = self._retrieve_from_arxiv(query, max_papers // 2)
-            papers.extend(arxiv_papers)
-        except Exception as e:
-            logger.warning("arXiv retrieval failed: %s", e)
-            
-        return papers[:max_papers]
+            arxiv_groups = [self._retrieve_from_arxiv(variant, per_variant) for variant in variants]
+            papers.extend(self._merge_unique_papers(arxiv_groups))
+        except Exception as exc:
+            logger.warning("arXiv retrieval failed: %s", exc)
+
+        return self._merge_unique_papers([papers])[:max_papers]
     
     def _retrieve_from_pubmed(self, query: str, max_results: int = 10) -> List[PaperDocument]:
         """Retrieve papers from PubMed Central API."""

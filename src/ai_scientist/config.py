@@ -31,6 +31,7 @@ class Settings:
     # offline-testable. The app/API enable it explicitly for the hybrid demo.
     enable_live_retrieval: bool = False
     live_paper_quality_threshold: float = 0.3
+    live_paper_quality_bonus: float = 0.12
     # Ranking bonuses enforce: user-uploaded papers > curated corpus > live API papers.
     uploaded_paper_quality_bonus: float = 0.30
     local_paper_quality_bonus: float = 0.15

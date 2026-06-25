@@ -49,20 +49,33 @@ class RetrievalAgent:
         )
         return min(1.0, base + bonus)
 
+    def _live_rank_score(self, paper: PaperDocument, query: str) -> float:
+        """Blend live-paper relevance and quality so good live hits can surface."""
+        base = coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
+        quality = self._calculate_quality_score(paper, query)
+        blended = (base * 0.7) + (quality * 0.3)
+        return min(1.0, blended + self.settings.live_paper_quality_bonus)
+
     def retrieve(self, query: str, top_k: int | None = None) -> list[PaperDocument]:
         limit = top_k or self.settings.top_k_retrieval
 
         # Local corpus + uploads are the deterministic, always-available grounding.
-        local_papers = self._retrieve_from_local(query, limit)
+        local_papers = self._retrieve_from_local(query, max(limit * 4, limit))
         logger.debug("Found %d relevant local paper(s) for query: %.50s", len(local_papers), query)
 
         # Live API retrieval is optional augmentation layered on top of the local pool.
         if self.settings.enable_live_retrieval:
             try:
-                api_papers = self.live_agent.retrieve_live_papers(query, max_papers=limit * 2)
+                api_papers = self.live_agent.retrieve_live_papers(query, max_papers=max(limit * 4, limit * 2))
                 logger.debug("API returned %d paper(s)", len(api_papers))
 
                 quality_filtered = self._filter_by_quality(api_papers, query)
+                if not quality_filtered and api_papers:
+                    quality_filtered = sorted(
+                        api_papers,
+                        key=lambda paper: self._calculate_quality_score(paper, query),
+                        reverse=True,
+                    )[: max(1, limit)]
                 logger.debug("After quality filtering: %d paper(s)", len(quality_filtered))
 
                 all_papers = self._merge_and_rank_papers(local_papers, quality_filtered, query)
@@ -134,12 +147,12 @@ class RetrievalAgent:
             final_score = self._local_rank_score(paper, query, uploaded_ids)
             scored_papers.append((final_score, paper, 'local'))
 
-        # API papers use standard scoring.
+        # API papers use live-source scoring so high-quality live results can surface.
         for paper in api_papers:
             # Skip if we already have this paper (by title similarity)
             if not self._is_duplicate(paper, local_papers):
-                base_score = coverage_score(query, f"{paper.title} {paper.abstract} {' '.join(paper.topics)}")
-                scored_papers.append((base_score, paper, 'api'))
+                live_score = self._live_rank_score(paper, query)
+                scored_papers.append((live_score, paper, 'api'))
         
         # Sort by score (descending)
         scored_papers.sort(key=lambda x: x[0], reverse=True)

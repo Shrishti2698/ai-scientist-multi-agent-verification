@@ -106,8 +106,8 @@ def render_paper_source_badge(source_type, source_label, bg_color, paper_title):
     """Render a paper with source-colored badge."""
     return f"""
     <div style="background-color: {bg_color}; padding: 8px; border-radius: 5px; margin: 2px 0;">
-        <strong style="color: green;">{source_label}</strong> 
-        <span style="font-family: monospace;">{paper_title}</span>
+        <strong style="color: #000000;">{source_label}</strong> 
+        <span style="font-family: monospace; color: #000000;">{paper_title}</span>
     </div>
     """
 
@@ -246,19 +246,7 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Demo Setup")
-        corpus_choice = st.selectbox(
-            "Corpus",
-            (
-                ("Offline Demo Corpus (real papers, 10 fields)", str(DEFAULT_CORPUS)),
-                ("AI/CS Sample Corpus", str(SAMPLE_CORPUS)),
-            ),
-            format_func=lambda option: option[0],
-            help=(
-                "Offline fallback/seed of REAL paper abstracts (from arXiv/PubMed) so the app "
-                "works without network. For real analysis, upload papers or rely on live retrieval — "
-                "uploads and live results outrank this corpus."
-            ),
-        )
+        corpus_choice = st.info("📚 **Multi-domain Research System**: Hybrid approach combining uploaded papers + live API retrieval")
         llm_available = bool(os.getenv("OPENAI_API_KEY"))
         model_choice = st.selectbox(
             "LLM model",
@@ -288,7 +276,7 @@ def main() -> None:
         if uploaded_files:
             st.success(f"{len(uploaded_files)} file(s) ready to merge into the corpus.")
 
-    corpus_path = Path(corpus_choice[1])
+    corpus_path = Path(str(DEFAULT_CORPUS))  # Use default since no dropdown
     selected_model = model_choice[0]
     corpus_signature = f"{compute_corpus_signature(corpus_path, uploaded_files)}::{selected_model}"
     system, single_agent, rag, corpus, uploaded_papers, upload_errors = load_systems(
