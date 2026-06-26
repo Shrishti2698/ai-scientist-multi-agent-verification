@@ -1,0 +1,254 @@
+\section{Introduction}
+
+The previous chapter established that CI repair is already a recognized research task, but that the most
+defensible remaining gap lies in \emph{safe}, \emph{abstention-aware}, and \emph{operationally disciplined}
+automation. This chapter turns that positioning into a precise problem statement. Rather than treating PatchOps
+as a generic coding agent, the thesis defines it as a constrained decision system for failed GitHub Actions
+workflows. The system is designed to observe a failure, compress the relevant evidence, reason over repository
+context, and then choose an appropriate operational response under explicit risk constraints.
+
+This precision matters for two reasons. First, it prevents overclaiming. A thesis that vaguely states ``PatchOps
+fixes CI failures'' would blur together diagnosis, patch generation, workflow validation, and safety. Second, a
+well-defined problem statement makes the evaluation meaningful. The benchmarks later in the thesis measure not
+only whether a patch can be produced, but whether the system chooses the right category of action for the right
+kind of failure.
+
+\section{Task Definition}
+
+PatchOps addresses the following task: given a failed GitHub Actions workflow execution and, when available, a
+local clone of the associated repository, determine the most appropriate response among a bounded set of
+operational actions and support that action with traceable evidence. The task is therefore not merely
+``generate a patch.'' It is a structured decision problem over noisy evidence.
+
+At a high level, the system input consists of:
+
+\begin{enumerate}
+\item the raw CI log or failure trace associated with a failed workflow run,
+\item optional repository context, including workflow files, manifests, and likely fix files, and
+\item optional execution context used for downstream validation, such as a local reproducible runner.
+\end{enumerate}
+
+The system output is a structured result containing compressed evidence, a failure classification, a root-cause
+summary, a final decision, and when appropriate a candidate patch and its safety assessment. In the current
+implementation this structure is explicit in the engine types: evidence, classification, root cause, patch,
+safety report, and decision are all materialized rather than left implicit in free-form text. This is an
+important design choice because it makes the system measurable and auditable.
+
+\section{Decision Space}
+
+The central abstraction in PatchOps is the \emph{decision} rather than the patch. The system currently supports
+four explicit actions:
+
+\begin{enumerate}
+\item \textbf{Patch:} generate a patch that is eligible for automatic progression because the failure is judged
+low risk, confidence is sufficiently high, and the patch passes the safety and plausibility checks.
+\item \textbf{Preview:} generate a candidate patch or repair suggestion, but keep a human in the loop rather
+than treating the change as ready for automatic action.
+\item \textbf{Rerun:} recommend re-execution when the failure is likely transient or flaky rather than a stable
+code or configuration defect.
+\item \textbf{Escalate:} decline automatic repair and forward the case for human review, typically because the
+failure is high risk, semantically unclear, or outside the safe editing envelope.
+\end{enumerate}
+
+The broader thesis uses the language of \emph{abstention}, and that remains conceptually correct. In PatchOps,
+abstention is realized operationally through the non-patch branches of the decision space. A rerun is an
+abstention from editing; an escalate decision is an abstention from automated repair; and preview is a
+human-in-the-loop abstaining mode for cases where a suggestion may be useful but an autonomous patch would be
+too strong. This interpretation keeps the thesis consistent with the literature while matching the implemented
+engine state machine exactly.
+
+\section{Failure Taxonomy and Risk Framing}
+
+PatchOps uses a fixed operational taxonomy of failure categories, because the action policy depends on the type
+of failure being handled. The current taxonomy contains ten core categories, with an \texttt{unknown} fallback
+for unresolved cases:
+
+\begin{center}
+\small
+\begin{tabularx}{0.92\textwidth}{
+  >{\ttfamily\raggedright\arraybackslash}X
+  >{\ttfamily\raggedright\arraybackslash}X
+}
+dependency\_install\_failure & unit\_test\_failure \\
+runtime\_version\_mismatch & missing\_system\_dependency \\
+workflow\_yaml\_error & permission\_or\_secret\_failure \\
+docker\_build\_failure & flaky\_or\_transient\_failure \\
+lint\_format\_failure & lockfile\_mismatch \\
+\end{tabularx}
+\end{center}
+
+These categories are not arbitrary labels invented only for implementation convenience. They are the project's
+operational abstraction over three sources: the broader GitHub Actions failure literature, the twelve-category
+structure of CI-Repair-Bench, and the practical needs of a decision policy that must distinguish repairable
+mechanical failures from risky or ambiguous ones. In later chapters, this taxonomy will be mapped explicitly to
+the literature-backed crosswalk used throughout the evaluation.
+
+Each category is also assigned a risk class. In the present system, low-risk categories include formatting,
+version mismatches, lockfile issues, dependency installation issues, and workflow YAML fixes. Medium-risk
+categories include Docker build failures, unit test failures, and missing system dependencies. High-risk cases
+include permission and secret failures. Transient failures are handled separately through rerun logic, while
+unknown cases are treated conservatively. This risk structure is one of the mechanisms that turns PatchOps from
+a patch generator into a risk-aware decision system.
+
+\section{Confidence, Learned Decision Gate, and Intended Actions}
+
+The decision policy in PatchOps is not purely symbolic; it combines category-level risk with confidence-based
+decision logic. In the earlier implementation, the engine used two pinned thresholds: a lower confidence floor
+of 0.50 and a higher patch threshold of 0.75. These values made the policy reproducible, but they were still
+hand-set constants. The later Phase 15 refinement replaces the low-risk act-versus-hold test with an optional
+learned, isotonic-calibrated decision gate over pre-generation signals such as calibrated classifier
+confidence, category risk, flaky status, semantic ambiguity, log-named-file count, and evidence length.
+
+Formally, let \(x_i\) denote the pre-generation feature vector for instance \(i\), and let
+\(x_i' = (x_i - \mu) / \sigma\) denote the standardized feature vector used by the decision model. The
+classifier-facing confidence signal used throughout the policy is
+\begin{equation}
+\mathrm{conf}_i = \max_c \Pr(c \mid x_i) = \max_c \mathrm{softmax}(W\phi(\mathrm{evidence}_i))_c,
+\end{equation}
+where \(c\) ranges over failure categories and \(\phi(\cdot)\) denotes the evidence representation. On the
+low-risk lane, Phase 15 adds a learned act-versus-hold model:
+\begin{equation}
+\Pr(\mathrm{act} \mid x_i) = \sigma(w^\top x_i' + b),
+\qquad
+\sigma(z) = \frac{1}{1 + e^{-z}}.
+\end{equation}
+
+Because raw probabilities can be miscalibrated, PatchOps applies a non-decreasing isotonic calibrator
+\(g(\cdot)\), fit on labeled act/hold outcomes:
+\begin{equation}
+g^\star = \arg\min_{g \ \mathrm{monotone}} \sum_i \left(g(s_i) - y_i\right)^2,
+\qquad
+p_{i,\mathrm{cal}} = g^\star\!\left(\Pr(\mathrm{act} \mid x_i)\right).
+\end{equation}
+The final low-risk decision rule is then
+\begin{equation}
+d_i =
+\begin{cases}
+\textsc{act} & \text{if } p_{i,\mathrm{cal}} \ge \tau, \\
+\textsc{hold} & \text{if } p_{i,\mathrm{cal}} < \tau,
+\end{cases}
+\qquad \tau = 0.5.
+\end{equation}
+In plain terms, the gate predicts whether a low-risk case should proceed toward an automatic patch or remain in
+preview mode.
+
+The intended action is computed before patch generation. If a failure is classified as flaky or transient, the
+system chooses rerun rather than edit. If the category is high risk or the diagnosis confidence falls below the
+lower floor, the system escalates rather than guessing. Medium-risk categories default to preview. Low-risk
+categories become automatic patch candidates only when the confidence policy supports action. In the threshold
+baseline this means crossing the higher threshold; in the learned-gate version this means the calibrated
+decision model predicts act rather than hold. Otherwise the case remains preview-only.
+
+The older hand-set rule can therefore be written explicitly as
+\begin{equation}
+\mathrm{conf}_i \ge \mathrm{TAU\_HIGH} = 0.75.
+\end{equation}
+This mathematical contrast makes the ``remove the magic constant'' point concrete: the learned gate replaces a
+single pinned threshold with a calibrated decision surface over multiple pre-generation signals. At the same
+time, the broader routing policy remains intentionally deterministic outside this low-risk lane: flaky cases
+still rerun, high-risk or unknown cases still escalate, and medium-risk cases still default to preview.
+
+This design reflects the thesis claim that the cost of a wrong action is asymmetric. A false negative, where
+the system declines to patch a fixable low-risk issue, is inconvenient. A false positive, where the system
+opens or endorses an unsafe or semantically misguided patch, is often more damaging. The policy therefore
+intentionally biases the system toward caution.
+
+\section{Semantic Ambiguity and Human Judgement}
+
+One of the most important requirements in PatchOps is that not every technically detectable error should be
+treated as machine-fixable. Some failures require genuine human judgement about intended program behavior. The
+current implementation encodes this idea through a semantic ambiguity backstop that catches signals such as type
+errors, assertion mismatches, and logic-oriented exceptions. Even if such a case appears low risk at the raw
+category level, the system downgrades an intended automatic patch to preview.
+
+This requirement is conceptually important because it separates mechanical repair from semantic repair. A format
+or version mismatch usually has a narrow and observable fix space. A type mismatch, failed assertion, or logic
+exception may involve the intended behavior of the software, which is something the thesis does not claim to
+solve fully. By defining semantic ambiguity as a first-class boundary, PatchOps makes its limits explicit rather
+than leaving them implicit in later error analysis.
+
+\section{Safety Requirements}
+
+The core safety requirement of PatchOps is straightforward: the system must never treat patch generation as a
+license to edit arbitrarily. A candidate patch must pass deterministic safety checks before it can remain in the
+\texttt{patch} branch of the decision pipeline.
+
+The current safety envelope has several parts:
+
+\begin{enumerate}
+\item \textbf{Forbidden-path protection.} Certain paths, such as environment files, secret-bearing locations,
+credentials, and private-key material, are never valid edit targets.
+\item \textbf{Category-specific allow-lists.} For categories such as workflow YAML errors, runtime version
+mismatches, lockfile issues, and dependency installation failures, the patch must stay within a narrow set of
+allowed file patterns.
+\item \textbf{Secret-introduction checks.} Added lines are scanned for patterns that resemble API keys,
+passwords, tokens, or private keys.
+\item \textbf{Minimality constraints.} Automatic patches are bounded by maximum file count and maximum added-line
+count, reducing the chance of broad or unfocused edits.
+\item \textbf{Reward-hacking detection.} The system checks for high-severity patterns such as test tampering,
+assertion removal, skip-based evasion, lint suppression, or CI-disabling changes that could make a run green
+without constituting an honest fix.
+\end{enumerate}
+
+These requirements embody the thesis claim that safety must be engineered explicitly. They also ensure that
+PatchOps can be evaluated on more than repair success alone. Because the safety logic is encoded deterministically,
+the later unsafe-edit and abstention metrics are grounded in observable policy rather than vague intuition.
+
+\section{Problem Boundaries and Scope}
+
+The thesis scope is deliberately narrower than the full product fantasy of an autonomous DevOps engineer. The
+core comparable evaluation is Python-first because CI-Repair-Bench, the main public benchmark used throughout
+the project, is Python-only. Node and Docker examples remain useful in demonstrations and controlled cases, but
+they are not mixed into the main comparable repair table.
+
+Similarly, PatchOps does not claim to emulate all of GitHub Actions locally. Its validation harness is a
+restricted CI-style re-execution loop meant for supported workflow shapes rather than a perfect clone of every
+GitHub-hosted runner feature. This limitation is not a weakness to hide. It is part of the problem definition:
+the thesis studies whether a safety-gated agent can make better decisions under a realistic but bounded
+validation regime.
+
+The project also does not claim to solve semantic correctness in the strong sense. CI-green is treated as
+necessary but not sufficient evidence, and the system is explicitly designed to abstain, preview, or escalate
+when the evidence suggests that automated repair would be overconfident. This stance is consistent with both the
+APR overfitting literature and the measured behavior of PatchOps in later chapters.
+
+\section{Non-Goals}
+
+Several tempting claims are explicitly outside the scope of this thesis.
+
+\begin{enumerate}
+\item \textbf{State-of-the-art repair leadership} is not the primary claim. PatchOps is not framed as a system
+whose main contribution is beating the best published Pass@1 number.
+\item \textbf{Universal workflow support} is not claimed. The thesis does not assert support for every language,
+every CI platform, or every GitHub Actions feature.
+\item \textbf{Fully autonomous software engineering} is not claimed. PatchOps is a bounded CI-repair decision
+system, not a general autonomous development agent.
+\item \textbf{Semantic correctness guarantees} are not claimed. A validated patch is stronger evidence than a
+free-form suggestion, but it is still not treated as a perfect proof of software correctness.
+\item \textbf{Model-training novelty} is not the center of the thesis. Although the project includes a small
+learned classifier as a reproducibility and cost contribution, the main research focus remains orchestration,
+safety, abstention, and evaluation.
+\end{enumerate}
+
+These non-goals are important because they protect the thesis from being judged against claims it does not need
+to make. A well-scoped thesis is stronger than an ambitious but indefensible one.
+
+\section{From Problem Statement to Architecture}
+
+The formal problem statement in this chapter now gives a clean lens for reading the rest of the thesis. PatchOps
+accepts failed CI evidence, reasons over bounded repository context, and chooses among patch, preview, rerun,
+and escalate actions under explicit risk and safety constraints. The system is therefore defined not by raw
+patch generation alone, but by a disciplined pipeline that links diagnosis, action selection, and validation.
+
+This framing also clarifies why the architecture in the next chapter looks the way it does. The multi-stage
+pipeline, the safety gate, the semantic ambiguity backstop, the plausibility filter, and the validation loop are
+not independent engineering tricks. They are architectural consequences of the problem definition established
+here. The next chapter presents that architecture in detail.
+
+\section{Chapter Conclusion}
+
+This chapter has defined the PatchOps task, action space, failure taxonomy, decision policy, safety
+requirements, and scope boundaries. These definitions make the later architecture and evaluation measurable:
+PatchOps is judged not only by whether it can emit a patch, but by whether it selects an appropriate operational
+response under explicit risk constraints. The next chapter translates these requirements into the system
+architecture.

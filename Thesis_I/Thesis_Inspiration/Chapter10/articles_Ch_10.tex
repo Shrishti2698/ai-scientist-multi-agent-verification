@@ -1,0 +1,115 @@
+\section{Conclusion}
+
+This thesis presented PatchOps, a repository-aware, safety-gated, abstention-aware agent for GitHub Actions CI
+failures. The project began from a practical goal: diagnose a failed CI run, identify an appropriate repair
+action, generate a candidate fix when safe, validate it through CI execution, and avoid harmful automation when
+the evidence is weak. The final contribution is more specific and more defensible than simply ``an AI that fixes
+CI.'' PatchOps is an AI repair system that treats \emph{when not to fix} as a first-class research problem.
+
+The thesis deliberately avoids claiming to be the first CI-verified repair system or to outperform the strongest
+repair baselines on raw Pass@1. Prior CI repair work already establishes repository-level CI-validated repair as
+a benchmarked task. PatchOps instead contributes a safety-and-abstention view of the problem, supported by a
+working system and a sequence of measured experiments.
+
+\section{Summary of Contributions}
+
+The first contribution is the PatchOps architecture itself: a staged pipeline for CI diagnosis, repository
+context retrieval, root-cause reasoning, action planning, patch generation, safety gating, validation, and
+decision routing. The system distinguishes between patching, previewing, rerunning, and escalating rather than
+treating every failure as a patch-generation task.
+
+The second contribution is an empirical decomposition of CI repair failure modes. The experiments show that
+classification becomes reasonably tractable, while fault localization and semantic repair remain difficult.
+Across lexical retrieval, LLM hybrid ranking, semantic embedding retrieval, and bounded agentic exploration,
+localization plateaus below the target bar. Full-repository retrieval improves patch applicability, but does not
+make gated repair achieve CI Pass@1 on the measured repair subset. This isolates the remaining bottleneck as
+semantic repository reasoning and repair correctness rather than merely missing files or invalid diffs.
+
+The third contribution is a measured abstention and safety stack. The learned classifier provides a local,
+reproducible, low-cost diagnosis stage and a useful confidence signal for selective prediction. Calibration
+makes that confidence more usable, and Phase 15 turns the low-risk act-versus-hold decision into a learned,
+calibrated gate that replaces the earlier hand-set threshold. The reward-hacking detector asks whether a
+CI-green outcome is honest, and the patch-plausibility gate asks whether a patch is likely to be on target
+before it is treated as an automatic PR candidate. Together, these components turn abstention from a prompt
+instruction into an engineered system behavior.
+
+The fourth contribution is claim discipline. The thesis separates live demonstrations from benchmark evidence,
+separates CI validation from semantic correctness, and reports low or negative results rather than hiding them.
+That honesty is part of the scientific value of the work: it makes clear where CI repair agents are useful
+today and where they remain unreliable.
+
+\section{Answers to the Research Questions}
+
+RQ1 asked whether repository and workflow context improve diagnosis and localization. The results show that
+workflow context modestly improves diagnosis, while deeper repository context is more important for file
+candidate discovery than for category classification. However, repository retrieval alone does not solve
+localization.
+
+RQ2 asked whether PatchOps patches apply and improve CI repair success compared with simpler baselines. The
+answer is mixed and intentionally conservative. Full-repository retrieval improves patch applicability among
+attempted gated patches, but gated CI Pass@1 remains low on the measured reproducible subset. The raw ungated
+baseline can produce some green outcomes, but without the same safety guarantees.
+
+RQ3 asked whether the safety-gated decision policy reduces unsafe or inappropriate repair attempts. The results
+support this as the strongest thesis claim. PatchOps explicitly abstains, reruns, previews, or escalates when
+automatic patching is not justified, and the later gates add protection against reward hacking and off-target
+patches. Phase 15 further strengthens the decision-policy result by showing that the low-risk act-versus-hold
+boundary can be learned and calibrated: it matches-or-beats the hand-tuned threshold baseline on the expanded
+Safety Set and recovers held-back confident low-risk actions without over-acting on that lane.
+
+RQ4 asked whether PatchOps can distinguish repairable failures from transient or flaky cases. The labeled
+safety set shows useful flaky handling and abstention behavior, but the sample remains limited. The conclusion
+is that PatchOps has a working decision mechanism for rerun-versus-repair, not that flaky classification is
+fully solved.
+
+RQ5 asked about cost and practicality. The measured pipeline remains low-cost in the main offline experiments,
+and the learned classifier reduces paid-model dependence for classification. Agentic exploration, however,
+adds significant latency without a global localization gain in the measured configuration. This supports the
+choice of a conservative staged pipeline with selective use of expensive reasoning.
+
+\section{Future Work}
+
+The most important future direction is semantic repair. PatchOps can now make patches apply more cleanly, but
+applicability is not correctness. Future systems should integrate stronger program analysis, differential
+testing, invariant checking, and richer execution feedback so that the repair loop can reason about behavior
+rather than only about CI outcomes and file overlap.
+
+A second direction is stronger verification. The current reward-hack and plausibility gates are useful but
+partial. Future work should add semantic-equivalence checks, mutation-based validation, test-impact analysis,
+and stronger patch-correctness oracles. This would make ``CI-green'' one signal among several rather than the
+dominant proxy.
+
+A third direction is improved repository navigation. The bounded agentic localizer shows that exploration can
+find files missed by retrieval in individual cases, but it is not reliable enough yet. Stronger reasoning
+models, graph-guided tools, AST and import-following support, and forced confidence-based exits may make
+agentic localization more useful. Future studies should measure these methods against the same localization
+and latency baselines rather than assuming agentic navigation is automatically better.
+
+A fourth direction is broader reproducibility. The learned classifier is already local and reproducible, but
+the LLM-dependent stages should be evaluated across stronger commercial models and open-weight models with
+repeated runs. This would clarify which conclusions are architecture-level and which depend on a particular
+model tier.
+
+A fifth direction is larger and more realistic safety evaluation. The current safety set is useful, but real
+enterprise CI failures include secrets, protected deployments, permissions, release workflows, flaky
+infrastructure, and organization-specific rules. Although the Safety Set has been expanded to support the Phase
+15 learned gate, it remains synthetic-heavy. A larger real-derived labeled safety benchmark would strengthen the
+abstention claim and make the safety policy more transferable.
+
+A sixth direction is CI-system coverage. PatchOps currently targets GitHub Actions and a restricted local
+validation harness. Extending the approach to richer GitHub Actions features, and eventually to GitLab CI,
+Jenkins, or other CI systems, would test how much of the architecture transfers beyond the current setting.
+
+\section{Final Remarks}
+
+PatchOps does not solve CI repair, and the thesis does not need it to. The project shows something more useful
+for the current state of LLM-based software agents: a CI repair agent must know when not to act. The experiments
+demonstrate that localization remains difficult, semantic repair remains unresolved, CI-green is only a partial
+oracle, and model self-abstention is not reliable enough by itself. In response, PatchOps builds abstention,
+a learned calibrated decision gate, safety gates, plausibility checks, and validation into the repair loop.
+
+The final lesson is therefore practical as well as scientific. Future CI agents should not be judged only by
+how often they generate patches. They should be judged by whether they choose the right action under
+uncertainty, whether their green results are honest, whether they expose confidence and risk, and whether they
+decline to act when the evidence does not justify automation. PatchOps is a step toward that kind of repair
+agent: not an overconfident auto-fixer, but a cautious, evidence-aware collaborator inside the CI workflow.

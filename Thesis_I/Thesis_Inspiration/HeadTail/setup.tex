@@ -1,0 +1,122 @@
+\usepackage[a4paper,top=1.5in,bottom=1in,left=1.5in,right=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{rotating}   % sidewaysfigure: full-page landscape for wide architecture diagrams
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+% Support the three common Overleaf layouts:
+% 1. Actual_Thesis contents uploaded as the project root,
+% 2. an Actual_Thesis folder uploaded into the project root,
+% 3. the whole repository uploaded as the project root.
+\graphicspath{
+  {Figures/}
+  {./Figures/}
+  {Actual_Thesis/Figures/}
+  {./Actual_Thesis/Figures/}
+  {Thesis/Actual_Thesis/Figures/}
+  {./Thesis/Actual_Thesis/Figures/}
+}
+
+\input{HeadTail/metadata}
+
+\setstretch{1.15}
+\setlength{\parindent}{0.2in}
+\setlength{\parskip}{0pt}
+\raggedbottom
+\emergencystretch=1.5em
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\captionsetup{font=small,labelfont=bf}
+
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\filcenter}
+  {\fontsize{16}{18}\selectfont\MakeUppercase{\chaptertitlename}\ \thechapter}
+  {10pt}
+  {\fontsize{20}{22}\selectfont}
+\titlespacing*{\chapter}{0pt}{0pt}{16pt}
+
+\titleformat{\section}
+  {\normalfont\bfseries\fontsize{14}{16}\selectfont}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries\fontsize{12}{14}\selectfont}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\bfseries\itshape\fontsize{12}{14}\selectfont}
+  {\thesubsubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancyhead[LE]{\small\thepage}
+\fancyhead[RE]{\nouppercase{\small\leftmark}}
+\fancyhead[LO]{\nouppercase{\small\ThesisShortTitle}}
+\fancyhead[RO]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{14pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\hypersetup{
+  hidelinks,
+  hypertexnames=false,
+  pdftitle={\ThesisShortTitle},
+  pdfauthor={\ThesisAuthorName}
+}
+
+\newcommand{\FrontMatterChapter}[1]{%
+  \chapter*{#1}%
+  \addcontentsline{toc}{chapter}{#1}%
+  \markboth{#1}{#1}%
+}
+
+\newcommand{\ChapterOpeningNote}[1]{%
+  \section*{Preface}%
+  \noindent\textit{#1}\par\vspace{0.8\baselineskip}%
+}
+
+\newcommand{\SignatureBlock}[2][0.38\textwidth]{%
+  \begin{minipage}[t]{#1}
+    \centering
+    \vspace{1.5cm}
+    \rule{\linewidth}{0.6pt}\par
+    #2
+  \end{minipage}%
+}

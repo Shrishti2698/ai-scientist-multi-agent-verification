@@ -1,0 +1,219 @@
+\section{Introduction}
+
+The previous chapter described the PatchOps architecture as a structured repair pipeline. This chapter maps that
+design onto the actual implementation. The goal is not to list every file mechanically, but to explain how the
+main modules cooperate to realize repository-aware, safety-gated, abstention-aware CI repair in code.
+
+The implementation centers on the \texttt{patchops.engine} package, with supporting validation, adapter, and
+benchmark code around it. This separation is intentional. The engine handles reasoning and decision logic. The
+validation layer handles CI-style re-execution. The benchmark scripts use the engine as a reusable subject of
+study rather than duplicating repair logic outside the system.
+
+\section{Implementation Structure}
+
+The PatchOps implementation is organized around a small set of coherent modules rather than a monolithic agent
+script. At the highest level, the codebase is divided into:
+
+\begin{enumerate}
+\item \textbf{engine modules} under \path{patchops/engine/}, which implement diagnosis, retrieval, planning,
+generation, safety, and final decision logic,
+\item \textbf{validation modules} under \path{patchops/validation/}, which provide local CI-style
+re-execution,
+\item \textbf{adapters} under \path{patchops/adapters/}, which support GitHub- and CLI-facing integration,
+\item \textbf{benchmark scripts} under \path{benchmarks/}, which evaluate the engine under controlled
+experimental protocols, and
+\item \textbf{acceptance and verification tests} under \path{tests/}, which enforce regression guarantees on
+the core behavior.
+\end{enumerate}
+
+This layered structure is valuable for a thesis artifact because it keeps the experimental system reusable. The
+same \texttt{diagnose(...)} entry point used in the live or local workflow can also be exercised by the
+benchmark harness, making the evaluation more faithful to the actual system behavior.
+
+\section{The Engine Entry Point}
+
+The practical center of the implementation is the decision routine in \path{patchops/engine/decide.py}. This
+module realizes the state machine described earlier: log extraction, classification, flaky detection, context
+retrieval, root-cause analysis, intended-action planning, semantic ambiguity downgrading, patch generation,
+safety gating, plausibility scoring, and final decision selection.
+
+The implementation returns a structured \texttt{Result} object rather than plain text. This object bundles the
+evidence, classification, root cause, decision, optional patch, optional safety report, and the reasoning
+trace. Supporting dataclasses in \texttt{types.py} make the pipeline explicit and serialization-friendly.
+Architecturally, this means every stage writes to a shared, typed interface rather than leaking unstructured
+prompt outputs across the system.
+
+\section{Evidence Compression and Classification}
+
+The first implementation layer is evidence compression. The log extractor in
+\path{patchops/engine/log_extractor.py} performs deterministic preprocessing: it strips ANSI noise, removes
+timestamp clutter, detects known signatures, finds the failed step, and isolates a critical error window. This
+keeps the later prompts short and makes the engine usable even without a live model.
+
+Classification is implemented in \texttt{classifier.py}. Its policy is hybrid. Strong deterministic signatures
+remain useful, but noisy real logs often require model adjudication. When an LLM is available, the classifier
+uses the rule-based hint and the learned-classifier hint as inputs to an LLM-primary decision. When no LLM is
+available, a confident learned-classifier prediction becomes the offline primary; otherwise rule signatures are
+used as the fallback. This preserves the thesis claim that PatchOps degrades gracefully rather than collapsing
+without API access.
+
+\section{Provider-Agnostic LLM Layer}
+
+One of the most important implementation choices is the provider-agnostic LLM abstraction in
+\path{patchops/engine/llm.py}. Instead of hard-wiring the system to one vendor, PatchOps supports OpenAI,
+Anthropic, and OpenAI-compatible providers behind a shared interface. The implementation also supports local or
+alternative OpenAI-style endpoints through a configurable base URL. If no provider is configured, the engine
+returns cleanly to deterministic behavior.
+
+This design serves three purposes. First, it makes experiments reproducible by pinning model roles through
+configuration. Second, it lets the system distinguish between strong and cheaper models for different stages,
+such as classification versus patch generation. Third, it turns LLM access into an optional acceleration layer
+rather than a hard dependency. That is especially important for a thesis claiming reproducibility and careful
+systems design rather than merely cloud-backed prompt orchestration.
+
+\section{Repository Context and Localization}
+
+Repository awareness is implemented through a pair of cooperating modules:
+\path{context_retriever.py} and \path{localizer.py}, with \path{repo_index.py} extending the design for
+full-repository search. The context retriever collects category-relevant files such as workflow YAML,
+manifests, lockfiles, configuration files, and evidence-named source files. It does so under size caps to keep
+prompt cost bounded.
+
+The localizer makes file selection an explicit, measurable subproblem. It implements multiple strategies,
+including log-path ranking, category-aware reranking, LLM candidate generation, hybrid fusion, deterministic
+full-repository BM25 ranking, and semantic embedding reranking. The repository index in
+\path{repo_index.py} builds a candidate universe from the repository clone itself, applies path-aware BM25,
+and optionally reranks the deterministic pool. This modular structure is important because it lets the thesis
+study localization as its own bottleneck rather than treating file selection as an invisible side effect of a
+single large prompt.
+
+\section{Root-Cause Analysis and Patch Planning}
+
+Once context has been gathered, PatchOps performs root-cause analysis through \path{rca_agent.py}. This
+module combines rule-based templates with optional LLM refinement. The implementation reflects the thesis
+philosophy of bounded intelligence: rules provide a defensible baseline and zero-cost fallback, while the model
+can produce a more contextual summary and affected-file hypothesis when available.
+
+The planner in \path{patch_planner.py} then turns diagnosis into intended action. It maps category,
+confidence, and flakiness into the action policy described earlier, using pinned thresholds and fixed risk
+classes from \path{config.py}. The semantic ambiguity guard is also implemented here, allowing the engine to
+downgrade an intended patch to preview when type-checking or logic-oriented signals suggest that human judgement
+is still required.
+
+The learned decision gate is implemented in \path{decision_gate.py} and wired into
+\path{decide.py}. It is opt-in and replaces only the low-risk high-confidence act-versus-hold test when the
+environment enables it and the model artifact is available. It does not bypass flaky rerun routing, high-risk
+escalation, the safety gate, or the plausibility gate. This narrow integration is deliberate: the learned gate
+removes the old magic threshold on the low-risk lane while preserving deterministic safety boundaries.
+
+\section{Patch Generation}
+
+Patch generation is implemented in \path{patch_generator.py}. The module contains both deterministic repair
+paths and LLM-backed patch generation. The deterministic path handles important mechanical cases such as runtime
+version mismatches, where the repair can be computed directly from repository and log evidence. The LLM path
+handles a broader set of repairable categories by asking the model to return full edited file contents and then
+computing the unified diff locally.
+
+This is an important implementation detail. Asking the model for raw diff text directly is brittle. By asking
+for full edited file contents and deriving the diff in code, PatchOps keeps patch formation more controllable
+and more likely to remain \texttt{git apply}-compatible. The generator also produces review-oriented PR
+metadata, including a title and a security-conscious PR body, reinforcing that the output is meant for
+inspection rather than blind execution.
+
+\section{Safety and Plausibility Controls}
+
+The two most thesis-critical safety modules are \path{safety_gate.py} and
+\path{patch_plausibility.py}. The safety gate implements deterministic checks over the candidate patch. It
+blocks forbidden paths, category-level allow-list violations, secret introduction, excessive patch breadth, and
+reward-hacking patterns. Because this logic is deterministic and explicit, it can be measured directly in the
+evaluation rather than inferred informally.
+
+The plausibility module implements a second layer of control. It estimates whether a generated patch is likely
+to be on-target using only inference-time signals such as evidence locality, file-type fit, minimality, and
+honesty. Low-plausibility patches are downgraded from automatic patch to preview. Together, these two modules
+operationalize the thesis argument that CI-green and patch-generated are not strong enough success conditions on
+their own.
+
+\section{Learned Classifier Integration}
+
+The learned classifier is implemented as an additive layer in \path{ml_classifier.py}. It loads a trained
+artifact produced by the benchmark training script and predicts category plus confidence from the same compressed
+evidence representation used at inference time. If the artifact is missing or the supporting dependencies are
+unavailable, the module simply yields no prediction and the engine falls back to its earlier rule and LLM path.
+
+This is an important implementation property. The classifier does not destabilize the rest of the system. It is
+integrated as a graceful enhancement for reproducibility and low-cost inference, not as a mandatory dependency
+that would change the rest of the engine's control flow.
+
+The classifier artifact also carries the shipped isotonic calibrator used by later decision stages. When present,
+\path{ml_classifier.py} applies this calibrator before emitting confidence; when absent, it falls back to raw
+confidence. This makes calibrated confidence an inference-time engine property rather than only an offline
+plotting result.
+
+\section{Validation Harness}
+
+The CI validation layer is implemented under \path{patchops/validation/}. Its local runner parses common
+GitHub Actions workflow shapes, extracts runnable shell steps, and executes them either in Docker or on the
+host as a fallback. The implementation is deliberately modest about scope: it supports common setup-node and
+setup-python patterns plus shell-based workflow steps, but it is not a full GitHub Actions emulator.
+
+This bounded implementation is nevertheless valuable. It gives PatchOps a local, repeatable mechanism for
+testing whether a candidate patch changes the observable CI outcome. The validation layer is therefore what
+connects the abstract notion of repair to the measurable Pass@1 and Pass@3 style metrics used later in the
+thesis.
+
+\section{Benchmarks as First-Class Implementation Clients}
+
+The benchmark scripts are not bolted on as an afterthought. They are designed as disciplined clients of the same
+engine. For example, \path{benchmarks/run_eval.py} drives the diagnosis and patch pipeline across ablation
+variants, \path{run_localization.py} isolates file-selection strategies, and the later benchmark scripts
+evaluate full-repository retrieval, the learned classifier, selective prediction, plausibility, reward hacking,
+agentic localization, and the learned decision gate.
+
+This matters because it means the measured system is the real system. The thesis is not evaluating simplified
+mock-ups of PatchOps stages; it is evaluating the actual implemented modules under controlled harnesses.
+
+\section{Acceptance and Regression Tests}
+
+PatchOps also includes acceptance and regression tests that enforce the system's core contract. The acceptance
+harness checks end-to-end diagnosis on the ten-case example set, verifies that the flagship deterministic patch
+applies cleanly, confirms correct rerun and escalate behavior on flaky and secret-related examples, requires a
+reasoning trace, and checks both the semantic ambiguity and reward-hacking protections.
+
+These tests are important in a thesis context because they distinguish two levels of confidence. Experimental
+results tell us how the system behaves on a benchmark. Acceptance checks tell us whether the intended design
+properties still hold after implementation changes. Together, they strengthen the system as a research artifact.
+
+\section{Implementation Principles}
+
+Several implementation principles recur across the codebase:
+
+\begin{enumerate}
+\item \textbf{Graceful degradation.} Optional LLM, classifier, retrieval, and decision-gate enhancements are
+additive rather than destructive; the system retains deterministic functionality when they are unavailable.
+\item \textbf{Bounded cost.} File size caps, prompt truncation, top-k limits, and staged retrieval keep model
+usage and runtime manageable.
+\item \textbf{Deterministic policy barriers.} Safety, ambiguity, and risk checks are enforced in code rather
+than left to prompt compliance.
+\item \textbf{Modularity.} Retrieval, classification, generation, safety, and validation are separable enough to
+be ablated experimentally.
+\item \textbf{Traceability.} Each stage contributes explicit outputs to a reasoning trace that can be inspected
+later by users or benchmark harnesses.
+\end{enumerate}
+
+These principles are what make PatchOps more than a prompt chain. They turn it into a controlled software
+system whose behavior can be studied systematically.
+
+\section{Chapter Conclusion}
+
+This chapter mapped the PatchOps architecture to its concrete implementation. The engine centers on a typed,
+traceable decision pipeline; the LLM layer is provider-agnostic and optional; repository retrieval and
+localization are modular and measurable; patch generation combines deterministic and model-backed paths; the
+learned decision gate removes the old low-risk magic threshold when enabled; safety and plausibility are
+enforced through explicit gates; and the validation harness provides bounded CI-style re-execution. The
+benchmark scripts and acceptance tests then exercise the same engine as both an experimental subject and a
+usable tool.
+
+With the implementation now grounded in code, the next chapter can describe how the system was evaluated:
+which datasets were used, how baselines were defined, what metrics were frozen in advance, and how the project
+maintained research discipline through phase-by-phase pre-registration.

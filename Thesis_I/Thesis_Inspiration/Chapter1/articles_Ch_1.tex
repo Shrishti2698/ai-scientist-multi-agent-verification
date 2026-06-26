@@ -1,0 +1,158 @@
+Continuous integration and continuous deployment (CI/CD) pipelines are now part of everyday software
+development. In modern repositories, every pull request, dependency update, and workflow change can trigger a
+GitHub Actions run that either confirms the health of the system or exposes a failure that blocks development.
+Although these failures are valuable signals, they are also expensive in practice. Developers must inspect raw
+logs, determine whether the failure is caused by configuration drift, dependency mismatch, test regressions,
+environment problems, or transient infrastructure issues, and then decide whether the right response is to
+patch code, re-run the workflow, or escalate the issue for human review. This triage work is repetitive, time
+consuming, and often urgent because failed CI blocks merges, delays releases, and interrupts developer flow.
+
+Recent progress in large language models (LLMs) has made it possible to automate parts of this process
+\cite{logsage2025,cirepairbench2026}.
+Log-analysis systems can summarize failures and suggest likely causes, while repository-aware repair systems can
+attempt patches and validate them by re-running CI. However, the practical problem is not simply whether a
+model can generate a patch. In real engineering workflows, an inappropriate automatic fix can be worse than no
+fix at all. A tool that edits the wrong file, suppresses a failing test, disables a check, or proposes a risky
+change for a transient failure may turn a local CI incident into a broader reliability problem. For this
+reason, the central question of this thesis is not ``can an LLM make CI green?'' but rather ``what is the right
+action for a given CI failure, and how can that action be taken safely?''
+
+This thesis presents \textbf{PatchOps}, a repository-aware AI agent for GitHub Actions failures that combines
+failure diagnosis, repository context retrieval, patch generation, local CI re-validation, and explicit
+safety-gated decision making. Instead of treating every failure as an invitation to generate a patch, PatchOps
+frames CI repair as a decision under uncertainty. Given a failed workflow run and its repository context, the
+system decides among several actions: open a patch pull request, present a preview for human review, recommend
+a re-run for likely transient failures, escalate risky cases, or abstain when evidence is insufficient. This
+decision-centric framing is the thesis backbone.
+
+\section{Research Context and Gap}
+
+The research landscape already contains strong prior work on CI failure analysis and repository-level repair.
+In particular, CI-Repair-Bench establishes CI-validated repository repair as a benchmarked task
+\cite{cirepairbench2026}, while industrial systems such as LogSage demonstrate that LLM-based diagnosis can be
+useful at scale \cite{logsage2025}. As a result, PatchOps does not claim to be the first system to perform
+CI-verified repair, nor does it claim to surpass the state of the art in raw repair success. Such claims would be
+inaccurate and would obscure the actual research opportunity.
+
+The genuine gap addressed by this thesis is different. Existing CI repair systems largely optimize for whether a
+patch can be generated and whether CI turns green after that patch is applied. They do not place equal emphasis
+on whether the agent should patch in the first place, how often it should refuse to act, whether a green result
+is obtained honestly, or whether the selected patch is even targeted at the right part of the repository. In
+other words, the literature has established CI repair as a task, but it has not adequately framed repair as a
+\emph{risk-sensitive decision process}. This is where PatchOps contributes: it adds a safety and abstention
+layer on top of an already established repair setting, and evaluates that layer explicitly rather than treating
+it as an implementation detail.
+
+\section{PatchOps Thesis Position}
+
+PatchOps demonstrably repairs CI failures end to end: it produces CI-verified fixes that turn failed workflows
+green, shown on real GitHub pull requests whose checks passed after the patch. The repair capability is therefore
+not in question. The position taken in this thesis builds on that capability rather than disputing it. PatchOps is
+claimed as a reproducible, safety-gated, abstention-aware CI-repair agent that is dependable when failures are
+log-localizable and cautious when they are not. The main contribution is consequently not raw patch volume,
+aggressive automation, or a higher repair rate than prior work; it is the engineering of \emph{trustworthy}
+repair --- knowing \emph{when not to act} --- together with a closed validation loop that checks proposed fixes
+through CI-style re-execution before they are treated as credible.
+
+The current evidence base in the project supports four findings that define the thesis:
+
+\begin{enumerate}
+\item Fault localization is the binding constraint, and within the methods tested it is not closed by retrieval
+alone. Across four strategies evaluated in this work --- lexical BM25, LLM reranking, semantic embedding
+retrieval, and bounded agentic (ReAct) exploration --- recall improves only modestly and plateaus below the
+target bar needed for robust repair. We therefore argue, for our setting, that simple retrieval is insufficient
+and that the residual difficulty appears to be one of repository reasoning; we do not claim this as a universal
+property of CI repair.
+\item Better localization is necessary but not sufficient for successful repair. Full-repository retrieval can
+remove patch-application bottlenecks without producing corresponding gains in end-to-end Pass@1 repair success.
+\item A green CI result is not automatically a correct result. Some patches can be off-target or reward-hacking
+in nature, so honesty and plausibility checks are required in addition to validation.
+\item Abstention cannot be left to the base agent alone. A tool-using agent may rarely self-decline even when it
+should, so abstention must be engineered through explicit selective controls, safety gates, and the learned
+calibrated act-versus-hold gate introduced in the final system.
+\end{enumerate}
+
+These findings are valuable even when they are negative or partially negative. A central strength of the
+PatchOps study is that it does not treat honest negative results as failures to hide. Instead, they are used to
+separate what the system already does well from what remains unsolved in CI repair, especially semantic repair
+after the correct file has already been identified.
+
+\section{Problem Motivation}
+
+The motivation for PatchOps comes from the mismatch between the operational reality of CI failures and the way
+automated repair is often discussed. Not all failures should be patched. Some runs fail because of flaky tests,
+network issues, missing credentials, permission errors, deployment conditions, or ambiguous semantic
+regressions. In such cases, blindly generating a patch is either unhelpful or unsafe. A production-relevant
+repair assistant therefore needs at least three properties.
+
+First, it must be \textbf{repository-aware}. CI failures are rarely understandable from logs alone. Workflow
+files, dependency manifests, configuration files, and the surrounding codebase provide crucial context for
+understanding what actually broke.
+
+Second, it must be \textbf{validation-aware}. A generated patch should not be treated as useful merely because
+it looks plausible in text. Practical repair demands a feedback loop in which the patch is applied and the
+relevant CI commands are re-executed.
+
+Third, it must be \textbf{safety-aware}. The system must recognize risky conditions, avoid touching forbidden or
+sensitive files, and prefer preview, re-run, or escalation modes over automation when evidence is weak or the
+stakes are high.
+
+PatchOps is designed around these three requirements. The resulting system is not a general autonomous software
+engineer; it is a scoped CI-repair agent whose primary value lies in disciplined decision making under noisy and
+incomplete evidence.
+
+\section{Research Questions}
+
+This thesis is organized around five fixed research questions:
+
+\begin{enumerate}
+\item Does repository-aware context improve CI/CD failure diagnosis and fault localization compared with log-only
+prompting?
+\item Does PatchOps generate patches that apply cleanly and improve CI repair success compared with simpler LLM
+baselines?
+\item Does a safety-gated decision policy reduce unsafe or inappropriate repair attempts?
+\item Can PatchOps distinguish repairable failures from transient or flaky failures where re-running is a better
+action than patching?
+\item What is the cost and latency of running PatchOps in a realistic GitHub workflow?
+\end{enumerate}
+
+These questions keep the work grounded. They separate diagnosis from repair, repair from safety, and automation
+from practicality. They also ensure that the thesis does not collapse into a vague ``AI for DevOps'' claim.
+
+\section{Contributions}
+
+The contributions of this thesis are summarized as follows:
+
+\begin{enumerate}
+\item \textbf{A system contribution:} PatchOps, an end-to-end repository-aware repair agent for GitHub Actions
+failures that integrates diagnosis, localization, patch planning, generation, validation, and decision making.
+\item \textbf{A methodological contribution:} a staged repair architecture that treats CI repair as a
+risk-sensitive decision process rather than a patch-generation task alone.
+\item \textbf{A safety contribution:} explicit support for patch, preview, re-run, escalate, and abstain actions,
+along with safety-gated controls over automated behavior.
+\item \textbf{An evaluation contribution:} a benchmarked study that reports not only diagnosis and repair
+metrics, but also unsafe-edit rate, abstention accuracy, calibration-oriented selective metrics, and
+patch-plausibility indicators.
+\item \textbf{An empirical contribution:} a set of findings showing that localization improvements alone do not
+solve CI repair, that green CI outcomes require honesty checks, and that abstention must be engineered rather
+than assumed.
+\end{enumerate}
+
+\section{Thesis Organization}
+
+The remainder of this thesis is organized as follows. Chapter 2 reviews the background and related work on LLM
+agents, CI failure diagnosis, automated program repair, safety, calibration, and abstention. Chapter 3 defines
+the problem, scope, and safety requirements of PatchOps. Chapter 4 presents the system design and architecture,
+including the decision pipeline and validation loop. Chapter 5 describes the implementation of the PatchOps
+engine and its supporting modules. Chapter 6 explains the experimental methodology, datasets, baselines, and
+evaluation metrics. Chapter 7 reports the empirical results, structured around the thesis's four headline
+findings. Chapter 8 discusses the broader meaning of these findings and their implications for practical CI
+repair agents. Chapter 9 examines threats to validity and current limitations. Chapter 10 concludes the thesis
+and outlines future research directions, with particular emphasis on semantic repair and stronger verification.
+
+\section{Chapter Conclusion}
+
+This chapter has introduced the PatchOps thesis, its motivation, research questions, and contributions. It has
+also established the central framing used throughout the document: CI repair is not only a patch-generation
+problem, but a risk-sensitive decision problem requiring repository context, validation, safety gates, and
+engineered abstention. The next chapter situates this framing within the related literature.

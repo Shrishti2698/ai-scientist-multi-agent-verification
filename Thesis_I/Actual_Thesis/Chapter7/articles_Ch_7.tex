@@ -1,0 +1,214 @@
+\section{Introduction}
+
+This chapter presents the evaluation of AI-Scientist. Following the methodology of Chapter~6, the evaluation is
+organized around the qualities the system is designed to deliver --- evidence grounding, claim-level verification,
+calibrated confidence, contradiction handling, honest abstention, and traceable reasoning --- and is illustrated
+through representative case studies spanning medicine, computer science, biology, and psychology. The chapter then
+compares the full multi-agent system against the single-agent and RAG baselines on the shared retrieval substrate.
+
+The aim of the chapter is not to compress trustworthiness into a single number, but to show \emph{how} the system
+reasons: which conclusions it grounds, how its confidence responds to evidence, when it abstains, and how its
+behaviour differs from the conventional alternatives. Throughout, honest and cautious behaviour --- abstaining on
+thin evidence, surfacing contradictions --- is treated as a successful outcome rather than a shortfall.
+
+\section{Behaviour of the Verification Pipeline}
+
+Across the question set, the full pipeline exhibits a consistent and interpretable pattern. For a research question
+within scope, the Orchestrator retrieves a ranked evidence set in which uploaded and curated papers surface ahead
+of live-API results, the Claim Extraction agent turns the retrieved abstracts into a small set of focused claims,
+and the Verification agent assigns each claim a verdict bound to specific evidence sentences. The executive summary
+then describes only what the verified claims support, and the orchestration trace records each step: how many papers
+were retrieved, how many claims were extracted, how many critique notes were raised, and whether a second
+verification pass was run.
+
+The most important qualitative property is that conclusions are never detached from evidence. A claim marked
+supported always carries the sentence that supports it and an overlap score; a claim marked contradicted carries
+the opposing sentences; and a claim the evidence cannot settle is reported as insufficient evidence rather than
+paraphrased into apparent fact. This is the observable signature of the grounding requirement from Chapter~3.
+
+\section{Case Study: Medicine}
+
+Consider the medical question of whether metformin improves weight and metabolic outcomes in type~2 diabetes. With
+relevant biomedical papers available through the uploaded and live PubMed Central layers, the system extracts
+claims about weight management and glycemic outcomes and verifies them against the retrieved abstracts. Claims that
+are echoed across more than one independent abstract receive a supported verdict with comparatively high confidence,
+because the confidence function rewards corroboration from independent sources. Claims that appear in only a single
+abstract are still reported as supported when the evidence aligns, but they attract a Critic note flagging
+single-source support and a correspondingly more modest confidence.
+
+This case illustrates two design properties working together. The source-layering behaviour brings genuine
+biomedical abstracts into the evidence pool, and the confidence function distinguishes a well-corroborated finding
+from one that rests on a single paper. The user therefore sees not just an answer but a graded, source-attributed
+assessment.
+
+\section{Case Study: Computer Science}
+
+For the question of whether retrieval-augmented generation reduces hallucination in language models, evidence is
+drawn from arXiv through the live layer alongside any uploaded papers. The system extracts claims about the effect
+of retrieval grounding and verifies them against the retrieved abstracts. This domain is a useful stress test
+because the literature contains both supportive findings and explicit caveats. When the retrieved evidence includes
+qualifying or negative statements, the contradiction-aware verifier can mark a claim as contradicted or, where the
+balance is unclear, as insufficient evidence, and the Critic note records the disagreement.
+
+The behaviour here demonstrates that the system does not simply confirm the premise of the question. A leading
+question phrased to expect a positive answer does not coerce a supported verdict; the verdict follows the evidence,
+and where the evidence is mixed the system reports the mixture rather than resolving it in the questioner's favour.
+
+\section{Case Study: Biology}
+
+For the question of whether CRISPR/Cas9 correction of the sickle mutation is a promising treatment for sickle cell
+disease, the biomedical live layer supplies abstracts describing gene-editing outcomes. Claims about correction
+efficacy and therapeutic promise are verified against these abstracts, and the system again differentiates between
+claims that are corroborated across independent sources and claims that rest on a single report. Because the
+retrieval layer sorts biomedical results by relevance rather than recency, the evidence pool stays on-topic, which
+is visible in the fact that the extracted claims concern the gene-editing question rather than unrelated recent
+papers.
+
+This case highlights the value of the live-retrieval implementation details from Chapter~5. Relevance-sorted search
+and full-abstract extraction are what make the evidence usable; without them, the verifier would be grounding its
+verdicts in off-topic or empty abstracts.
+
+\section{Case Study: Psychology}
+
+For the question of how social-media use relates to adolescent depression and affect, the system retrieves
+psychological and clinical abstracts and extracts claims about the direction and strength of the association. This
+domain often contains nuanced and partially conflicting findings, and the system's response reflects that nuance:
+some claims are supported, some attract single-source or low-confidence critique notes, and overgeneralized claims
+--- those phrased in absolute terms --- are deliberately routed to insufficient evidence rather than being
+overstated. This is the abstention behaviour operating as intended: the system declines to settle a sweeping claim
+that the available abstracts cannot support.
+
+\section{Source Layering in Practice}
+
+Across all four case studies, the reported source of each retrieved paper confirms that the layered evidence model
+behaves as specified. Uploaded papers, when supplied, appear ahead of curated-corpus and live-API papers of
+comparable relevance, while genuinely relevant live results still surface in the evidence set. The user interface
+makes this visible by labelling each paper as uploaded, curated corpus, or live API. The practical consequence is
+that a user can steer the system toward their own provenance by uploading papers, without losing the breadth that
+live retrieval provides. Table~\ref{tab:source-layers} summarizes the role of each layer.
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{The three evidence layers and their role in verification.}
+\label{tab:source-layers}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.24\textwidth} >{\raggedright\arraybackslash}p{0.18\textwidth} >{\raggedright\arraybackslash}X}
+\toprule
+Layer & Priority & Role in the evaluation \\
+\midrule
+Uploaded papers & Highest & User-provided provenance; surfaces first when relevant; lets the user ground the answer in chosen sources. \\
+Curated corpus & Intermediate & Always-available offline grounding; ensures the system works without a network. \\
+Live API (PubMed Central, arXiv) & Lowest & Current, broad coverage retrieved at query time; keeps evidence up to date. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Confidence Behaviour}
+
+A central evaluation question is whether the per-claim confidence is a usable signal. Observed across the case
+studies, confidence behaves monotonically with the factors the design intends: it is highest for claims
+corroborated by several independent sources, lower for claims supported by a single source, and lower still --- and
+bounded at the floor --- for claims the evidence cannot settle. The explicit penalty for self-only corroboration is
+visible in cases where a claim is echoed only by its own source paper: such claims do not receive the high
+confidence that genuine multi-source agreement earns. Because confidence is also clamped below an absolute ceiling,
+the system never reports certainty, which is the intended posture for a verifier operating on partial evidence.
+
+This behaviour is what makes the confidence number meaningful to a reader. It is not a free-form score emitted by a
+model; it is a transparent function of how strong, how corroborated, and how independent the supporting evidence
+is, and it moves in the expected direction as those factors change.
+
+\section{Contradiction Handling and Abstention}
+
+The evaluation specifically exercises questions where the literature disagrees or where the evidence is thin. In
+these cases the system does not default to a confident answer. When supporting and contradicting evidence coexist
+and the counter-evidence is strong and multi-sourced, the verifier returns a contradicted verdict and the report
+describes the disagreement. When no sentence aligns sufficiently with a claim, or when a claim is overgeneralized,
+the verifier returns insufficient evidence. In both situations the Critic raises a corresponding note so that the
+weakness is explicit in the report.
+
+This is the behavioural core of the thesis's honesty claim. A system that always produced a confident supported
+verdict would be easy to build and impossible to trust. AI-Scientist instead makes its uncertainty and the
+literature's disagreement part of the output.
+
+\section{The Critic-Driven Re-Verification Loop}
+
+The adaptive loop is observable in the orchestration trace. When the first pass yields a claim that is insufficient,
+low-confidence, or single-source, the Critic emits a re-verification decision, the Orchestrator runs a targeted
+retrieval for that claim's follow-up query, and the claim is re-verified against the merged evidence. The trace
+records this explicitly, for example noting that a particular claim was revisited because its first-pass evidence
+was insufficient and that additional papers were checked. Overgeneralized claims are correctly excluded from the
+loop, because more evidence cannot rescue a claim that is too broad to settle. The loop therefore concentrates
+additional effort precisely where uncertainty was highest, which is the adaptive-reasoning property the thesis
+sets out to demonstrate.
+
+\section{Comparison with the Baselines}
+
+Running the same questions through the single-agent and RAG baselines on the shared retrieval substrate isolates
+what the multi-agent design adds. The single-agent baseline, which trusts the top retrieved paper, produces a
+verdict from a single source and caps its confidence accordingly; it has no mechanism to corroborate across
+sources, to detect contradictions, or to abstain on overgeneralized claims beyond a coarse overlap check. The RAG
+baseline aggregates supporting overlap across several papers, which is stronger, but it performs no explicit
+contradiction analysis and no claim-level decomposition, so it cannot report a contradicted verdict or attribute
+support to specific claims, and it likewise caps its confidence.
+
+The full system differs on exactly the axes the thesis emphasizes. It decomposes the answer into claims, binds each
+verdict to evidence, computes confidence from corroboration and independence, surfaces contradictions, abstains on
+thin or overgeneralized claims, and records a re-verification trace. Table~\ref{tab:baseline-comparison} summarizes
+these capability differences, which are properties of the systems' designs rather than tuned outcomes.
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Capability comparison of the three systems on the shared retrieval substrate.}
+\label{tab:baseline-comparison}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X c c c}
+\toprule
+Capability & Single-agent & RAG & AI-Scientist \\
+\midrule
+Grounds answer in retrieved evidence & Partial & Yes & Yes \\
+Decomposes answer into checkable claims & No & No & Yes \\
+Per-claim verdict with attributed evidence & No & No & Yes \\
+Explicit contradiction handling & No & No & Yes \\
+Confidence from corroboration / independence & No (capped) & No (capped) & Yes \\
+Honest abstention on thin / broad claims & Coarse & Coarse & Yes \\
+Critic-driven re-verification & No & No & Yes \\
+Traceable orchestration record & No & No & Yes \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Domain Generality and Scope Control}
+
+The case studies span four distinct domains served by different live sources, and the pipeline behaves consistently
+across all of them: the same retrieve--extract--verify--criticize--synthesize workflow applies whether the question
+is biomedical, computational, biological, or psychological. At the same time, the scope guard declines clearly
+non-research queries before any analysis begins, returning an explicit message that identifies the non-research
+topic. This confirms the domain-generality requirement: the system is broad across legitimate research fields while
+refusing to act as a generic assistant for which its verification design provides no benefit.
+
+\section{Result Synthesis}
+
+The evaluation supports the thesis spine in a coherent way.
+
+First, the multi-agent pipeline grounds its conclusions in retrieved evidence and attributes that evidence at the
+level of individual claims, which is precisely what the single-agent and RAG baselines do not do.
+
+Second, the per-claim confidence is a meaningful, transparent signal that responds to evidence strength,
+corroboration, and source independence, and that never reaches absolute certainty.
+
+Third, the system handles disagreement and thin evidence honestly, returning contradicted or insufficient-evidence
+verdicts and surfacing the corresponding critique, rather than manufacturing a confident answer.
+
+Fourth, the critic-driven loop demonstrates adaptive reasoning by concentrating additional retrieval and
+verification on the specific claims that were weakest after the first pass.
+
+\section{Chapter Conclusion}
+
+This chapter presented the evaluation of AI-Scientist through cross-domain case studies and a comparison with the
+single-agent and RAG baselines. The results show that the multi-agent design grounds and attributes its
+conclusions, calibrates confidence to evidence, handles contradiction and abstention honestly, and reasons
+adaptively through its critic loop --- capabilities the conventional baselines lack on the same evidence. Taken
+together, these findings justify the central thesis claim: AI-Scientist is best understood not as a system that
+answers every question confidently, but as a reproducible, evidence-grounded, self-critical research assistant that
+is dependable when the evidence is clear and honest when it is not. The next chapter discusses the broader meaning
+of these findings.

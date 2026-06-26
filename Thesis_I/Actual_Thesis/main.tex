@@ -1,0 +1,18 @@
+% Compatibility entrypoint for Overleaf.
+% It supports three layouts:
+% 1. Actual_Thesis contents uploaded as the project root,
+% 2. an Actual_Thesis folder uploaded into the project root,
+% 3. the whole repository uploaded into the project root.
+\IfFileExists{thesis.tex}{%
+  \input{thesis.tex}%
+}{%
+  \IfFileExists{Actual_Thesis/thesis.tex}{%
+    \input{Actual_Thesis/thesis.tex}%
+  }{%
+    \IfFileExists{Thesis/Actual_Thesis/thesis.tex}{%
+      \input{Thesis/Actual_Thesis/thesis.tex}%
+    }{%
+      \errmessage{Could not locate thesis.tex from this entrypoint}%
+    }%
+  }%
+}

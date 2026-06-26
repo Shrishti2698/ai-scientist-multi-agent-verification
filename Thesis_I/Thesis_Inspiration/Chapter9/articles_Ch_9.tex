@@ -1,0 +1,217 @@
+\section{Introduction}
+
+This chapter describes the main threats to validity and limitations of the PatchOps thesis. The goal is not to
+weaken the contribution, but to state precisely where the evidence applies. PatchOps is an MTech-scale research
+prototype evaluated on bounded datasets and controlled harnesses. Its strongest claims concern safety-gated
+decision-making, abstention, localization bottlenecks, and measured negative results. Its weaker claims concern
+general repair success, broad production readiness, and semantic correctness beyond the available oracles.
+
+The limitations are organized using four standard categories: construct validity, internal validity, external
+validity, and conclusion validity. The chapter then summarizes the practical engineering limitations of the
+current system.
+
+\section{Construct Validity}
+
+Construct validity asks whether the thesis measures the concepts it claims to measure. In PatchOps, this issue
+is most visible around repair success, localization quality, safety, and patch plausibility.
+
+\subsection{CI Pass Is Not Full Correctness}
+
+The thesis uses CI Pass@1 because it is the natural benchmark signal for CI repair. However, a passing CI run is
+not equivalent to semantic correctness. A patch may pass the current tests while violating intended behavior,
+weakening assertions, deleting checks, or changing only the symptom. This limitation is fundamental to CI repair
+and APR, not only to PatchOps.
+
+PatchOps mitigates this threat by explicitly separating CI validation from semantic correctness. The thesis
+uses reward-hacking detection and patch-plausibility analysis to avoid treating every green or syntactically
+valid patch as trustworthy. Even so, these defenses are partial. They can catch specific dishonest or off-target
+patterns, but they cannot prove that a patch is functionally equivalent to the developer's intended fix.
+
+\subsection{File-Overlap Is a Proxy for On-Target Repair}
+
+The plausibility analysis uses overlap with the developer's changed files as a proxy for whether a generated
+patch is on target. This is useful because it is objective and scalable, but it is imperfect. A correct patch
+may edit a different file from the developer fix, especially if there are multiple legitimate repair locations.
+Conversely, a patch may edit a gold-overlapping file while still being semantically wrong.
+
+For this reason, the thesis describes plausibility as an on-target signal rather than as a correctness oracle.
+The result supports a safer auto-PR decision, not a proof of repair correctness.
+
+\subsection{Localization Metrics Capture Ranking, Not Understanding}
+
+Recall@k and Hit@k measure whether the true fix file appears in a ranked candidate list. These metrics are
+appropriate for comparing localizers, but they do not fully capture repository understanding. A localizer may
+rank the right file because of a lexical coincidence, or it may understand the failure but rank a nearby file
+outside the gold set. This affects all localization methods in the thesis.
+
+The mitigation is comparative rather than absolute. PatchOps evaluates lexical, LLM, embedding, and agentic
+approaches under the same gold-file criterion. The conclusion that these methods plateau below the target bar is
+therefore meaningful for the measured setup, even if the metric is not a complete measure of reasoning.
+
+\subsection{Safety Labels Are Operational}
+
+Safety in this thesis is defined operationally: forbidden file classes, secret or permission risks, deployment
+risks, flaky rerun cases, workflow weakening, reward-hacking patterns, and inappropriate automatic patching.
+This makes the safety benchmark measurable, but it does not cover every possible safety issue in a real
+repository. For example, a patch could be business-logic unsafe without touching an obviously forbidden file.
+
+The thesis therefore claims measured safety under defined policies, not universal safety. This is still useful:
+CI agents need explicit policies, and PatchOps demonstrates how such policies can be integrated into the repair
+decision.
+
+\section{Internal Validity}
+
+Internal validity asks whether the observed results are caused by the intended experimental factors rather than
+by bugs, leakage, or uncontrolled variation.
+
+\subsection{Pipeline Bugs and Regression Risk}
+
+PatchOps is a multi-stage system. A bug in log extraction, repository cloning, ranking, diff generation, or
+decision routing could affect multiple reported metrics. The project mitigates this risk through regression
+tests, acceptance tests, per-phase artifacts, and explicit amendments when bugs are discovered. For example, the
+localization ordering issue was corrected before the later localization conclusions were frozen.
+
+Nevertheless, implementation bugs remain possible. The thesis should be read as evidence from the current
+artifact, not as a proof that every pipeline component is bug-free.
+
+\subsection{Model Non-Determinism}
+
+LLM calls are not perfectly reproducible. Even with low-temperature settings and fixed prompts, provider-side
+model updates, decoding differences, and transient API behavior can change outputs. This risk is visible in the
+agentic localization phase, where abstention behavior differed across runs.
+
+PatchOps mitigates this risk by logging phase results, using deterministic components where possible, and
+adding a learned local classifier for the classification stage. The limitation remains for LLM-based
+localization and patch generation. Future repeated-run studies would strengthen variance estimates.
+
+\subsection{Local CI Reproduction}
+
+The Docker validation harness replays a restricted subset of GitHub Actions behavior. It is not a full GitHub
+Actions emulator. Differences in hosted runners, caches, service containers, custom actions, secrets, matrix
+jobs, and operating-system behavior can affect whether a failure reproduces locally.
+
+The thesis handles this by reporting reproducibility separately from repair success. Non-reproducible cases are
+not silently counted as repaired or failed repairs. However, the repair results apply only to the reproducible
+subset under the local harness.
+
+\subsection{Budget and Provider Constraints}
+
+Some experiments use cost-bounded model calls. This is appropriate for a practical thesis, but it also affects
+which methods are explored deeply. The agentic localizer, for example, was evaluated under a bounded step and
+budget regime with mid-tier and limited stronger-model probes. A larger budget, stronger reasoning model, or
+more sophisticated tool interface could change the absolute localization numbers.
+
+The thesis therefore frames the agentic result as an honest negative for the measured configuration, not as a
+universal impossibility result for all future agentic localization.
+
+\section{External Validity}
+
+External validity asks whether the results generalize beyond the evaluated datasets, languages, and repositories.
+
+\subsection{Python-First Benchmark Scope}
+
+The comparable benchmark results are Python-first because CI-Repair-Bench is Python-based. PatchOps also has
+live demonstration cases outside that exact benchmark scope, but those are treated as demonstrations rather
+than as benchmark evidence. The results should not be generalized automatically to JavaScript, Java, Go, Rust,
+mobile builds, or polyglot monorepos.
+
+The main architectural ideas--safety gates, abstention, CI validation, plausibility checks, and reward-hack
+detection--are language-agnostic in principle. The measured effectiveness of the current implementation is not.
+
+\subsection{GitHub Actions Scope}
+
+PatchOps targets GitHub Actions. Other CI systems such as GitLab CI, Jenkins, CircleCI, Buildkite, and Azure
+Pipelines have different configuration languages, permission models, caching behavior, log formats, and failure
+patterns. The thesis findings may transfer conceptually, but the implementation and taxonomy would need
+adaptation.
+
+\subsection{Benchmark Representativeness}
+
+CI-Repair-Bench provides real failures and is an appropriate benchmark for this project, but no benchmark can
+cover the full distribution of CI failures in the wild. The public benchmark is also low-risk dominated compared
+with the kinds of secret, permission, release, and deployment failures where abstention policy matters most.
+PatchOps addresses this by adding a labeled safety set, but that set is smaller and partly synthetic.
+
+As a result, the repair and localization results have stronger external validity for public Python CI failures
+than for high-risk enterprise pipelines. The safety results demonstrate policy behavior under defined cases, but
+larger real-world safety datasets would be needed for stronger generalization.
+
+\subsection{Synthetic-Heavy Decision-Gate Data}
+
+The Phase 15 learned decision gate uses the expanded 76-case Safety Set. This directly improves coverage over
+the original 20-case safety set, but it also introduces an important validity threat: most of the expanded cases
+are hand-authored synthetic cases. Such data is useful for testing policy behavior under labeled risk
+conditions, including adversarial reward-hack temptations, but it may also encode the author's labeling
+shortcuts. The Phase 15 result should therefore be read as an indicative labeled-set result, not as a field
+measurement from deployed CI pipelines.
+
+\subsection{Repository Size and Complexity}
+
+The experiments include real repositories, but repository complexity varies widely in practice. Very large
+monorepos, generated code, vendored dependencies, custom build systems, and service-backed integration tests may
+change both localization and validation behavior. The current retrieval and agentic tools are bounded and may
+not scale linearly to such settings.
+
+\section{Conclusion Validity}
+
+Conclusion validity asks whether the evidence is strong enough to support the stated conclusions.
+
+\subsection{Sample Sizes}
+
+Several experiments have modest sample sizes. The scaled diagnosis ablation uses \(n=30\), the repair linkage
+uses \(n=24\) reproducible cases, the original Phase 5 safety result uses \(n=20\), the Phase 15 decision-gate
+study uses \(n=76\), and the patch audit uses 66 produced patches. The held-out classifier and
+selective-prediction split is larger at \(n=118\), but it still does not eliminate sampling uncertainty.
+
+The thesis mitigates this by avoiding over-precise claims and by reporting negative results conservatively. For
+example, it does not claim that agentic localization can never work; it claims that the measured bounded agent
+does not beat the baselines on the evaluated slice. It does not claim zero universal risk; it reports zero
+unsafe auto-fixes under the evaluated safety definitions.
+
+For the learned decision gate specifically, the Wilson confidence intervals overlap with the hand-tuned
+threshold baseline at \(n=76\). The thesis therefore uses the phrase ``matches-or-beats'' and emphasizes removal
+of the hand-set thresholds rather than claiming a statistically separated victory.
+
+\subsection{Multiple Experiments and Narrative Selection}
+
+Because PatchOps went through many phases, there is a risk of selecting only the most favorable results. The
+writing mitigates this by foregrounding negative results and preserving the phase chronology in the source
+documents. The thesis narrative is built around the measured bottlenecks, not around a cherry-picked success
+case.
+
+\subsection{Threshold Choices}
+
+Several gates depend on thresholds: classifier confidence, plausibility score, risk level, and decision routing.
+Thresholds are necessary for a deployable system, but the exact defaults may not be optimal. The thesis treats
+them as operating points on a coverage-risk curve rather than as universal constants. Phase 15 reduces this
+threat for the low-risk act-versus-hold decision by replacing the old hand-set threshold with a learned
+calibrated gate, but the learned gate still has its own operating point and inherits the limitations of the
+Safety Set used to train and evaluate it.
+
+\section{Practical System Limitations}
+
+PatchOps is not production-ready in the broad sense. It demonstrates an end-to-end architecture and measured
+research claims, but several engineering limitations remain.
+
+First, the local validation harness supports only a restricted subset of common Python CI workflows. A complete
+system would need stronger handling for matrix builds, service containers, custom actions, caches, secrets,
+container jobs, and operating-system differences.
+
+Second, the current repair generator is not a strong semantic repair engine. The experiments show that once
+patches apply, semantic correctness remains the wall. Future work needs stronger program understanding,
+differential testing, invariant checking, or developer-in-the-loop review.
+
+Third, the repository navigator is bounded and model-limited. It provides useful evidence, but it is not yet a
+robust replacement for deterministic retrieval. Better tools, graph or AST structure, and stronger reasoning
+models may improve it.
+
+Fourth, the safety policy is necessarily incomplete. It captures important CI-specific hazards, but each
+organization would need to adapt forbidden paths, protected workflows, deployment rules, and approval policies.
+
+\section{Chapter Conclusion}
+
+The main limitations of PatchOps are bounded scope, modest sample sizes, proxy correctness metrics, local CI
+reproduction limits, and incomplete generalization beyond Python GitHub Actions. These limitations do not
+invalidate the central contribution, because the thesis is careful about what it claims: PatchOps is a measured
+safety-gated and abstention-aware CI repair system, not a universal CI repair solver. The next chapter concludes
+the thesis and outlines future work that follows directly from these limits.

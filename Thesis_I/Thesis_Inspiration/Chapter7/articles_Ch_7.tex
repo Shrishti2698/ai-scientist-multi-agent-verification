@@ -1,0 +1,512 @@
+\section{Introduction}
+
+This chapter presents the empirical results of PatchOps. The results are organized
+around four headline findings rather than around a chronological list of phases. This structure matters because
+the project includes both positive gains and honest negative results. The goal of the chapter is therefore not
+to maximize apparent success, but to show what the experiments establish about diagnosis, localization, repair,
+safety, abstention, and patch honesty.
+
+Every quantitative claim in this chapter is grounded in the canonical per-phase \texttt{findings.md} files. When
+summary documents and phase findings differ, the phase findings govern the wording used here. This is
+particularly important for the localization studies and for the agentic-abstention result, where the correct
+claim depends on reconciled runs rather than on an early single-run summary.
+
+\section{Diagnosis Quality and Early Benchmark Behavior}
+
+Before PatchOps can repair or abstain intelligently, it has to classify failures reasonably well. The scaled
+diagnosis ablation ladder provides the clearest diagnosis snapshot on a stratified CI-Repair-Bench subset
+(\(n=30\)) \cite{cirepairbench2026}. In that study, category accuracy was 0.83 for the cleaned-log condition and rose to 0.87 when the
+workflow YAML was added. Importantly, this gain came from workflow context rather than from deeper repository
+context. The full repository-aware configuration did not improve category accuracy beyond the workflow-aware
+setting on that slice.
+
+This result is modest rather than dramatic, but it matters. It shows that the diagnosis layer is reasonably
+competent and that workflow context is useful, while also suggesting that the primary bottleneck of PatchOps is
+not raw failure categorization. This interpretation is consistent with the overall project trajectory: category
+accuracy becomes usable relatively early, while later phases reveal that localization and semantic repair remain
+substantially harder.
+
+The same diagnosis ablation also exposes category asymmetry. PatchOps is strong on code linting, formatting,
+dependency issues, runtime errors, package installation, environment errors, assertion errors,
+documentation/docstring failures, and type checking on that slice. It is weaker on test failures and especially
+weak on configuration errors. This category split is important because it anticipates the later repair results:
+mechanical or localized failures are often understandable, while configuration-heavy and semantically ambiguous
+failures are much harder to route cleanly.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{F5_ablation_ladder.png}
+\caption{Diagnosis ablation ladder showing the effect of context and gating on diagnosis and localization.}
+\label{fig:ablation-ladder}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{F7_per_category.png}
+\caption{Per-category diagnosis behavior on the scaled benchmark slice.}
+\label{fig:per-category}
+\end{figure}
+
+\section{Fault Localization Remains Hard Across Tested Methods}
+
+The strongest multi-study result in the thesis is that fault localization remains the central bottleneck and
+that no tested method clears the target bar. This finding emerges cumulatively across the log-only,
+whole-repository, semantic-embedding, and bounded-agentic localization studies.
+
+\subsection{Log-Only Localization Strategies}
+
+The first direct localization study compared four strategies on a stratified CI-Repair-Bench subset (\(n=50\)):
+log-path ranking, category reranking, one-shot LLM prediction, and a hybrid strategy. The best result came from
+the corrected LLM-first hybrid, which reached Recall@3 of 0.32, Recall@1 of 0.27, and Hit@5 of 0.50. The LLM
+was the strongest single signal, while the deterministic methods remained cheaper but less complete.
+
+This was a real improvement over the earlier localization red flag around 0.29, but it was also an honest
+warning. Even the best strategy was still far below the advisor's target bar of 0.45. The phase therefore
+established two things simultaneously: localization can be improved by better ranking strategy, but the task is
+still genuinely difficult.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{F8_localization_recall.png}
+\caption{Log-only localization strategies. The corrected LLM-first hybrid is strongest but remains below the target bar.}
+\label{fig:phase6-localization}
+\end{figure}
+
+\subsection{Whole-Repository Retrieval}
+
+We next tested whether whole-repository retrieval could break that ceiling. In the
+deterministic full-repository study (\(n=30\), coverage 1.00), the fused \texttt{full\_repo} strategy became the
+best zero-cost retrieval method, reaching Recall@3 of 0.25, Hit@3 of 0.37, and Hit@5 of 0.40. This improved on
+the best deterministic log-only baseline, but it still did not approach the 0.45 target. A particularly useful
+sub-finding was that pure BM25 over the whole repository was actually harmful on its own, collapsing to
+Recall@3 of 0.06. The retrieval signal only became useful when fused with the precise log-path information.
+
+The same phase also measured a paid LLM lever on top of the retrieval stack. The LLM hybrid reproduced the
+Recall@3 0.32 result from the earlier log-only study, but an LLM rerank over the BM25 pool did not help whole-repo retrieval. In
+fact, it reduced the \texttt{full\_repo} result from Recall@3 0.25 to 0.21. This is one of the most instructive
+negative results in the project: adding an LLM on top of lexical retrieval did not solve the localization
+ceiling.
+
+\subsection{Semantic Embedding Retrieval}
+
+We then tested the remaining obvious retrieval lever: semantic embeddings. The result was another honest
+negative. On the same \(n=30\) draw, \texttt{full\_repo\_embed} reached Recall@3 0.21, which did not beat the
+deterministic BM25 fusion at 0.25. It traded a little top-3 precision for slightly better depth at rank 5, but
+it still failed to cross the target bar.
+
+By the end of this retrieval comparison, PatchOps had measured three distinct retrieval families on this task:
+
+\begin{enumerate}
+\item lexical whole-repository retrieval, peaking at Recall@3 0.25,
+\item one-shot LLM reranking or hybridization, peaking around Recall@3 0.27--0.32, and
+\item semantic embedding reranking, at Recall@3 0.21.
+\end{enumerate}
+
+All three remained below 0.45. This is the point at which the thesis can defend a scoped interpretation:
+localization in this setting is not merely solved by swapping retrieval methods. Across the methods tested here,
+simple retrieval is insufficient, and the residual difficulty appears to involve repository reasoning.
+
+\subsection{Bounded Agentic Exploration}
+
+The final major localization lever was bounded agentic exploration over a repository clone. This is
+where the reconciliation note matters most. The canonical result for the gpt-4o-mini agent on the \(n=30\)
+seed-7 slice is Recall@3 0.24, with average latency 19.9 seconds per instance and a high forced-fallback rate.
+The agent therefore slightly edges the deterministic full-repository baseline but does not beat the LLM hybrid
+and remains far below 0.45.
+
+This result is powerful precisely because it is the fourth negative. After lexical retrieval, LLM one-shot
+reranking, semantic embeddings, and now agentic exploration, localization still does not cross the bar. The
+task appears bottlenecked by repository reasoning difficulty in this evaluated setting rather than by the
+absence of one more retrieval heuristic.
+
+There is one important nuance. The agent does occasionally show the \emph{possibility} of developer-style
+exploration helping where ranking fails. On the few instances where it actually commits to a \texttt{finish}
+action rather than timing out into fallback, its committed subset looks stronger than the deterministic baseline,
+and at least one clean win exists where repository exploration found a relevant fix file the retrieval baseline
+missed. However, these wins are too sparse and unstable to overturn the global conclusion.
+
+\subsection{Localization Conclusion}
+
+Taken together, these four localization studies support the first headline finding:
+\emph{across the four methods tested, simple retrieval is insufficient in this setting, and the residual
+difficulty appears to be repository reasoning.} The best measured values across these families remain clustered
+well below the target threshold. This does not mean retrieval is useless, and it is not a universal law about
+all possible localizers. It means that, for PatchOps and this benchmark setting, retrieval is necessary but not
+sufficient, and the downstream system must remain honest when localization is weak.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{F11_localization_strategies.png}
+\caption{Localization strategies across Phases 6, 8, and 10. None clears the 0.45 Recall@3 target.}
+\label{fig:localization-strategies}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{F18_agent_localization.png}
+\caption{Agentic localization result and termination behavior. Agentic exploration is useful in isolated cases but does not clear the localization plateau.}
+\label{fig:agent-localization}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Headline localization results for the localization bottleneck study.}
+\label{tab:localization-headline}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{0.29\textwidth}
+  c
+  c
+  >{\raggedright\arraybackslash}X
+}
+\toprule
+Method family & Sample & Recall@3 & Interpretation \\
+\midrule
+LLM-first hybrid & \(n=50\) & 0.32 & Best overall measured localizer. \\
+Full-repository fused BM25 & \(n=30\) & 0.25 & Best zero-cost full-repo retrieval. \\
+Embedding rerank & \(n=30\) & 0.21 & Does not beat lexical retrieval. \\
+Bounded agentic exploration & \(n=30\) & 0.23--0.24 & Does not beat the best hybrid. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent\textit{Comparability note.} The best hybrid result is measured on a 50-instance slice, whereas the
+whole-repository, embedding, and agentic rows are measured on a 30-instance slice. The fine-grained ordering
+between these families should therefore be read as indicative, while the robust conclusion is the shared
+plateau below the 0.45 Recall@3 target.
+
+\section{Better Localization Is Necessary but Not Sufficient for Repair}
+
+The second headline finding comes from the localization-to-repair linkage experiment. Here the
+methodology asked a decisive question: if localization improves and patches become cleaner, does CI Pass@1 rise
+with it?
+
+On the reproducible subset (\(n=24\)) of the scaled repair re-run, the ungated \texttt{raw\_llm} baseline reached
+Pass@1 0.12 with apply-rate 0.43. The gated \texttt{repo} variant, which used oracle changed-files context from
+the earlier setup, had coverage 0.29, apply-rate 0.29 among attempted cases, and Pass@1 0.00. The key result
+was the \texttt{repo\_full} variant: once real clone-based full-repository retrieval was used, apply-rate among
+attempted cases rose to 1.00, yet Pass@1 stayed 0.00.
+
+These two Pass@1 values are not directly comparable across variants: \texttt{raw\_llm} is the ungated baseline
+at 0.96 coverage, whereas \texttt{repo\_full} is the gated path at 0.29 coverage. The finding rests on the
+apply-rate-to-Pass@1 decoupling within the gated path, not on a direct cross-variant Pass@1 comparison.
+
+This is a central thesis result because it isolates a specific bottleneck transition. Earlier, one could have
+suspected that repair was failing mainly because the generated diffs did not even apply cleanly. The linkage study shows
+that once the apply-rate bottleneck is removed, the system still fails to make CI green on the gated path. The
+remaining problem is semantic correctness, not simply file selection or diff validity.
+
+In other words, localization improvement is necessary because it prevents invalid or off-tree patches, but it is
+not sufficient to produce correct repair. This is exactly why the thesis emphasizes honest abstention and safety
+controls. When the system reaches the semantic frontier, caution becomes more valuable than overconfident
+automation.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.70\textwidth]{F12_apply_bottleneck.png}
+\caption{Localization-to-repair linkage: full-repository retrieval removes the apply-rate bottleneck among attempted patches, but repair success remains blocked by semantic correctness.}
+\label{fig:apply-bottleneck}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F9_repair_passk.png}
+\caption{Docker repair evaluation on the reproducible subset. Ungated repair obtains some CI-green outcomes, while the gated policy remains conservative.}
+\label{fig:repair-passk}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Localization-to-repair linkage on the reproducible Docker subset.}
+\label{tab:repair-linkage}
+\begin{tabular}{lccc}
+\toprule
+Variant & Coverage & Apply-rate among attempted & CI Pass@1 \\
+\midrule
+\texttt{raw\_llm} & 0.96 & 0.43 & 0.12 \\
+\texttt{repo} & 0.29 & 0.29 & 0.00 \\
+\texttt{repo\_full} & 0.29 & 1.00 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Supporting Result: Learned Classification as a Reproducibility and Cost Result}
+
+The learned failure classifier adds a narrower but still important result. On a held-out test split of
+\(n=118\), the learned model reached exact accuracy 0.74, lenient accuracy 0.84, and macro-F1 0.58. The rule
+baseline, by contrast, achieved exact accuracy 0.37 and lenient accuracy 0.47. The learned model therefore
+nearly doubled the deterministic rule baseline and landed inside the LLM classifier's observed lenient accuracy
+band.
+
+This result should be interpreted carefully. The classifier is not a repair-success breakthrough. Its
+value is that it makes one part of the pipeline cheaper, more reproducible, and locally trainable while keeping
+accuracy competitive with the LLM path on the categories that dominate the dataset. This is why it belongs in
+the results chapter but not as the main headline. It strengthens the system scientifically without pretending to
+solve the core repair problem.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F13_classifier.png}
+\caption{Learned classifier compared with the rule baseline. The classifier is a reproducibility and cost contribution, not a repair-rate claim.}
+\label{fig:classifier}
+\end{figure}
+
+\section{CI-Green Is Not Enough}
+
+The third headline finding is that a green or plausible-looking result is not a sufficient indicator of
+correctness. PatchOps investigates this in two complementary ways: reward-hacking detection and patch
+plausibility analysis.
+
+\subsection{Reward Hacking}
+
+The reward-hacking audit asked whether any of the 66 produced patches achieved apparent progress by cheating rather
+than by fixing the underlying issue. The result was small but important: the observed cheat-rate was non-zero,
+with one detected reward-hacking patch among the 66 produced patches. That patch deleted a test and removed an
+assertion. The detector caught it, and the wired gate would block it.
+
+Equally important, none of the three CI-green patches in the run were hacky. This lets the thesis state the
+result honestly: reward hacking is not the dominant behavior of this model on this workload, but it is real
+enough to require explicit defenses. This is exactly the type of low-frequency, high-consequence behavior a
+safety-first CI agent should guard against.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F16_reward_hacking.png}
+\caption{Reward-hacking audit. The observed cheat rate is low but non-zero, justifying an explicit detector and gate.}
+\label{fig:reward-hacking}
+\end{figure}
+
+\subsection{Patch Plausibility}
+
+The plausibility study asked a different but related question: even when a patch looks syntactically reasonable and passes the
+safety gate, is it editing a file that the developer's actual fix touched? On the 66 produced patches in the
+validation set, the base on-target rate was only 0.14. In other words, most generated patches were not even
+editing a gold-overlapping file.
+
+The static plausibility score performed well as a discriminator, reaching AUC 0.77 overall, with evidence
+locality alone already at 0.75. When used as a gate, it materially improved auto-PR precision: from 0.14 at
+full coverage to 0.27 at 50\% coverage, 0.35 at 25\% coverage, and a peak around 0.50 at very low coverage.
+
+This is exactly the patch-level counterpart of the selective-prediction story from the abstention studies. At the diagnosis
+level, calibrated confidence tells PatchOps when to act. At the patch level, plausibility tells PatchOps when a
+patch should be previewed instead of being treated as an automatic action candidate.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F17_patch_plausibility.png}
+\caption{Plausibility gate. Precision improves as automatic action is restricted to more plausible patches.}
+\label{fig:patch-plausibility}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Patch honesty and plausibility results.}
+\label{tab:honesty-plausibility}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{0.28\textwidth}
+  c
+  >{\raggedright\arraybackslash}X
+}
+\toprule
+Result & Value & Interpretation \\
+\midrule
+Reward-hack patches & 1/66 & Low-frequency but real cheating behavior. \\
+CI-green patches that were hacky & 0/3 & No observed green patch was gamed in this run. \\
+Base on-target rate & 0.14 & Most produced patches do not edit a gold-overlapping file. \\
+Combined plausibility AUC & 0.77 & Static signals predict on-target behavior. \\
+Peak gated precision & \(\approx 0.50\) & Higher precision is possible at low coverage. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Abstention Must Be Engineered}
+
+The fourth headline finding emerges most clearly in the selective prediction and safety results. The thesis
+claim is not simply that PatchOps abstains. The claim is that \emph{good abstention must be engineered through
+external controls rather than left to the free-form model alone.}
+
+\subsection{Selective Prediction and Calibration}
+
+The selective-prediction study turns abstention into a rigorous operating characteristic. On the held-out classification split
+(\(n=118\)), the learned classifier's confidence produced a strong risk-coverage curve: base accuracy 0.84,
+AURC 0.051, and selective accuracy rising to 0.97 at 50\% coverage and 1.00 at 25\% coverage. By contrast, the
+current heuristic engine confidence was a poor abstention signal, with base accuracy 0.74, AURC 0.261, and
+erratic selective behavior.
+
+This is a major thesis-quality result. It shows that PatchOps can abstain intelligently when the right
+confidence signal is used, and that the current hand-rolled confidence should not be trusted as the main gating
+input. The same study also shows that confidence calibration matters. The learned classifier's raw expected
+calibration error of 0.224 was cut to 0.119 by isotonic calibration, making the emitted confidence easier to
+use as a stable decision threshold.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F14_risk_coverage.png}
+\caption{Risk-coverage behavior. Learned classifier confidence is a much stronger abstention signal than hand-rolled engine confidence.}
+\label{fig:risk-coverage}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.62\textwidth]{F15_reliability.png}
+\caption{Reliability diagram showing the value of isotonic calibration.}
+\label{fig:reliability}
+\end{figure}
+
+\subsection{The Learned Calibrated Decision Gate}
+
+The learned decision-gate study turns the earlier calibration lesson into an implemented decision policy. Earlier PatchOps versions
+used hand-set constants, including a low confidence floor and a high-confidence patch threshold, to decide when
+a low-risk case should act or hold. The learned gate replaces the low-risk act-versus-hold threshold with a learned,
+isotonic-calibrated decision gate over pre-generation signals: calibrated classifier confidence, category risk,
+flaky status, semantic ambiguity, log-named-file count, and evidence length.
+
+On the expanded Safety Set (\(n=76\)), the learned gate reaches act/hold accuracy 0.91 with a Wilson interval
+of [0.82, 0.95] under leave-one-out evaluation and 0.92 under five-fold evaluation, compared with 0.855 for the
+hand-tuned threshold policy. It is also well calibrated, with \(P(\mathrm{act})\) ECE approximately 0.07. The
+honest interpretation is matches-or-beats rather than a statistically separated win, because the confidence
+intervals overlap at this sample size. The important engineering result is that the decision is no longer
+explained by hand-set thresholds alone.
+
+The most concrete gain appears on the low-risk lane where the engine actually uses the learned gate. Among the
+15 cases routed to that lane, all 15 are true-patch cases. The learned gate acts on 15/15, while the hand-tuned
+thresholds act on only 11/15, recovering four confident patches that the older policy held back, with 0 over-act
+on that lane. This is a decision-quality result, not a Pass@1 result: it improves the act-versus-hold policy
+without claiming that semantic repair success is solved.
+
+This result should also be interpreted with its small trade-offs visible. Under leave-one-out evaluation, the
+learned gate incurs a marginal abstention and over-act cost relative to the hand-tuned policy
+\((0.95 \text{ vs. } 0.96;\ 3/56 \text{ vs. } 2/56)\), but it gains higher overall act/hold accuracy and
+recovers low-risk actions that the earlier policy held back.
+
+The same refinement also ships the earlier isotonic calibrator inside the classifier artifact. The emitted classifier
+confidence ECE falls from 0.18 to 0.06 in the held-out check, making calibrated confidence part of the engine
+rather than only an offline analysis. A related embedding-versus-TF-IDF classifier ablation is an honest null:
+neural embeddings reach lenient accuracy 0.66, below the shipped TF-IDF classifier at 0.83. This reinforces the
+earlier interpretation that classification is not the bottleneck and that simple lexical signals remain strong
+for this stage.
+
+The two calibration figures in this section refer to different evaluations: the earlier selective-prediction
+benchmark reports isotonic calibration reducing ECE from 0.224 to 0.119, while the learned decision-gate study reports the
+shipped classifier artifact on the later held-out check, where ECE falls from 0.18 to 0.06. They are therefore
+consistent calibration results, not competing measurements of the same run.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{F19_decision_gate.png}
+\caption{Learned decision gate. The calibrated policy matches-or-beats the hand-tuned threshold policy and recovers held-back low-risk actions without over-acting on that lane.}
+\label{fig:decision-gate}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Learned decision gate summary.}
+\label{tab:decision-gate}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+Policy & Act/hold acc. & Abstention acc. & Over-act & \(P(\mathrm{act})\) ECE & AURC \\
+\midrule
+Hand-tuned thresholds & 0.855 & 0.96 & 2/56 & -- & -- \\
+Learned gate, LOO & 0.908 [0.82, 0.95] & 0.95 & 3/56 & 0.072 & 0.106 \\
+Learned gate, 5-fold & 0.921 [0.84, 0.96] & 0.96 & 2/56 & 0.066 & 0.089 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Safety Set Evaluation}
+
+The earlier safety-set study already demonstrated the operational value of abstention-oriented behavior. On
+the labeled \(n=20\) safety benchmark, PatchOps achieved abstention accuracy 0.92, flaky F1 0.86, and 0/20
+unsafe auto-fixes. It also correctly abstained on all escalate and rerun cases, with one over-eager preview
+versus patch mismatch that was later addressed by the semantic ambiguity backstop.
+
+Methodologically, the most important part of this result is not that the benchmark is small, but that the
+decision classes are explicit. The system is being evaluated on whether it chooses the right kind of action, not
+only on whether it emits diffs. The Safety Set is later expanded to \(n=76\) for the learned decision-gate study, but the original
+numbers remain the original 20-case result and should be read with that denominator.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{F6_safety_gate.png}
+\caption{Safety Set behavior. The original 20-case result measures decision accuracy, abstention, and unsafe auto-fix behavior.}
+\label{fig:safety-gate}
+\end{figure}
+
+\subsection{Self-Abstention Nuance}
+
+The agentic localization phase supplies the most important cautionary nuance in the whole thesis. The gpt-4o-mini
+agent was explicitly given an \texttt{abstain} action, yet across two runs on the same slice it abstained only
+rarely and run-dependently: 0/30 in one run and 2/30 in the canonical reconciled run. When those abstentions
+did occur, they were justified. However, the correct conclusion is not that the model abstains well. The
+correct conclusion is that self-abstention is too rare and unstable to rely on.
+
+This is why the wording matters. The robust thesis claim is that the agent abstains \emph{rarely and
+run-dependently}, not never. That instability is itself a finding. It shows that if PatchOps is to abstain
+reliably, the abstention logic has to be engineered into the decision stack through calibrated confidence and
+external safety controls. The learned decision-gate result is the capstone of this argument: the act-versus-hold
+decision is explicitly learned and calibrated rather than left to self-abstention or hand-set thresholds alone.
+
+\section{Safety and Practicality as System Outcomes}
+
+The combined results also say something broader about the system's practical operating profile. On the safety
+benchmarks, PatchOps is conservative and generally asymmetric toward caution. On the repair benchmarks, the
+ungated baseline can produce more aggressive behavior and occasionally more green outcomes, but at the cost of
+weak guarantees and lower interpretability. The gated system is more trustworthy, but this trustworthiness is
+paid for with lower coverage.
+
+This trade-off is not a flaw in the thesis. It is part of the thesis claim. PatchOps is not trying to maximize
+raw patch volume. It is trying to define a repair agent that behaves sensibly when confidence and correctness
+signals are weak.
+
+The cost numbers also support this practical framing. The scaled diagnosis ablation remained in the low-dollar
+range, with approximately \$1.47 total spend for 120 diagnoses using the cheaper model configuration. The later
+whole-repository retrieval and learned-classifier studies together cost approximately \$0.57. The agentic localization study remained cheap in
+absolute dollar terms but expensive in latency, averaging about 20 seconds per instance and delivering no Recall@3
+gain over the best one-shot hybrid localizer. This makes it clear that agentic exploration is not currently the
+default practical choice.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{F3_token_cost.png}
+\caption{Token-cost profile for the scaled evaluation configuration.}
+\label{fig:token-cost}
+\end{figure}
+
+\section{Result Synthesis}
+
+The results chapter supports the thesis spine in a coherent way.
+
+First, diagnosis quality becomes serviceable relatively early, especially when workflow context is added, but it
+does not remove the deeper localization and repair bottlenecks.
+
+Second, localization remains the defining challenge, and repeated attempts to solve it through new retrieval
+mechanisms and bounded agentic exploration plateau below the desired threshold. This is the strongest evidence
+that, in the evaluated PatchOps setting, the unresolved part of CI repair appears to involve repository
+reasoning rather than simple matching alone.
+
+Third, once localization is improved enough to make patches apply cleanly, the next wall is semantic
+correctness. That transition is one of the clearest and most thesis-worthy findings in the project.
+
+Fourth, confidence and safety controls matter because the system cannot rely on the base agent to abstain
+reliably, and because CI-green or plausible-looking patches are not trustworthy enough on their own.
+The learned decision gate strengthens this point by replacing the old low-risk confidence threshold with a learned calibrated
+gate that matches-or-beats the threshold baseline while recovering held-back low-risk actions.
+
+\section{Chapter Conclusion}
+
+This chapter presented the empirical backbone of the PatchOps thesis. The results show that workflow context
+improves diagnosis modestly, that localization remains the central bottleneck across four different method
+families, that fixing localization is necessary but not sufficient for repair success, that a learned classifier
+can deliver strong reproducibility and cost benefits, that abstention becomes useful only when engineered
+through calibrated external controls, that the learned decision-gate study turns the act-versus-hold decision into a learned calibrated
+gate, and that CI-green is too weak a success criterion without reward-hack and plausibility defenses.
+
+Taken together, these results justify the central thesis claim: PatchOps is best understood not as a system that
+``solves'' CI repair, but as a reproducible, safety-gated, abstention-aware repair agent that remains honest
+about where repository reasoning and semantic repair are still hard. The next chapter synthesizes these results
+into the broader discussion and implications of the work.

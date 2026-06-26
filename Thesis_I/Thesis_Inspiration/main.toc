@@ -1,0 +1,178 @@
+\contentsline {chapter}{Approval}{9}{chapter*.1}%
+\contentsline {chapter}{Declaration}{11}{chapter*.2}%
+\contentsline {chapter}{Certificate}{13}{chapter*.3}%
+\contentsline {chapter}{Plagiarism Report}{15}{chapter*.4}%
+\contentsline {chapter}{Acknowledgment}{i}{chapter*.5}%
+\contentsline {chapter}{Abstract}{iii}{chapter*.6}%
+\contentsline {chapter}{List of Abbreviations}{xi}{chapter*.8}%
+\contentsline {chapter}{List of Symbols and Notations}{xiii}{chapter*.9}%
+\contentsline {chapter}{List of Figures}{xv}{chapter*.9}%
+\contentsline {chapter}{List of Tables}{xvii}{chapter*.10}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.12}%
+\contentsline {section}{\numberline {1.1}Research Context and Gap}{2}{section.13}%
+\contentsline {section}{\numberline {1.2}PatchOps Thesis Position}{2}{section.14}%
+\contentsline {section}{\numberline {1.3}Problem Motivation}{3}{section.19}%
+\contentsline {section}{\numberline {1.4}Research Questions}{4}{section.20}%
+\contentsline {section}{\numberline {1.5}Contributions}{4}{section.26}%
+\contentsline {section}{\numberline {1.6}Thesis Organization}{5}{section.32}%
+\contentsline {section}{\numberline {1.7}Chapter Conclusion}{5}{section.33}%
+\contentsline {chapter}{\numberline {2}Background and Related Work}{7}{chapter.34}%
+\contentsline {section}{\numberline {2.1}Introduction}{7}{section.35}%
+\contentsline {section}{\numberline {2.2}LLM-Based CI/CD Diagnosis and Remediation}{7}{section.36}%
+\contentsline {section}{\numberline {2.3}Automated Program Repair and Build Repair}{8}{section.37}%
+\contentsline {section}{\numberline {2.4}Why CI Repair Is Not the Same as Classical APR}{9}{section.38}%
+\contentsline {section}{\numberline {2.5}Overfitting, Plausibility, and Reward Hacking}{9}{section.39}%
+\contentsline {section}{\numberline {2.6}Benchmarks and Datasets}{10}{section.40}%
+\contentsline {section}{\numberline {2.7}Failure Taxonomy and the Diversity of CI Failures}{11}{section.41}%
+\contentsline {section}{\numberline {2.8}Flaky and Transient Failures}{11}{section.42}%
+\contentsline {section}{\numberline {2.9}Industry and Open-Source Landscape}{12}{section.43}%
+\contentsline {section}{\numberline {2.10}Implications for PatchOps Design}{12}{section.44}%
+\contentsline {section}{\numberline {2.11}Chapter Conclusion and Positioning}{13}{section.45}%
+\contentsline {chapter}{\numberline {3}Problem Statement}{15}{chapter.46}%
+\contentsline {section}{\numberline {3.1}Introduction}{15}{section.47}%
+\contentsline {section}{\numberline {3.2}Task Definition}{15}{section.48}%
+\contentsline {section}{\numberline {3.3}Decision Space}{16}{section.52}%
+\contentsline {section}{\numberline {3.4}Failure Taxonomy and Risk Framing}{16}{section.57}%
+\contentsline {section}{\numberline {3.5}Confidence, Learned Decision Gate, and Intended Actions}{17}{section.58}%
+\contentsline {section}{\numberline {3.6}Semantic Ambiguity and Human Judgement}{18}{section.64}%
+\contentsline {section}{\numberline {3.7}Safety Requirements}{19}{section.65}%
+\contentsline {section}{\numberline {3.8}Problem Boundaries and Scope}{20}{section.71}%
+\contentsline {section}{\numberline {3.9}Non-Goals}{20}{section.72}%
+\contentsline {section}{\numberline {3.10}From Problem Statement to Architecture}{21}{section.78}%
+\contentsline {section}{\numberline {3.11}Chapter Conclusion}{21}{section.79}%
+\contentsline {chapter}{\numberline {4}System Design}{23}{chapter.80}%
+\contentsline {section}{\numberline {4.1}Introduction}{23}{section.81}%
+\contentsline {section}{\numberline {4.2}Architectural Philosophy}{23}{section.82}%
+\contentsline {section}{\numberline {4.3}Current Implemented Workflow}{24}{section.87}%
+\contentsline {section}{\numberline {4.4}Stage 1: Log Extraction}{25}{section.99}%
+\contentsline {section}{\numberline {4.5}Stage 2: Failure Classification}{25}{section.100}%
+\contentsline {section}{\numberline {4.6}Stage 3: Flaky and Transient Detection}{25}{section.101}%
+\contentsline {section}{\numberline {4.7}Stage 4: Repository Context Retrieval}{26}{section.102}%
+\contentsline {section}{\numberline {4.8}Stage 5: Root-Cause Analysis}{26}{section.103}%
+\contentsline {section}{\numberline {4.9}Stage 6: Patch Planning and Intended Action}{26}{section.104}%
+\contentsline {section}{\numberline {4.10}Stage 6b: Learned Decision Gate}{27}{section.105}%
+\contentsline {section}{\numberline {4.11}Stage 7: Semantic Ambiguity Backstop}{28}{section.107}%
+\contentsline {section}{\numberline {4.12}Stage 8: Patch Generation}{28}{section.108}%
+\contentsline {section}{\numberline {4.13}Stage 9: Safety Gate}{29}{section.109}%
+\contentsline {section}{\numberline {4.14}Stage 10: Plausibility Gate}{29}{section.110}%
+\contentsline {section}{\numberline {4.15}Final Decision and Trace}{29}{section.111}%
+\contentsline {section}{\numberline {4.16}Current Workflow as a Figure}{30}{section.112}%
+\contentsline {section}{\numberline {4.17}Validation Harness and Target Agentic Architecture}{31}{section.114}%
+\contentsline {section}{\numberline {4.18}Implemented Extensions and Target Growth}{31}{section.115}%
+\contentsline {section}{\numberline {4.19}Why the Architecture Matches the Thesis Claim}{32}{section.116}%
+\contentsline {section}{\numberline {4.20}Chapter Conclusion}{32}{section.121}%
+\contentsline {chapter}{\numberline {5}Implementation}{33}{chapter.122}%
+\contentsline {section}{\numberline {5.1}Introduction}{33}{section.123}%
+\contentsline {section}{\numberline {5.2}Implementation Structure}{33}{section.124}%
+\contentsline {section}{\numberline {5.3}The Engine Entry Point}{34}{section.130}%
+\contentsline {section}{\numberline {5.4}Evidence Compression and Classification}{34}{section.131}%
+\contentsline {section}{\numberline {5.5}Provider-Agnostic LLM Layer}{34}{section.132}%
+\contentsline {section}{\numberline {5.6}Repository Context and Localization}{35}{section.133}%
+\contentsline {section}{\numberline {5.7}Root-Cause Analysis and Patch Planning}{35}{section.134}%
+\contentsline {section}{\numberline {5.8}Patch Generation}{36}{section.135}%
+\contentsline {section}{\numberline {5.9}Safety and Plausibility Controls}{36}{section.136}%
+\contentsline {section}{\numberline {5.10}Learned Classifier Integration}{36}{section.137}%
+\contentsline {section}{\numberline {5.11}Validation Harness}{37}{section.138}%
+\contentsline {section}{\numberline {5.12}Benchmarks as First-Class Implementation Clients}{37}{section.139}%
+\contentsline {section}{\numberline {5.13}Acceptance and Regression Tests}{37}{section.140}%
+\contentsline {section}{\numberline {5.14}Implementation Principles}{38}{section.141}%
+\contentsline {section}{\numberline {5.15}Chapter Conclusion}{38}{section.147}%
+\contentsline {chapter}{\numberline {6}Methodology}{41}{chapter.148}%
+\contentsline {section}{\numberline {6.1}Introduction}{41}{section.149}%
+\contentsline {section}{\numberline {6.2}Evaluation Philosophy}{41}{section.150}%
+\contentsline {section}{\numberline {6.3}Phase-by-Phase Pre-Registration}{42}{section.151}%
+\contentsline {section}{\numberline {6.4}Datasets and Evaluation Sources}{42}{section.156}%
+\contentsline {section}{\numberline {6.5}Why a Multi-Source Design Is Necessary}{43}{section.158}%
+\contentsline {section}{\numberline {6.6}Research Questions and Evaluation Axes}{43}{section.159}%
+\contentsline {section}{\numberline {6.7}Baselines and Ablation Ladder}{44}{section.165}%
+\contentsline {section}{\numberline {6.8}Validation Strategy}{44}{section.166}%
+\contentsline {section}{\numberline {6.9}Metric Families}{45}{section.167}%
+\contentsline {section}{\numberline {6.10}Formal Metric Definitions}{46}{section.169}%
+\contentsline {subsection}{\numberline {6.10.1}Localization Metrics}{46}{subsection.170}%
+\contentsline {subsection}{\numberline {6.10.2}Repair Metrics}{46}{subsection.172}%
+\contentsline {subsection}{\numberline {6.10.3}Classification Metrics}{47}{subsection.175}%
+\contentsline {subsection}{\numberline {6.10.4}Decision and Abstention Metrics}{47}{subsection.177}%
+\contentsline {subsection}{\numberline {6.10.5}Selective Prediction and Calibration}{47}{subsection.180}%
+\contentsline {subsection}{\numberline {6.10.6}Plausibility and Ranking Quality}{48}{subsection.184}%
+\contentsline {subsection}{\numberline {6.10.7}Confidence Intervals}{48}{subsection.186}%
+\contentsline {section}{\numberline {6.11}Ground-Truth Design for Safety and Flakiness}{48}{section.188}%
+\contentsline {section}{\numberline {6.12}Localization Methodology as a Separate Study}{49}{section.189}%
+\contentsline {section}{\numberline {6.13}Classifier Methodology as a Reproducibility Study}{49}{section.190}%
+\contentsline {section}{\numberline {6.14}Selective Prediction and Calibration Methodology}{49}{section.191}%
+\contentsline {section}{\numberline {6.15}Learned Decision-Gate Methodology}{49}{section.192}%
+\contentsline {section}{\numberline {6.16}Agentic Localization Methodology}{50}{section.193}%
+\contentsline {section}{\numberline {6.17}Threats to Validity Built Into the Methodology}{50}{section.194}%
+\contentsline {section}{\numberline {6.18}Methodological Honesty Rules}{51}{section.195}%
+\contentsline {section}{\numberline {6.19}Chapter Conclusion}{51}{section.196}%
+\contentsline {chapter}{\numberline {7}Results}{53}{chapter.197}%
+\contentsline {section}{\numberline {7.1}Introduction}{53}{section.198}%
+\contentsline {section}{\numberline {7.2}Diagnosis Quality and Early Benchmark Behavior}{53}{section.199}%
+\contentsline {section}{\numberline {7.3}Fault Localization Remains Hard Across Tested Methods}{55}{section.202}%
+\contentsline {subsection}{\numberline {7.3.1}Log-Only Localization Strategies}{55}{subsection.203}%
+\contentsline {subsection}{\numberline {7.3.2}Whole-Repository Retrieval}{55}{subsection.205}%
+\contentsline {subsection}{\numberline {7.3.3}Semantic Embedding Retrieval}{56}{subsection.206}%
+\contentsline {subsection}{\numberline {7.3.4}Bounded Agentic Exploration}{56}{subsection.210}%
+\contentsline {subsection}{\numberline {7.3.5}Localization Conclusion}{57}{subsection.211}%
+\contentsline {section}{\numberline {7.4}Better Localization Is Necessary but Not Sufficient for Repair}{58}{section.215}%
+\contentsline {subsection}{\numberline {7.4.1}Supporting Result: Learned Classification as a Reproducibility and Cost Result}{60}{subsection.219}%
+\contentsline {section}{\numberline {7.5}CI-Green Is Not Enough}{60}{section.221}%
+\contentsline {subsection}{\numberline {7.5.1}Reward Hacking}{61}{subsection.222}%
+\contentsline {subsection}{\numberline {7.5.2}Patch Plausibility}{61}{subsection.224}%
+\contentsline {section}{\numberline {7.6}Abstention Must Be Engineered}{62}{section.227}%
+\contentsline {subsection}{\numberline {7.6.1}Selective Prediction and Calibration}{62}{subsection.228}%
+\contentsline {subsection}{\numberline {7.6.2}The Learned Calibrated Decision Gate}{64}{subsection.231}%
+\contentsline {subsection}{\numberline {7.6.3}Safety Set Evaluation}{65}{subsection.234}%
+\contentsline {subsection}{\numberline {7.6.4}Self-Abstention Nuance}{65}{subsection.236}%
+\contentsline {section}{\numberline {7.7}Safety and Practicality as System Outcomes}{66}{section.237}%
+\contentsline {section}{\numberline {7.8}Result Synthesis}{67}{section.239}%
+\contentsline {section}{\numberline {7.9}Chapter Conclusion}{67}{section.240}%
+\contentsline {chapter}{\numberline {8}Discussion}{69}{chapter.241}%
+\contentsline {section}{\numberline {8.1}Introduction}{69}{section.242}%
+\contentsline {section}{\numberline {8.2}Why the Negative Results Matter}{69}{section.243}%
+\contentsline {section}{\numberline {8.3}PatchOps as a Conditional Repair System}{70}{section.244}%
+\contentsline {section}{\numberline {8.4}Why Abstention Must Be Engineered}{70}{section.245}%
+\contentsline {section}{\numberline {8.5}CI-Green as a Partial Oracle}{71}{section.246}%
+\contentsline {section}{\numberline {8.6}The Role of the Learned Classifier}{71}{section.247}%
+\contentsline {section}{\numberline {8.7}The Learned Decision Gate as the Abstention Capstone}{72}{section.248}%
+\contentsline {section}{\numberline {8.8}Architecture: Why a Staged Pipeline Is Preferable Here}{72}{section.249}%
+\contentsline {section}{\numberline {8.9}Implications for Deployment}{73}{section.250}%
+\contentsline {section}{\numberline {8.10}Relation to Prior CI Repair Work}{74}{section.251}%
+\contentsline {section}{\numberline {8.11}Chapter Conclusion}{74}{section.252}%
+\contentsline {chapter}{\numberline {9}Limitations}{75}{chapter.253}%
+\contentsline {section}{\numberline {9.1}Introduction}{75}{section.254}%
+\contentsline {section}{\numberline {9.2}Construct Validity}{75}{section.255}%
+\contentsline {subsection}{\numberline {9.2.1}CI Pass Is Not Full Correctness}{75}{subsection.256}%
+\contentsline {subsection}{\numberline {9.2.2}File-Overlap Is a Proxy for On-Target Repair}{76}{subsection.257}%
+\contentsline {subsection}{\numberline {9.2.3}Localization Metrics Capture Ranking, Not Understanding}{76}{subsection.258}%
+\contentsline {subsection}{\numberline {9.2.4}Safety Labels Are Operational}{76}{subsection.259}%
+\contentsline {section}{\numberline {9.3}Internal Validity}{76}{section.260}%
+\contentsline {subsection}{\numberline {9.3.1}Pipeline Bugs and Regression Risk}{77}{subsection.261}%
+\contentsline {subsection}{\numberline {9.3.2}Model Non-Determinism}{77}{subsection.262}%
+\contentsline {subsection}{\numberline {9.3.3}Local CI Reproduction}{77}{subsection.263}%
+\contentsline {subsection}{\numberline {9.3.4}Budget and Provider Constraints}{77}{subsection.264}%
+\contentsline {section}{\numberline {9.4}External Validity}{78}{section.265}%
+\contentsline {subsection}{\numberline {9.4.1}Python-First Benchmark Scope}{78}{subsection.266}%
+\contentsline {subsection}{\numberline {9.4.2}GitHub Actions Scope}{78}{subsection.267}%
+\contentsline {subsection}{\numberline {9.4.3}Benchmark Representativeness}{78}{subsection.268}%
+\contentsline {subsection}{\numberline {9.4.4}Synthetic-Heavy Decision-Gate Data}{78}{subsection.269}%
+\contentsline {subsection}{\numberline {9.4.5}Repository Size and Complexity}{79}{subsection.270}%
+\contentsline {section}{\numberline {9.5}Conclusion Validity}{79}{section.271}%
+\contentsline {subsection}{\numberline {9.5.1}Sample Sizes}{79}{subsection.272}%
+\contentsline {subsection}{\numberline {9.5.2}Multiple Experiments and Narrative Selection}{79}{subsection.273}%
+\contentsline {subsection}{\numberline {9.5.3}Threshold Choices}{80}{subsection.274}%
+\contentsline {section}{\numberline {9.6}Practical System Limitations}{80}{section.275}%
+\contentsline {section}{\numberline {9.7}Chapter Conclusion}{80}{section.276}%
+\contentsline {chapter}{\numberline {10}Conclusion}{81}{chapter.277}%
+\contentsline {section}{\numberline {10.1}Conclusion}{81}{section.278}%
+\contentsline {section}{\numberline {10.2}Summary of Contributions}{81}{section.279}%
+\contentsline {section}{\numberline {10.3}Answers to the Research Questions}{82}{section.280}%
+\contentsline {section}{\numberline {10.4}Future Work}{83}{section.281}%
+\contentsline {section}{\numberline {10.5}Final Remarks}{84}{section.282}%
+\contentsline {chapter}{\numberline {A}Reproducibility Artifacts}{85}{appendix.283}%
+\contentsline {section}{\numberline {A.1}Purpose}{85}{section.284}%
+\contentsline {section}{\numberline {A.2}Canonical Result Sources}{85}{section.285}%
+\contentsline {section}{\numberline {A.3}Benchmark and Analysis Scripts}{85}{section.287}%
+\contentsline {section}{\numberline {A.4}Engine Modules}{86}{section.289}%
+\contentsline {chapter}{References}{89}{table.caption.290}%
+\contentsline {chapter}{Publication}{91}{appendix*.292}%
+\contentsline {chapter}{Author's Biography}{93}{appendix*.293}%

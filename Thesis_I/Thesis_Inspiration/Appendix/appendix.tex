@@ -1,0 +1,78 @@
+\chapter{Reproducibility Artifacts}\label{appendix:artifacts}
+
+\section{Purpose}
+
+This appendix records the main files that support the PatchOps thesis results. It is intended as a navigation
+aid for examiners and future maintainers rather than as a replacement for the full project repository. The
+thesis follows the rule that per-phase \texttt{findings.md} files are the canonical source of quantitative
+claims.
+
+\section{Canonical Result Sources}
+
+\begin{table}[!htbp]
+\centering
+\caption{Canonical result artifacts used by the thesis.}
+\label{tab:artifact-map}
+\begin{tabular}{p{0.28\textwidth}p{0.58\textwidth}}
+\toprule
+Artifact & Role in thesis \\
+\midrule
+\path{docs/THESIS_WRITING_GUIDE.md} & Thesis spine, claim discipline, chapter plan, and required Phase 15 updates. \\
+\path{docs/PROGRESS_REPORT.md} & Master status summary and contribution framing. \\
+\path{docs/results/metrics_plan.md} & Table and figure catalog, metric definitions, and current result values. \\
+\path{docs/progress/phase*/findings.md} & Canonical quantitative results for each phase. \\
+\path{docs/progress/phase*/conclusion.md} & Interpretation and scope of each phase result. \\
+\path{data/eval/*.jsonl} & Raw evaluation rows used by the benchmark scripts and figure generator. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Benchmark and Analysis Scripts}
+
+\begin{table}[!htbp]
+\centering
+\caption{Experiment scripts referenced by the methodology and results chapters.}
+\label{tab:script-map}
+\begin{tabular}{p{0.31\textwidth}p{0.55\textwidth}}
+\toprule
+Script & Purpose \\
+\midrule
+\path{benchmarks/run_eval.py} & Diagnosis, decision, and ablation experiments. \\
+\path{benchmarks/run_localization.py} & Log-path, hybrid, full-repository, and embedding localization studies. \\
+\path{benchmarks/run_repair_eval.py} & Docker-based Pass@1 repair evaluation. \\
+\path{benchmarks/train_classifier.py} & Learned failure classifier and calibration artifact. \\
+\path{benchmarks/run_selective.py} & Risk-coverage and calibration experiments. \\
+\path{benchmarks/audit_reward_hack.py} & Reward-hacking audit over produced patches. \\
+\path{benchmarks/analyze_plausibility.py} & Patch plausibility and on-target analysis. \\
+\path{benchmarks/run_agent_localization.py} & Bounded ReAct repository-navigation localizer. \\
+\path{benchmarks/train_decision_model.py} & Phase 15 learned act-versus-hold decision gate. \\
+\path{benchmarks/make_figures.py} & Regenerates the figures copied into \path{Figures/}. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Engine Modules}
+
+\begin{table}[!htbp]
+\centering
+\caption{Core implementation modules.}
+\label{tab:module-map}
+\begin{tabular}{p{0.31\textwidth}p{0.55\textwidth}}
+\toprule
+Module & Responsibility \\
+\midrule
+\path{patchops/engine/decide.py} & Main state machine and final action selection. \\
+\path{patchops/engine/log_extractor.py} & CI log compression and evidence extraction. \\
+\path{patchops/engine/classifier.py} & Rule/LLM/learned failure classification policy. \\
+\path{patchops/engine/ml_classifier.py} & Optional trained classifier and shipped calibrator. \\
+\path{patchops/engine/localizer.py} & Fault-localization strategies. \\
+\path{patchops/engine/repo_index.py} & Full-repository BM25 and embedding reranking. \\
+\path{patchops/engine/agent_localizer.py} & Bounded agentic repository exploration. \\
+\path{patchops/engine/safety_gate.py} & Deterministic patch safety checks. \\
+\path{patchops/engine/reward_hack.py} & Test-tampering and CI-gaming detection. \\
+\path{patchops/engine/patch_plausibility.py} & On-target and overfit-risk score. \\
+\path{patchops/engine/decision_gate.py} & Phase 15 learned calibrated act-versus-hold gate. \\
+\path{patchops/validation/} & Local CI-style re-execution harness. \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,195 @@
+\section{Introduction}
+
+The previous chapter reported the empirical results of PatchOps. This chapter discusses what those results mean
+for the design of AI agents that operate inside CI pipelines. The central point is that PatchOps should not be
+read as an attempt to maximize patch volume at any cost. It is better understood as a system that makes repair
+conditional: act when the failure signal, repository evidence, and safety checks support action; otherwise
+abstain, preview, rerun, or escalate.
+
+This distinction is important because CI repair is an unusually tempting domain for overclaiming. A failed CI
+run provides an apparently crisp objective, and a green rerun appears to offer a simple success signal. The
+experiments in this thesis show that the real problem is less tidy. The failure log may identify a symptom
+rather than the file that should be changed. A patch may apply cleanly but fail semantically. A green CI result
+may still be produced by an off-target or dishonest edit. An agent may be given the option to abstain and still
+rarely choose it. These observations are why the safety-gated and abstention-aware framing is not a decorative
+addition to PatchOps; it is the core design response to the empirical behavior of the task.
+
+\section{Why the Negative Results Matter}
+
+Several of the most important results in PatchOps are negative results. Full-repository lexical retrieval did
+not break the localization ceiling. LLM reranking did not fix whole-repository retrieval. Semantic embeddings
+did not outperform the fused lexical baseline. Bounded agentic exploration did not reliably beat cheaper
+localizers. Full-repository retrieval made generated patches apply, but did not make the gated system achieve
+CI Pass@1 on the measured repair subset.
+
+These results could be read superficially as a sequence of failed improvements. In a thesis, however, their
+value is different. They narrow the problem. Before these experiments, low repair success could have been
+explained by weak context, missing files, invalid diffs, poor classification, or lack of repository search. The
+later phases remove several of those explanations. Classification becomes competitive with an LLM through a
+local learned model. Full-repository retrieval removes the apply-rate bottleneck among attempted gated patches.
+Embeddings and agentic navigation test the obvious next localization levers. The remaining wall is therefore
+more specific: semantic repository reasoning and repair correctness.
+
+This sharpening is a real research contribution. A system that only reports end-to-end repair success can hide
+where the failure occurs. PatchOps decomposes the pipeline into diagnosis, localization, patch production,
+patch application, validation, safety, and abstention. That decomposition makes it possible to say not only that
+CI repair is hard, but where and why it remains hard in this implementation.
+
+\section{PatchOps as a Conditional Repair System}
+
+The most important design implication is that CI repair agents should be conditional systems rather than
+patch-emission systems. A patch-emission system treats every failure as an opportunity to generate a diff. A
+conditional repair system treats patching as only one possible decision among several. PatchOps therefore
+distinguishes between \texttt{patch}, \texttt{preview}, \texttt{rerun}, and \texttt{escalate}.
+
+This decision vocabulary changes the meaning of success. A correct rerun decision for a flaky failure is not a
+failure to repair; it is the right action. Escalating a secret, permission, deployment, or ambiguous failure is
+not a weakness if automatic editing would be unsafe. Previewing a low-plausibility patch is not indecision if
+the available evidence does not justify opening an automatic PR. In this framing, abstention is not the absence
+of intelligence. It is one of the system's safety behaviors.
+
+The results support this design. The labeled safety set shows that explicit decision classes can be evaluated.
+The selective-prediction experiment shows that abstention can be converted into a risk-coverage trade-off
+instead of a vague rule. The patch-plausibility experiment shows that even after a patch exists, the system can
+separate automatic action from preview. The reward-hacking detector shows that a patch can be rejected because
+it is dishonest, not merely because it fails to apply.
+
+\section{Why Abstention Must Be Engineered}
+
+One of the clearest lessons from the agentic localization study is that abstention cannot simply be delegated to
+the base model. The bounded repository-exploration agent had an explicit abstain action, but it used it rarely
+and run-dependently. When it did abstain, the abstentions were justified, but the frequency was too unstable to
+serve as the main safety mechanism.
+
+This result explains the need for PatchOps' external decision stack. The learned classifier confidence provides
+a stronger diagnosis-level abstention signal than the hand-written engine confidence. Phase 15 then turns that
+calibrated signal into a learned act-versus-hold gate for the low-risk lane, replacing the older hand-set
+threshold decision. Reward-hacking detection adds a hard veto for dishonest patches. Patch plausibility provides
+a patch-level signal for whether a diff should be auto-PR'd or merely previewed. Together, these components make
+abstention a property of the system architecture rather than a hopeful behavior of the LLM.
+
+This distinction also matters for accountability. If an LLM freely decides when to decline, the system has only
+a weak explanation for why it acted on one failure and not another. If abstention is tied to calibrated
+confidence, a learned act-versus-hold model, safety predicates, and patch-locality signals, the system can
+produce a traceable reason: low diagnosis confidence, high-risk edit target, reward-hacking pattern, or low
+plausibility. That traceability is essential for a CI agent that may open PRs in a real repository.
+
+\section{CI-Green as a Partial Oracle}
+
+CI validation is valuable, but it is not a complete correctness oracle. PatchOps uses CI re-execution because it
+is the strongest readily available feedback signal in this domain. If a generated fix still leaves CI red, the
+system has direct evidence that the repair failed. However, the reverse does not always hold. A green run may
+mean the underlying problem was fixed, but it may also mean the check was weakened, the failing test was removed,
+or the patch happened to satisfy the current test suite while missing the semantic intent.
+
+This is why the thesis connects CI repair to the broader APR overfitting literature. The risk is not only that
+an agent fails to fix a bug. The more subtle risk is that it produces a plausible patch that optimizes the
+observable validation signal without respecting the intended behavior. PatchOps' reward-hack and plausibility
+gates are responses to that risk. They do not prove semantic correctness, but they make the system less willing
+to treat every green or syntactically valid patch as acceptable.
+
+The phrase ``CI-validated repair'' should therefore be read carefully. It means that selected fixes are checked
+against CI, not that CI fully certifies correctness. The thesis contribution is the combination of CI validation
+with safety and abstention controls, not a claim that CI alone is enough.
+
+\section{The Role of the Learned Classifier}
+
+The learned classifier has a deliberately modest role in the thesis. It is not presented as the main technical
+breakthrough and it is not claimed to improve CI Pass@1. Its value is practical and methodological. It makes one
+stage of the pipeline cheaper, reproducible, and trainable from public data while matching the LLM's observed
+classification band on the measured split.
+
+This matters because CI agents are often evaluated under conditions that are difficult to reproduce exactly:
+closed models, drifting APIs, hidden prompts, and paid inference. Moving classification onto a small local model
+does not remove all of those issues, because the rest of PatchOps still uses LLMs for generation and reasoning.
+However, it reduces reliance on closed inference for a repeated pipeline stage and provides a stable confidence
+signal for selective prediction.
+
+The classifier is therefore best understood as infrastructure for trustworthy operation. It supports the
+abstention story, improves cost behavior, and strengthens reproducibility. It does not distract from the main
+finding that localization and semantic repair remain the hard parts.
+
+\section{The Learned Decision Gate as the Abstention Capstone}
+
+Phase 15 resolves a weakness that an examiner would naturally notice in the earlier architecture: if the system
+uses confidence thresholds, where did those thresholds come from? The answer in the final PatchOps artifact is
+that the low-risk act-versus-hold decision is no longer only a hand-set threshold. It is an optional learned,
+calibrated decision gate trained on the labeled Safety Set.
+
+This matters because it converts the phrase ``abstention must be engineered'' into an implemented mechanism. The
+gate uses signals available before patch generation and produces a calibrated probability of action. On the
+expanded 76-case Safety Set it matches-or-beats the hand-tuned threshold policy, with overlapping confidence
+intervals, and on the low-risk lane it recovers confident patch actions that the old thresholds held back. The
+correct discussion point is not that PatchOps suddenly repairs more CI failures end to end. The point is that the
+act-versus-hold boundary is now measured, calibrated, and inspectable.
+
+The result also preserves the conservative structure of PatchOps. The learned gate does not bypass flaky
+reruns, high-risk escalation, reward-hack detection, or patch plausibility. It only decides whether a low-risk
+case should proceed toward action or remain held for preview. This is the right level of learning for the thesis
+claim: use learned calibration to remove brittle constants, but keep deterministic safety boundaries in place.
+
+\section{Architecture: Why a Staged Pipeline Is Preferable Here}
+
+PatchOps uses a staged decision pipeline rather than an unconstrained multi-agent architecture. The experiments
+support that choice. In CI repair, each stage has a different failure mode: diagnosis can misclassify the
+failure, localization can retrieve the wrong file, patch generation can overfit, CI validation can be gamed, and
+the planner can act too aggressively. A staged architecture lets the system attach checks and evidence to each
+boundary.
+
+The agentic localization phase is especially informative here. Tool use is attractive because it resembles how
+developers investigate repositories: search, read, follow imports, and decide. In the measured setting, however,
+the bounded agent was slower than deterministic retrieval and did not provide a global localization gain. That
+does not mean agentic exploration is useless; the clean wins show that it can help in some cases. It does mean
+that agentic behavior should be introduced as a bounded component with fallback and external gates, not as an
+unrestricted replacement for the whole pipeline.
+
+The practical design lesson is that AI CI repair benefits from explicit control surfaces. Deterministic
+retrieval, learned classification, the learned decision gate, LLM reasoning, safety gates, plausibility checks,
+and validation runners each contribute different kinds of evidence. The thesis argues for orchestrating these
+pieces conservatively rather than trusting a single model call to diagnose, localize, patch, validate, and
+self-regulate.
+
+\section{Implications for Deployment}
+
+In a real engineering team, PatchOps would be most appropriate as a tiered assistant rather than a fully
+autonomous maintainer. For low-risk, log-localizable failures such as straightforward version bumps or narrowly
+scoped dependency issues, the system can propose or open a small PR after safety checks. For ambiguous failures,
+test-semantics failures, permissions issues, deployment failures, and low-plausibility patches, the system
+should provide a preview or escalation with evidence instead of changing code automatically.
+
+This operating model is less glamorous than a universal auto-fixer, but it is more realistic. CI pipelines are
+part of the trust boundary of a repository. A bad patch can hide a real regression, weaken tests, or modify
+workflow behavior in ways that have security and release consequences. The correct default is therefore not
+``always patch.'' The correct default is ``patch only when the evidence and gates justify it.''
+
+The results also suggest how teams could tune PatchOps. A team that prioritizes speed could lower abstention
+thresholds or the learned gate's operating point and accept more previewed patches. A team that manages critical
+infrastructure could require higher plausibility and confidence before auto-PR. The important point is that
+PatchOps exposes this as a measurable coverage-versus-risk trade-off rather than as a hidden prompt preference.
+
+\section{Relation to Prior CI Repair Work}
+
+The discussion also clarifies how PatchOps should be positioned relative to CI-Repair-Bench and related repair
+systems. PatchOps does not claim to be the first system to perform CI-verified repair, and it does not claim to
+beat the strongest reported repair baselines on raw Pass@1. Those would be the wrong claims. CI-Repair-Bench
+already establishes repository-level CI-verified repair as a benchmarked task, and its strongest baseline sets a
+clear reference point.
+
+PatchOps contributes along a different axis. It asks what an agent should do when repair evidence is weak, when
+patches are plausible but off-target, when the validation oracle can be gamed, and when the model does not
+reliably abstain on its own. This safety-and-abstention axis is not a substitute for repair accuracy; it is a
+complement to it. In practical CI automation, both are needed. A high-repair system that cannot distinguish safe
+from unsafe action is risky, while a safe system with low coverage is useful only on a narrower subset. PatchOps
+occupies the second side of that trade-off and makes the trade-off explicit.
+
+\section{Chapter Conclusion}
+
+This chapter interpreted the empirical results of PatchOps as evidence for conditional, safety-gated CI repair.
+The main discussion points are that negative results help isolate the true bottleneck, abstention must be
+engineered rather than entrusted to the model alone, Phase 15 turns the key low-risk act-versus-hold boundary
+into a learned calibrated gate, CI-green is only a partial correctness signal, and the staged architecture is
+justified by the distinct failure modes of diagnosis, localization, generation, validation, and decision-making.
+
+The next chapter states the limitations and threats to validity of these claims. It is intentionally explicit
+about scope, sample sizes, benchmark dependence, proxy metrics, and the gap between this thesis prototype and a
+production CI system.

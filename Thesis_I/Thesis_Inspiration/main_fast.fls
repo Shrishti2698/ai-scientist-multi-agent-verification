@@ -1,0 +1,750 @@
+PWD D:\personal\PatchOps\Thesis\Actual_Thesis
+INPUT C:\Users\Build91 Admin\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
+INPUT main_fast.tex
+OUTPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.log
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\book.cls
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\book.cls
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\bk12.clo
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\bk12.clo
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\bk12.clo
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
+INPUT .\HeadTail\metadata.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\metadata.tex
+INPUT .\HeadTail\metadata.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\metadata.tex
+INPUT HeadTail\metadata.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\geometry\geometry.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\geometry\geometry.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\iftex\ifvtex.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\iftex\ifvtex.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\geometry\geometry.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\fontenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\fontenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecrm1200.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\inputenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\inputenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\newtxtext.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\newtxtext.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xpatch\xpatch.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xpatch\xpatch.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xkeyval\xkeyval.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xkeyval\xkeyval.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\xkeyval\xkeyval.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\xkeyval\xkvutils.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\textcomp.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\textcomp.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xstring\xstring.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\xstring\xstring.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\xstring\xstring.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\carlisle\scalefnt.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\carlisle\scalefnt.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\mweights\mweights.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\fontaxes\fontaxes.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\fontaxes\fontaxes.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\figureversions\figureversions.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\figureversions\figureversions.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\newtxmath.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\newtxmath.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\oberdiek\centernot.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\oberdiek\centernot.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\binhex\binhex.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype-pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype-pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype-pdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\setspace\setspace.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\setspace\setspace.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\rotating.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\graphics\rotating.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\booktabs\booktabs.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\booktabs\booktabs.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\placeins\placeins.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\placeins\placeins.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\longtable.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\longtable.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\ltcaption.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\caption\ltcaption.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\titlesec\titlesec.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\titlesec\titlesec.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.aux
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.aux
+INPUT main_fast.aux
+OUTPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.aux
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\omlntxmi.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\omlntxmi.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\omlntxmi.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxexa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxexa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxexa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmsntxsy.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmsntxsy.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmsntxsy.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmxntxexx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmxntxexx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\lmxntxexx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-ptm.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-ptm.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-ptm.cfg
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT main_fast.out
+INPUT main_fast.out
+OUTPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.pdf
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+OUTPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT .\HeadTail\head_fast.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\head_fast.tex
+INPUT .\HeadTail\head_fast.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\head_fast.tex
+INPUT HeadTail\head_fast.tex
+INPUT .\HeadTail\blank.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\blank.tex
+INPUT .\HeadTail\blank.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\blank.tex
+INPUT HeadTail\blank.tex
+INPUT .\HeadTail\coverpage.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\coverpage.tex
+INPUT .\HeadTail\coverpage.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\coverpage.tex
+INPUT HeadTail\coverpage.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT Thesis_Title.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\newtx\ntx-ec-tlf.enc
+INPUT .\HeadTail\title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\title.tex
+INPUT .\HeadTail\title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\title.tex
+INPUT HeadTail\title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT Thesis_Title.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\IIITLOGO.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\IIITLOGO.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\IIITLOGO.png
+INPUT .\Figures\IIITLOGO.png
+INPUT .\Figures\IIITLOGO.png
+INPUT .\Figures\IIITLOGO.png
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ts1-qtmr.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\tex-gyre\q-ts1.enc
+INPUT .\HeadTail\dedication.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\dedication.tex
+INPUT .\HeadTail\dedication.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\dedication.tex
+INPUT HeadTail\dedication.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Italic-tlf-t1.tfm
+INPUT .\HeadTail\cer_approval.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\cer_approval.tex
+INPUT .\HeadTail\cer_approval.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\cer_approval.tex
+INPUT HeadTail\cer_approval.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT Thesis_Title.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT .\HeadTail\declaration.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\declaration.tex
+INPUT .\HeadTail\declaration.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\declaration.tex
+INPUT HeadTail\declaration.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT Thesis_Title.tex
+INPUT .\HeadTail\cert_2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\cert_2.tex
+INPUT .\HeadTail\cert_2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\cert_2.tex
+INPUT HeadTail\cert_2.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT .\Thesis_Title.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Thesis_Title.tex
+INPUT Thesis_Title.tex
+INPUT .\HeadTail\plagiarism_report.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\plagiarism_report.tex
+INPUT .\HeadTail\plagiarism_report.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\plagiarism_report.tex
+INPUT HeadTail\plagiarism_report.tex
+INPUT .\HeadTail\ack.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\ack.tex
+INPUT .\HeadTail\ack.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\ack.tex
+INPUT HeadTail\ack.tex
+INPUT .\HeadTail\abstract.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\abstract.tex
+INPUT .\HeadTail\abstract.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\abstract.tex
+INPUT HeadTail\abstract.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.toc
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.toc
+INPUT main_fast.toc
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ot1minntx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ot1minntx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ot1minntx.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msa.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msa.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msa.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msb.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msb.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msb.cfg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxmia.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxmia.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxmia.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsym.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsym.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsym.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsyc.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsyc.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\untxsyc.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+OUTPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.toc
+INPUT .\Symbol\abbreviation.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Symbol\abbreviation.tex
+INPUT .\Symbol\abbreviation.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Symbol\abbreviation.tex
+INPUT Symbol\abbreviation.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmi.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\NewTXMI.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\stxscr.tfm
+INPUT .\Symbol\symbols.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Symbol\symbols.tex
+INPUT .\Symbol\symbols.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Symbol\symbols.tex
+INPUT Symbol\symbols.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmi.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\NewTXMI.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\stxscr.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Regular-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\newtx\ntx-ot1-tlf.enc
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Regular-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
+INPUT .\Chapter1\chapter1.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter1\chapter1.tex
+INPUT .\Chapter1\chapter1.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter1\chapter1.tex
+INPUT Chapter1\chapter1.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT .\Chapter1\articles_Ch_1.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter1\articles_Ch_1.tex
+INPUT .\Chapter1\articles_Ch_1.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter1\articles_Ch_1.tex
+INPUT Chapter1\articles_Ch_1.tex
+INPUT .\Chapter2\chapter2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter2\chapter2.tex
+INPUT .\Chapter2\chapter2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter2\chapter2.tex
+INPUT Chapter2\chapter2.tex
+INPUT .\Chapter2\articles_Ch_2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter2\articles_Ch_2.tex
+INPUT .\Chapter2\articles_Ch_2.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter2\articles_Ch_2.tex
+INPUT Chapter2\articles_Ch_2.tex
+INPUT .\Chapter3\chapter3.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter3\chapter3.tex
+INPUT .\Chapter3\chapter3.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter3\chapter3.tex
+INPUT Chapter3\chapter3.tex
+INPUT .\Chapter3\articles_Ch_3.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter3\articles_Ch_3.tex
+INPUT .\Chapter3\articles_Ch_3.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter3\articles_Ch_3.tex
+INPUT Chapter3\articles_Ch_3.tex
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtt.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtt.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\tex\latex\newtx\t1ntxtt.fd
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\txfonts\t1xtt.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmi5.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsy5.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexx.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxmia.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsym.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxsyc.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntxexa.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\txfonts\t1xtt.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxsy.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmia.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaSTbb.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxsy.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-sc-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-sc-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-sc-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxexx.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txexs.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\newtx\ntx-ec-tlf-pc.enc
+INPUT .\Chapter4\chapter4.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter4\chapter4.tex
+INPUT .\Chapter4\chapter4.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter4\chapter4.tex
+INPUT Chapter4\chapter4.tex
+INPUT .\Chapter4\articles_Ch_4.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter4\articles_Ch_4.tex
+INPUT .\Chapter4\articles_Ch_4.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter4\articles_Ch_4.tex
+INPUT Chapter4\articles_Ch_4.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F20_decision_gate_architecture.jpg
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F20_decision_gate_architecture.jpg
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F20_decision_gate_architecture.jpg
+INPUT .\Figures\F20_decision_gate_architecture.jpg
+INPUT .\Figures\F20_decision_gate_architecture.jpg
+INPUT .\Figures\F20_decision_gate_architecture.jpg
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-t1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmi.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\NewTXMI.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\stxscr.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Regular-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Regular-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F21_pipeline_overview.jpg
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F21_pipeline_overview.jpg
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F21_pipeline_overview.jpg
+INPUT .\Figures\F21_pipeline_overview.jpg
+INPUT .\Figures\F21_pipeline_overview.jpg
+INPUT .\Figures\F21_pipeline_overview.jpg
+INPUT .\Chapter5\chapter5.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter5\chapter5.tex
+INPUT .\Chapter5\chapter5.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter5\chapter5.tex
+INPUT Chapter5\chapter5.tex
+INPUT .\Chapter5\articles_Ch_5.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter5\articles_Ch_5.tex
+INPUT .\Chapter5\articles_Ch_5.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter5\articles_Ch_5.tex
+INPUT Chapter5\articles_Ch_5.tex
+INPUT .\Chapter6\chapter6.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter6\chapter6.tex
+INPUT .\Chapter6\chapter6.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter6\chapter6.tex
+INPUT Chapter6\chapter6.tex
+INPUT .\Chapter6\articles_Ch_6.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter6\articles_Ch_6.tex
+INPUT .\Chapter6\articles_Ch_6.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter6\articles_Ch_6.tex
+INPUT Chapter6\articles_Ch_6.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F4_dataset_categories.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F4_dataset_categories.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F4_dataset_categories.png
+INPUT .\Figures\F4_dataset_categories.png
+INPUT .\Figures\F4_dataset_categories.png
+INPUT .\Figures\F4_dataset_categories.png
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\txfonts\t1xtt.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\txfonts\t1xtt.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Bold-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txbmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1r.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmia.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaSTbb.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-Regular-tlf-ot1.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
+INPUT .\Chapter7\chapter7.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter7\chapter7.tex
+INPUT .\Chapter7\chapter7.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter7\chapter7.tex
+INPUT Chapter7\chapter7.tex
+INPUT .\Chapter7\articles_Ch_7.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter7\articles_Ch_7.tex
+INPUT .\Chapter7\articles_Ch_7.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter7\articles_Ch_7.tex
+INPUT Chapter7\articles_Ch_7.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F5_ablation_ladder.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F5_ablation_ladder.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F5_ablation_ladder.png
+INPUT .\Figures\F5_ablation_ladder.png
+INPUT .\Figures\F5_ablation_ladder.png
+INPUT .\Figures\F5_ablation_ladder.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F7_per_category.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F7_per_category.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F7_per_category.png
+INPUT .\Figures\F7_per_category.png
+INPUT .\Figures\F7_per_category.png
+INPUT .\Figures\F7_per_category.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F8_localization_recall.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F8_localization_recall.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F8_localization_recall.png
+INPUT .\Figures\F8_localization_recall.png
+INPUT .\Figures\F8_localization_recall.png
+INPUT .\Figures\F8_localization_recall.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F11_localization_strategies.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F11_localization_strategies.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F11_localization_strategies.png
+INPUT .\Figures\F11_localization_strategies.png
+INPUT .\Figures\F11_localization_strategies.png
+INPUT .\Figures\F11_localization_strategies.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F18_agent_localization.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F18_agent_localization.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F18_agent_localization.png
+INPUT .\Figures\F18_agent_localization.png
+INPUT .\Figures\F18_agent_localization.png
+INPUT .\Figures\F18_agent_localization.png
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Bold-tlf-ot1.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxmia.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaSTbb.tfm
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F12_apply_bottleneck.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F12_apply_bottleneck.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F12_apply_bottleneck.png
+INPUT .\Figures\F12_apply_bottleneck.png
+INPUT .\Figures\F12_apply_bottleneck.png
+INPUT .\Figures\F12_apply_bottleneck.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F9_repair_passk.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F9_repair_passk.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F9_repair_passk.png
+INPUT .\Figures\F9_repair_passk.png
+INPUT .\Figures\F9_repair_passk.png
+INPUT .\Figures\F9_repair_passk.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F13_classifier.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F13_classifier.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F13_classifier.png
+INPUT .\Figures\F13_classifier.png
+INPUT .\Figures\F13_classifier.png
+INPUT .\Figures\F13_classifier.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F16_reward_hacking.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F16_reward_hacking.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F16_reward_hacking.png
+INPUT .\Figures\F16_reward_hacking.png
+INPUT .\Figures\F16_reward_hacking.png
+INPUT .\Figures\F16_reward_hacking.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F17_patch_plausibility.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F17_patch_plausibility.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F17_patch_plausibility.png
+INPUT .\Figures\F17_patch_plausibility.png
+INPUT .\Figures\F17_patch_plausibility.png
+INPUT .\Figures\F17_patch_plausibility.png
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxsy.vf
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F14_risk_coverage.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F14_risk_coverage.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F14_risk_coverage.png
+INPUT .\Figures\F14_risk_coverage.png
+INPUT .\Figures\F14_risk_coverage.png
+INPUT .\Figures\F14_risk_coverage.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F15_reliability.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F15_reliability.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F15_reliability.png
+INPUT .\Figures\F15_reliability.png
+INPUT .\Figures\F15_reliability.png
+INPUT .\Figures\F15_reliability.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F19_decision_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F19_decision_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F19_decision_gate.png
+INPUT .\Figures\F19_decision_gate.png
+INPUT .\Figures\F19_decision_gate.png
+INPUT .\Figures\F19_decision_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F6_safety_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F6_safety_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F6_safety_gate.png
+INPUT .\Figures\F6_safety_gate.png
+INPUT .\Figures\F6_safety_gate.png
+INPUT .\Figures\F6_safety_gate.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F3_token_cost.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F3_token_cost.png
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Figures\F3_token_cost.png
+INPUT .\Figures\F3_token_cost.png
+INPUT .\Figures\F3_token_cost.png
+INPUT .\Figures\F3_token_cost.png
+INPUT .\Chapter8\chapter8.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter8\chapter8.tex
+INPUT .\Chapter8\chapter8.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter8\chapter8.tex
+INPUT Chapter8\chapter8.tex
+INPUT .\Chapter8\articles_Ch_8.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter8\articles_Ch_8.tex
+INPUT .\Chapter8\articles_Ch_8.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter8\articles_Ch_8.tex
+INPUT Chapter8\articles_Ch_8.tex
+INPUT .\Chapter9\chapter9.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter9\chapter9.tex
+INPUT .\Chapter9\chapter9.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter9\chapter9.tex
+INPUT Chapter9\chapter9.tex
+INPUT .\Chapter9\articles_Ch_9.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter9\articles_Ch_9.tex
+INPUT .\Chapter9\articles_Ch_9.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter9\articles_Ch_9.tex
+INPUT Chapter9\articles_Ch_9.tex
+INPUT .\Chapter10\chapter10.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter10\chapter10.tex
+INPUT .\Chapter10\chapter10.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter10\chapter10.tex
+INPUT Chapter10\chapter10.tex
+INPUT .\Chapter10\articles_Ch_10.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter10\articles_Ch_10.tex
+INPUT .\Chapter10\articles_Ch_10.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Chapter10\articles_Ch_10.tex
+INPUT Chapter10\articles_Ch_10.tex
+INPUT .\Appendix\appendix.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Appendix\appendix.tex
+INPUT .\Appendix\appendix.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\Appendix\appendix.tex
+INPUT Appendix\appendix.tex
+INPUT .\HeadTail\tail_fast.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\tail_fast.tex
+INPUT .\HeadTail\tail_fast.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\tail_fast.tex
+INPUT HeadTail\tail_fast.tex
+INPUT .\HeadTail\fast_bibliography.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\fast_bibliography.tex
+INPUT .\HeadTail\fast_bibliography.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\fast_bibliography.tex
+INPUT HeadTail\fast_bibliography.tex
+INPUT .\HeadTail\publication.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\publication.tex
+INPUT .\HeadTail\publication.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\publication.tex
+INPUT HeadTail\publication.tex
+INPUT .\HeadTail\biodata_student.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\biodata_student.tex
+INPUT .\HeadTail\biodata_student.tex
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\HeadTail\biodata_student.tex
+INPUT HeadTail\biodata_student.tex
+INPUT main_fast.aux
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT D:\personal\PatchOps\Thesis\Actual_Thesis\main_fast.out
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\NewTXMI.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\NewTXMI.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\tex-gyre\qtmr.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\tex-gyre\qtmr.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\txfonts\t1xtt.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\txfonts\t1xtt.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txexs.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txexs.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txmiaX.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txmiaX.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txsys.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\txsys.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmb.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmb.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmr.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmr.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmri.pfb
+INPUT C:\Users\Build91 Admin\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\ztmri.pfb

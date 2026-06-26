@@ -1,0 +1,330 @@
+\section{Introduction}
+
+The previous chapter defined PatchOps as a risk-aware decision system for failed CI workflows. This chapter
+shows how that definition is realized architecturally. The most important high-level point is that PatchOps is
+not currently a free-form multi-agent swarm. It is a structured, multi-stage pipeline in which only some stages
+use LLM calls and the control flow itself remains explicit. This is a deliberate design decision, not a missing
+feature.
+
+The architecture follows the evidence discussed in the literature review. Repair systems are easier to defend,
+measure, and ablate when the stages and transitions are visible. PatchOps therefore separates deterministic
+preprocessing, LLM-backed reasoning, deterministic policy logic, and downstream validation into distinct steps.
+This separation gives the thesis a clear systems story: repository-aware repair is not one monolithic prompt,
+but a controlled workflow that transforms raw CI evidence into an operational decision.
+
+\section{Architectural Philosophy}
+
+PatchOps is best understood as a \emph{multi-stage decision pipeline} with an implemented validation harness
+around selected candidate patches. The core diagnosis-to-decision engine is single-pass, and the stronger
+multi-attempt verifier/rediagnosis loop remains the target architecture. The system already includes several
+LLM-backed components, but they are embedded in a deterministic state machine rather than being allowed to
+coordinate autonomously. In the terminology used throughout the project:
+
+\begin{enumerate}
+\item a \textbf{stage} is one step in the workflow,
+\item a \textbf{deterministic stage} uses fixed rules or thresholds and does not call an LLM,
+\item an \textbf{LLM-backed stage} performs bounded model-assisted reasoning, and
+\item an \textbf{agentic loop} is a repeated act-observe-revise process in which the result of one action feeds
+back into another reasoning step.
+\end{enumerate}
+
+This distinction is important because it clarifies what is already built and what is still proposed. The
+implemented PatchOps engine is a single pass from log to decision, and the project includes a local Docker
+validation harness for checking selected candidate fixes. The target architecture adds a tighter
+generate-validate-rediagnose loop and a verifier stage, which are the pieces that make the workflow genuinely
+agentic in the stronger sense.
+
+\section{Current Implemented Workflow}
+
+The current PatchOps workflow begins with a failed CI log and resolves to exactly one final action. The
+implemented stage order is:
+
+\begin{enumerate}
+\item log extraction,
+\item failure classification,
+\item flaky or transient detection,
+\item repository context retrieval,
+\item root-cause analysis,
+\item patch planning and intended-action selection,
+\item semantic ambiguity checking,
+\item patch generation when a code change is warranted,
+\item safety gating,
+\item plausibility gating for candidate automatic patches, and
+\item final decision emission.
+\end{enumerate}
+
+This design directly matches the system objective established in Chapter 3. The pipeline does not attempt to
+``think about everything at once.'' Instead, it narrows the decision space incrementally. Raw logs are first
+compressed into evidence. Evidence is then classified. The classification and extracted signals are used to
+decide whether the case is flaky, low risk, medium risk, high risk, or ambiguous. Only after these earlier
+filters does the system spend effort on candidate patch generation.
+
+In the refined Phase 15 architecture, the low-risk act-versus-hold branch can also be routed through a learned
+decision gate. This gate does not replace the deterministic routing for flaky, high-risk, or unknown cases.
+Instead, it replaces the earlier hand-set high-confidence threshold on the low-risk lane with a calibrated model
+that predicts whether PatchOps should act or hold before generation.
+
+\section{Stage 1: Log Extraction}
+
+The first stage is a deterministic log extractor that performs the same kind of evidence compression suggested by
+the CI diagnosis literature. Its responsibilities are to remove formatting noise, identify the failed step,
+extract a critical error block, and detect known failure signatures. This stage is crucial because CI logs are
+far too noisy to be treated as raw model context in every case.
+
+Architecturally, this stage serves two purposes. First, it reduces token cost and prompt clutter. Second, it
+creates structured evidence that can be reused by several later stages rather than forcing each one to reparse
+the original log independently. This is an example of design discipline that matters in systems research:
+expensive reasoning is deferred until the most relevant evidence has already been isolated.
+
+\section{Stage 2: Failure Classification}
+
+The classification stage maps the compressed failure evidence into the project's operational taxonomy. In the
+current architecture, this stage is LLM-primary but can also incorporate rule hints and other supporting
+signals. The output is not only a category label but also a confidence value and rationale. That confidence
+value becomes a control signal for later policy decisions, which is why classification is not merely a reporting
+step.
+
+This stage exists because subsequent decisions depend on failure type. A runtime version mismatch, a flaky
+network timeout, a missing secret, and a failing test should not be pushed through the same patching logic.
+Classification therefore acts as the bridge between raw diagnosis and risk-aware action selection.
+
+\section{Stage 3: Flaky and Transient Detection}
+
+Once the system has a compressed view of the failure, it checks whether the run looks flaky or transient. This
+stage is deterministic in the current implementation and is intentionally placed before repository reasoning and
+patch generation. The rationale is straightforward: if the observed failure is likely due to a network timeout,
+registry instability, connection reset, or similar transient issue, the safest response is rerun rather than
+repair.
+
+This ordering is one of the clearest expressions of the thesis contribution. Many repair systems ask ``can I
+patch this?'' before asking ``should I patch this?'' PatchOps flips that priority by giving transient handling an
+early exit branch in the architecture.
+
+\section{Stage 4: Repository Context Retrieval}
+
+If the failure is not classified as transient, PatchOps retrieves repository context. This stage is a key
+architectural differentiator from log-only diagnosis assistants. The retriever collects category-relevant files
+such as workflow YAML, manifests, configuration files, lockfiles, and evidence-linked source files. In the
+expanded full-repository mode described later in the thesis, it can also surface candidate fix files that the
+log never names directly.
+
+The architectural role of this stage is to make the later reasoning repository-aware without letting repository
+size overwhelm the system. PatchOps does not dump the full repository into the model context. Instead, it uses a
+bounded retrieval step to select files that are likely to matter for the current failure. This is one of the
+main ways the system balances practicality with context sensitivity.
+
+\section{Stage 5: Root-Cause Analysis}
+
+The root-cause analysis stage is LLM-backed. It takes the extracted evidence, the classification result, and the
+retrieved repository files, and produces a summarized explanation of the likely defect and the affected files.
+Architecturally, this stage converts local evidence into a hypothesis about what actually went wrong.
+
+This stage is distinct from classification for a reason. Classification says what type of failure occurred.
+Root-cause analysis says what in the repository most likely caused it. Keeping these two functions separate
+makes the system easier to analyze and avoids overloading a single prompt with too many tasks at once.
+
+\section{Stage 6: Patch Planning and Intended Action}
+
+After root-cause analysis, PatchOps computes an intended action through a deterministic planner. This stage
+combines failure category, confidence, and flaky status with the risk policy defined in Chapter 3. If the case
+is high risk or unknown, the planner escalates. If it is medium risk, the planner defaults to preview. If it is
+low risk and highly confident, the planner marks the case as a patch candidate. Otherwise, it remains
+preview-oriented.
+
+This stage is architecturally central because it is where repair becomes explicitly decision-theoretic. PatchOps
+does not treat patch generation as the default outcome. Instead, it introduces a planner whose job is to decide
+whether patch generation is even appropriate to pursue strongly.
+
+\section{Stage 6b: Learned Decision Gate}
+
+The learned decision gate is the implemented answer to the question of where the act-versus-hold threshold
+comes from. Earlier versions of PatchOps used hand-set constants to decide whether a low-risk case was confident
+enough for automatic patching. Phase 15 replaces that low-risk threshold test with an optional calibrated model
+trained on the labeled Safety Set.
+
+The gate uses only pre-generation signals: calibrated classifier confidence, category risk, flaky status,
+semantic ambiguity, the number of files named in the log, and evidence length. Its output is a calibrated
+probability of action. If the gate predicts act, the case may proceed toward patch generation and still must
+pass the safety and plausibility gates. If it predicts hold, the case remains preview-oriented. The rest of the
+policy is unchanged: flaky cases still rerun, high-risk and unknown cases still escalate, and low-plausibility
+or unsafe patches are still downgraded later.
+
+Architecturally, this means Stage 6b implements the Chapter 3 rule
+\(
+d_i = \textsc{act}
+\)
+iff
+\(
+p_{i,\mathrm{cal}} \ge 0.5
+\)
+on the low-risk lane only. It does not bypass the deterministic routing for flaky, medium-risk, high-risk, or
+unknown cases, and it does not overrule the later safety and plausibility gates. This separation matters
+because the learned model refines one bounded decision boundary inside the workflow rather than turning the
+entire system into an opaque end-to-end controller.
+
+This stage matters architecturally because it turns abstention from a threshold convention into an evaluated
+model component. It also keeps the design conservative: the learned gate is opt-in and graceful. If the model
+artifact is absent, the earlier deterministic threshold behavior remains available.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{F20_decision_gate_architecture.jpg}
+\caption[Learned decision gate architecture (Stage 6b)]{\textbf{Learned decision gate architecture (Stage 6b).}
+Deterministic, zero-cost pre-generation signals
+(calibrated classifier confidence, category-risk one-hot, flaky status, semantic ambiguity,
+log-named-file count, and evidence length) are standardized and passed to a calibrated
+logistic-regression model. The isotonic-calibrated probability of action $p_{\mathrm{cal}}$ is
+thresholded at $0.5$ on the low-risk lane to set act (proceed to patch, then the safety and
+plausibility gates) versus hold (preview for human review).}
+\label{fig:decision-gate-arch}
+\end{figure}
+
+\section{Stage 7: Semantic Ambiguity Backstop}
+
+Before any candidate automatic patch can survive the pipeline, the system applies a semantic ambiguity check.
+This check is deterministic and looks for signals associated with type errors, assertion mismatches, and logic
+exceptions. If such signals are present, an intended automatic patch is downgraded to preview.
+
+Architecturally, this backstop is important because it enforces a boundary between mechanical and semantic
+repair. It is also a good example of how PatchOps combines deterministic policy with LLM-driven reasoning:
+models may propose a plausible repair path, but a separate policy layer can still decide that the action should
+remain human-reviewed.
+
+\section{Stage 8: Patch Generation}
+
+When the planner and semantic guard still permit a code change, PatchOps generates a patch. This stage has both
+a deterministic rule path and an LLM path. The deterministic path handles flagship mechanical cases such as
+runtime version mismatches. The LLM path covers the broader set of repairable low- and medium-risk categories by
+producing candidate file edits and then deriving a unified diff from them.
+
+This hybrid architecture is significant for the thesis. It shows that PatchOps is not a pure LLM wrapper. Where
+reliable deterministic repair is possible, the system prefers it. Where broader reasoning is required, it uses
+an LLM under tightly constrained output expectations. The generated patch is accompanied by PR-facing metadata,
+including title and explanation, which supports the system's live-review workflow.
+
+\section{Stage 9: Safety Gate}
+
+The safety gate is the core defensive component in the implemented architecture. It examines candidate patches
+before they are allowed to remain in the automatic patch branch. The gate checks for forbidden paths,
+category-specific allow-list violations, secret introduction, excessive patch size, and reward-hacking patterns
+such as test tampering or check-disabling edits.
+
+If the gate blocks a patch, the system never proceeds as though the change were safe for automatic use.
+Depending on the case, the decision is downgraded to preview or escalate. This downgrade logic is architecturally
+important because it shows that safety is not a separate report generated after the fact. It actively changes
+the control flow of the system.
+
+\section{Stage 10: Plausibility Gate}
+
+Even a patch that passes the file-level safety gate may still be off-target. PatchOps therefore includes a
+plausibility gate that estimates whether the generated patch is likely to correspond to a real fix or whether it
+looks overfit. The plausibility score uses static signals such as evidence locality, minimality, category fit,
+source-touch behavior, deletion heaviness, and reward-hack absence.
+
+This stage is the architectural response to a central finding of the APR literature: plausible does not imply
+correct. In PatchOps, a low-plausibility patch is not discarded silently. Instead, it is downgraded from
+automatic patch to preview. This preserves usefulness while protecting the system from overclaiming confidence
+in weak candidates.
+
+\section{Final Decision and Trace}
+
+After the previous stages have run, PatchOps emits one final decision. This decision, together with the
+underlying evidence, reasoning trace, patch, and safety report, is returned as a structured result. The
+trace-based design is intentional. Because the thesis emphasizes trustworthy automation, it is not enough for
+the system to merely output an action. The action should be inspectable, explainable, and attributable to
+intermediate stages.
+
+This trace mechanism also supports the live demo interface and later analysis. A failed or downgraded patch is
+not a black box; the user can inspect whether the downgrade happened because of low confidence, a safety-policy
+violation, a semantic ambiguity signal, or low plausibility.
+
+\section{Current Workflow as a Figure}
+
+For thesis presentation, the current implemented system should be shown as a single-pass architecture diagram.
+That figure starts from a CI failure log, passes through log extraction, classification, flaky detection,
+repository retrieval, root-cause analysis, planning, patch generation, safety checking, and decision emission,
+and ends in one of the four explicit actions. This is the correct ``implemented pipeline'' figure for the
+thesis because it corresponds exactly to the built system rather than to a purely aspirational design.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{F21_pipeline_overview.jpg}
+\caption[The implemented PatchOps pipeline end-to-end]{\textbf{The implemented PatchOps pipeline end-to-end.}
+A CI failure log is extracted and classified
+(TF-IDF + calibrated logistic regression, then LLM adjudication); flaky failures rerun, otherwise the
+system retrieves repository context, runs root-cause analysis, plans a risk class and intended action,
+and sets act/hold at the decision gate (learned calibrated gate on the low-risk lane, hand-tuned
+thresholds elsewhere). A semantic-ambiguity backstop, the safety gate, and the plausibility/overfit
+gate then route each case into exactly one of four explicit decision outcomes: rerun, patch (open PR),
+preview (human review), or escalate.}
+\label{fig:pipeline-overview}
+\end{figure}
+
+\section{Validation Harness and Target Agentic Architecture}
+
+Although the core decision engine is single-pass, PatchOps already includes a bounded local validation harness
+used to apply candidate patches and re-run supported CI-style commands. This is the mechanism that makes
+CI-validated repair measurable in the thesis. The stronger target architecture tightens this mechanism into two
+additional capabilities: a verifier stage and a multi-attempt validation loop. These additions are what make the
+architecture genuinely agentic in the stronger sense described earlier.
+
+The verifier stage is an additional reasoning layer that critiques a generated patch before it reaches the final
+safety and validation stages. Its purpose is to catch plausible-but-wrong fixes earlier. The validation loop
+extends the workflow from one-shot repair into generate-validate-rediagnose behavior: if a patch is applied and
+the CI-style validation still fails, the system re-enters diagnosis with the new error and attempts another
+repair within a bounded retry limit.
+
+Architecturally, this target design matters because it gives the thesis a clear progression path. The current
+system is a carefully engineered decision pipeline with validation support. The target system is the same
+pipeline extended with the smallest additional agentic pieces that the literature suggests are worth the
+complexity. This keeps the design honest: agentic behavior is added where it promises measurable benefit, not
+for rhetorical effect.
+
+\section{Implemented Extensions and Target Growth}
+
+The broader architecture also accommodates two important extensions that were introduced after the earliest base
+pipeline and are now part of the implemented and evaluated PatchOps system: full-repository retrieval and a
+lightweight learned classifier. Full-repository retrieval expands the candidate search space beyond log-named
+files, addressing the localization bottleneck directly. The learned classifier supports reproducibility and
+low-cost classification while preserving the main thesis focus on orchestration and safety.
+
+It is important to separate these implemented extensions from the still-targeted verifier and validation-loop
+additions described above. Full-repository retrieval and the learned classifier are no longer merely proposed;
+they have already been built and measured in later project phases. Their role in this chapter is architectural:
+they show that the pipeline is modular enough to accept stronger retrieval and classification components without
+changing the underlying action model or safety policy. This modularity is one of the strongest design
+properties of PatchOps as a research artifact.
+
+\section{Why the Architecture Matches the Thesis Claim}
+
+The PatchOps architecture is not merely a sequence of implementation modules. It is a direct structural
+expression of the thesis claim. The system begins by compressing evidence rather than trusting raw logs,
+retrieves bounded repository context rather than relying on generic code generation, separates diagnosis from
+action choice, and places explicit policy barriers between a candidate patch and a final automatic action. In
+doing so, it embodies four commitments:
+
+\begin{enumerate}
+\item \textbf{Repository awareness:} reasoning should be grounded in actual project files rather than logs alone.
+\item \textbf{Safety gating:} candidate edits must satisfy deterministic policy checks before they are trusted.
+\item \textbf{Abstention awareness:} the system should be able to choose non-patch actions as first-class
+outcomes.
+\item \textbf{Closed-loop validation:} stronger versions of the system should observe the consequences of a patch
+through bounded re-execution rather than treating generation as the endpoint.
+\end{enumerate}
+
+These commitments are what distinguish PatchOps from both log-only CI assistants and unconstrained coding-agent
+patterns.
+
+\section{Chapter Conclusion}
+
+This chapter described the PatchOps system design as a structured repair pipeline rather than a generic LLM
+application. The architecture begins with deterministic evidence compression, moves through LLM-assisted
+classification and root-cause analysis, and then narrows the decision through planning, the learned decision
+gate, semantic ambiguity checks, safety gating, plausibility assessment, and final action selection. The current
+engine is therefore a single-pass but decision-rich workflow, supported by a validation harness for selected
+candidate fixes.
+
+The chapter also distinguished this implemented architecture from the target agentic design, which adds a
+verifier and a tighter bounded rediagnosis loop. That distinction is important for the thesis because it keeps
+the implemented system and the proposed research direction clearly separated. With the architecture now
+established, the next chapter can map these stages to the actual codebase and implementation details.

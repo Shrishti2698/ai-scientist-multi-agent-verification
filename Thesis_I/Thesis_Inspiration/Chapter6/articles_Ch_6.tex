@@ -1,0 +1,402 @@
+\section{Introduction}
+
+PatchOps is a systems thesis, but it is also an evaluation thesis. The contribution depends not only on whether
+the software works in isolated examples, but on whether its behavior can be measured honestly against baselines
+on defined datasets. This chapter therefore explains the evaluation methodology used throughout the project.
+
+The methodology reflects a deliberate response to advisor feedback and to the risks identified in the literature
+review. CI repair is easy to overclaim and hard to benchmark cleanly. Public benchmarks emphasize repair
+success, but the main PatchOps claim concerns safety, abstention, and decision quality. Workflow re-execution is
+expensive and imperfectly reproducible. Some important failure types, especially secret, permission, and
+transient cases, are under-represented in public repair benchmarks. For these reasons, PatchOps uses a
+multi-source evaluation strategy and an explicit phase-by-phase pre-registration workflow.
+
+\section{Evaluation Philosophy}
+
+The first methodological principle in PatchOps is that a working component is not automatically a result.
+Implementation progress and experimental evidence are treated separately. A component counts as a result only
+when it is measured against a baseline on a clearly defined dataset under frozen metric definitions.
+
+The second principle is that every reported number must carry its context. Sample size, coverage, and
+limitations are not optional details added after the fact. They are part of the result itself. This principle
+is especially important in a thesis where some sub-studies use modest sample sizes or only subsets of workflows
+that can be validated locally.
+
+The third principle is that negative findings remain findings. PatchOps explicitly preserves honest negative
+results such as retrieval plateaus or weak agentic gains. Methodologically, this matters because it reduces the
+temptation to tune or rewrite the experimental story around only the favorable cells.
+
+\section{Phase-by-Phase Pre-Registration}
+
+One of the strongest research-discipline choices in the project is the use of a repeated pre-registration-like
+workflow for each major evaluation phase. Every significant experimental phase is documented with four files:
+
+\begin{enumerate}
+\item \texttt{benchmark.md}, written before execution, freezing the research question, dataset, baselines,
+metric definitions, and hypotheses;
+\item \texttt{methodology.md}, written before execution, describing the harness, scoring rules, and known
+threats to validity;
+\item \texttt{findings.md}, written after the run, recording the observed numbers; and
+\item \texttt{conclusion.md}, written after the run, interpreting the findings.
+\end{enumerate}
+
+This workflow does not claim the formal status of clinical-style pre-registration, but it serves the same
+practical purpose for a thesis project: it constrains post-hoc story drift. An especially important rule follows
+from this structure: when a number conflicts across summary documents, the per-phase \texttt{findings.md} is the
+canonical source.
+
+\section{Datasets and Evaluation Sources}
+
+PatchOps does not rely on a single benchmark for every research question. Instead, it uses different datasets
+for different forms of evidence.
+
+The primary public benchmark for repair and diagnosis is \textbf{CI-Repair-Bench}, a Python-first benchmark of
+567 CI failure instances distributed across more than one hundred repositories and twelve categories. This is
+the anchor dataset for comparable repair performance, localization, and diagnosis experiments
+\cite{cirepairbench2026}.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{F4_dataset_categories.png}
+\caption{CI-Repair-Bench category distribution used as the main public benchmark context.}
+\label{fig:dataset-categories}
+\end{figure}
+
+For broader CI log context and classifier motivation, PatchOps also references larger CI log corpora such as
+\textbf{GHALogs}. These corpora are useful for understanding real-world failure distributions and classification
+context, even when they are not directly suitable for patch validation \cite{ghalogs2025}.
+
+For safety and abstention, PatchOps uses a curated \textbf{Safety Set}. This is necessary because public repair
+benchmarks under-sample the exact categories that matter most to the thesis claim, such as permission failures,
+missing secrets, deployment-sensitive cases, and clearly transient failures where rerun is preferable to
+repair. The Safety Set first appears as a 20-case labeled evaluation in Phase 5 and is later expanded to 76
+labeled cases in Phase 15 for the learned decision-gate study. The two uses are reported separately so the
+original Phase 5 safety result is not rewritten after the fact.
+
+Finally, live demonstration cases exist separately from benchmark evidence. These cases are useful for viva or
+system demonstration but are not mixed into the research tables.
+
+\section{Why a Multi-Source Design Is Necessary}
+
+This multi-source design is not a convenience; it is methodologically necessary. A single public benchmark is
+well-suited for repair comparability but poorly suited for safety or abstention claims when risky classes are
+rare. Conversely, a fully synthetic benchmark may provide excellent safety ground truth while saying little
+about real repair difficulty. By combining a public repair benchmark with a labeled safety benchmark and a
+separate demo set, PatchOps aligns each research question with the kind of evidence it actually needs.
+
+This also helps separate benchmark scope from product scope. The comparable core thesis result remains
+Python-first through CI-Repair-Bench. Broader language examples may still appear in controlled cases or live
+demonstrations without weakening the comparability of the main evaluation.
+
+\section{Research Questions and Evaluation Axes}
+
+The experimental design is organized around fixed research questions rather than around arbitrary benchmark runs.
+Across the project phases, the questions remain stable:
+
+\begin{enumerate}
+\item whether repository context improves diagnosis and localization,
+\item whether PatchOps improves patch quality or repair success relative to simpler baselines,
+\item whether safety-gated decision making reduces unsafe or inappropriate repair actions,
+\item whether PatchOps can distinguish repairable failures from flaky or transient ones, and
+\item what cost and latency profile the system exhibits in realistic use.
+\end{enumerate}
+
+Later phases add sharper sub-questions, such as whether confidence is a usable abstention signal and whether
+agentic navigation improves localization. However, these are extensions of the same core evaluation frame, not
+separate and unrelated experiments.
+
+\section{Baselines and Ablation Ladder}
+
+PatchOps is evaluated not only as a single full system, but also through an ablation ladder. This is essential
+because the thesis claims modular value from log preprocessing, workflow context, repository retrieval, safety
+gating, and selective decision logic.
+
+The baseline ladder includes progressively richer context conditions such as raw or cleaned logs, workflow-aware
+reasoning, repository-aware reasoning, a full pipeline without the safety gate, and the full PatchOps pipeline.
+This structure allows the evaluation to answer questions such as whether workflow context improves
+classification, whether repository retrieval helps localization, and whether the safety gate or abstention logic
+meaningfully changes behavior relative to a raw generator tendency.
+
+The same ladder logic also appears in specialized studies. Localization experiments compare multiple retrieval
+strategies on the same instances. Phase 8 extends this with full-repository BM25 retrieval. Phase 10 adds
+semantic embedding reranking. Phase 14 adds an agentic localizer. Together these comparisons produce a
+multi-method study of the localization bottleneck rather than a single isolated claim.
+
+\section{Validation Strategy}
+
+PatchOps uses a bounded local CI-style validation harness rather than claiming full GitHub Actions emulation.
+This distinction is methodologically important. The local runner parses common workflow shapes, extracts runnable
+steps, and executes them in Docker where possible. This allows reproducible patch validation for supported
+workflows while keeping the scope honest.
+
+Because not every workflow can be replayed locally under the same assumptions, validation coverage is always
+reported explicitly. A workflow that cannot be supported by the local harness is not silently treated as a pass
+or hidden from the denominator without disclosure. This coverage discipline is necessary to keep Pass@1 and
+related repair metrics interpretable.
+
+\section{Metric Families}
+
+The methodology tracks several families of metrics rather than collapsing everything into one success rate.
+
+\textbf{Diagnosis metrics} include category accuracy and, where relevant, root-cause-related behavior. These
+measure how well the system identifies the type of failure before attempting repair.
+
+\textbf{Localization metrics} include Recall@\{1,3,5\} and Hit@\{1,3,5\}, comparing ranked predicted files
+against the files touched by the developer's actual fix under a frozen matching rule. These metrics are
+important because localization is a known bottleneck and is studied explicitly rather than buried inside repair.
+
+\textbf{Patch metrics} include patch-produced rate, patch-apply rate, and CI validation outcomes such as
+Pass@1 and Pass@3 where applicable. The methodology keeps patch-apply distinct from repair success, because a
+syntactically applicable diff may still be semantically useless.
+
+\textbf{Decision metrics} are especially important for PatchOps. They include decision accuracy, abstention
+accuracy, unnecessary-patch rate, correct rerun behavior, and correct escalation behavior. These are the
+metrics that make the safety-and-abstention claim measurable.
+
+\textbf{Safety metrics} include unsafe auto-fix rate and, in later refinements, separation between unsafe
+automatic actions and unsafe suggestions. These metrics operationalize the difference between emitting a risky
+idea for human inspection and automatically treating it as a deployable fix.
+
+\textbf{Calibration and selective-prediction metrics} are added in the selective prediction phase. These include
+risk-coverage curves, area under the risk-coverage curve, reliability diagrams, and expected calibration error.
+Their purpose is to turn ``abstain'' from a slogan into a quantitative operating characteristic.
+
+\textbf{Practicality metrics} include token cost, model usage, and latency, because a CI assistant that is too
+slow, too expensive, or too brittle to run repeatedly is not operationally credible.
+
+\begin{table}[!htbp]
+\centering
+\caption{Metric families used in the PatchOps evaluation.}
+\label{tab:metric-families}
+\begin{tabular}{p{0.22\textwidth}p{0.62\textwidth}}
+\toprule
+Metric family & Representative metrics \\
+\midrule
+Diagnosis & Category accuracy, per-category accuracy, classifier confidence. \\
+Localization & Recall@1/3/5, Hit@1/3/5, coverage, localization cost. \\
+Patch and repair & Patch-produced rate, patch-apply rate with coverage, CI Pass@1/Pass@3. \\
+Decision quality & Patch/preview/rerun/escalate accuracy, abstention accuracy, unnecessary-patch rate. \\
+Safety and honesty & Unsafe auto-fix rate, reward-hack rate, patch plausibility, on-target precision. \\
+Calibration & AURC, reliability, ECE, selective accuracy at fixed coverage. \\
+Practicality & Token cost, wall-clock latency, model/provider dependence. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Formal Metric Definitions}
+
+To keep the later results precise, the metric families above are defined formally once here and then reused
+throughout Chapter 7. Let \(N\) denote the number of instances, let \(\mathbf{1}[\cdot]\) denote the indicator
+function, let \(G_i\) denote the gold fix-file set for instance \(i\), and let \(P_i^k\) denote the top-\(k\)
+predicted files returned by the localizer.
+
+\subsection{Localization Metrics}
+
+PatchOps reports both overlap-sensitive Recall@\(\,k\) and hit-style Hit@\(\,k\):
+\begin{equation}
+\mathrm{Recall@}k = \frac{1}{N}\sum_{i=1}^{N}\frac{|G_i \cap P_i^k|}{|G_i|},
+\qquad
+\mathrm{Hit@}k = \frac{1}{N}\sum_{i=1}^{N}\mathbf{1}\!\left[G_i \cap P_i^k \neq \varnothing\right].
+\end{equation}
+Recall@\(\,k\) measures how much of the gold fix set is recovered on average, while Hit@\(\,k\) asks the
+simpler question of whether at least one correct file appears in the top-\(k\) list.
+
+\subsection{Repair Metrics}
+
+Repair metrics are always interpreted together with coverage. Let \(N_{\mathrm{att}}\) denote the number of
+instances for which PatchOps actually attempted a patch under the given policy:
+\begin{equation}
+\mathrm{Pass@1} = \frac{1}{N_{\mathrm{att}}}\sum_i \mathbf{1}[\text{patch}_i \text{ turns CI green}],
+\end{equation}
+\begin{equation}
+\mathrm{apply\text{-}rate} = \frac{\#\{\text{patches that } \texttt{git apply}\}}{N_{\mathrm{att}}},
+\qquad
+\mathrm{coverage} = \frac{N_{\mathrm{att}}}{N}.
+\end{equation}
+This makes the honesty constraint explicit: a selective system can appear stronger on attempted cases partly by
+declining the hard ones, so repair quality should never be read without its corresponding coverage term.
+
+\subsection{Classification Metrics}
+
+For classification studies, PatchOps reports per-class precision and recall through the standard \(F_1\) family.
+For class \(c\),
+\begin{equation}
+F_{1,c} = \frac{2P_cR_c}{P_c + R_c},
+\qquad
+\mathrm{macro\text{-}}F_1 = \frac{1}{C}\sum_{c=1}^{C}F_{1,c},
+\end{equation}
+where \(C\) is the number of classes. Macro-\(F_1\) is useful here because weak categories should remain
+visible instead of being dominated by larger easier classes.
+
+\subsection{Decision and Abstention Metrics}
+
+PatchOps is evaluated as a decision system, not only as a patch generator. If \(\hat{a}_i\) is the predicted
+action and \(a_i^\star\) is the expected action label, act/hold accuracy is
+\begin{equation}
+\mathrm{Acc}_{\mathrm{act/hold}} = \frac{1}{N}\sum_i \mathbf{1}[\hat{a}_i = a_i^\star].
+\end{equation}
+Abstention accuracy uses the project's restricted denominator:
+\begin{equation}
+\mathrm{Acc}_{\mathrm{abst}} =
+\frac{\#\{\text{should-abstain} \wedge \text{did abstain}\}}{\#\{\text{should-abstain}\}}.
+\end{equation}
+This definition matters because abstention is judged only on the subset where abstaining was the correct
+behavior; it is not averaged over all decisions.
+
+\subsection{Selective Prediction and Calibration}
+
+For a confidence score \(s_i\), threshold \(\tau\), and zero-one loss \(\ell_i \in \{0,1\}\), selective
+prediction is summarized through coverage, selective risk, and area under the risk-coverage curve:
+\begin{equation}
+\mathrm{cov}(\tau) = \frac{1}{N}\sum_i \mathbf{1}[s_i \ge \tau],
+\qquad
+\mathrm{risk}(\tau) = \frac{\sum_i \ell_i \mathbf{1}[s_i \ge \tau]}
+{\sum_i \mathbf{1}[s_i \ge \tau]}.
+\end{equation}
+\begin{equation}
+\mathrm{AURC} = \frac{1}{N}\sum_{k=1}^{N}\left(\frac{1}{k}\sum_{j=1}^{k}\ell_{(j)}\right),
+\end{equation}
+where \(\ell_{(j)}\) are losses sorted by decreasing confidence. Lower AURC indicates a better confidence
+ranking because the accepted prefix stays more accurate over a wider range of coverage values.
+
+Calibration is reported through expected calibration error. For \(M\) confidence bins \(B_m\),
+\begin{equation}
+\mathrm{ECE} = \sum_{m=1}^{M}\frac{|B_m|}{N}\left|\mathrm{acc}(B_m) - \mathrm{conf}(B_m)\right|.
+\end{equation}
+ECE measures whether stated confidence matches empirical correctness, which is why it is central to the
+abstention story in Phase 11 and the learned decision gate in Phase 15.
+
+\subsection{Plausibility and Ranking Quality}
+
+Patch plausibility is evaluated through ROC AUC, which can be read as the probability that a random on-target
+patch receives a higher score than a random off-target patch:
+\begin{equation}
+\mathrm{AUC} =
+\frac{1}{|\mathcal{P}||\mathcal{N}|}
+\sum_{p \in \mathcal{P}}\sum_{n \in \mathcal{N}} \mathbf{1}[s_p > s_n].
+\end{equation}
+This matches the role of the plausibility gate as a ranking mechanism rather than as a proof of semantic
+correctness.
+
+\subsection{Confidence Intervals}
+
+Because several PatchOps studies operate at small \(n\) and sometimes near 0 or 1, Wilson score intervals are
+preferable to normal approximations. For an empirical proportion \(\hat{p}\) and \(z = 1.96\),
+\begin{equation}
+\frac{\hat p+\frac{z^2}{2n}\;\pm\;z\sqrt{\frac{\hat p(1-\hat p)}{n}+\frac{z^2}{4n^2}}}{1+\frac{z^2}{n}}.
+\end{equation}
+This is the interval family behind the thesis wording that Phase 15 matches-or-beats the threshold baseline
+rather than claiming a clean statistical separation at \(n=76\).
+
+\section{Ground-Truth Design for Safety and Flakiness}
+
+Safety and flakiness require more than a public benchmark label. The Safety Set therefore assigns structured
+labels to each case, including expected action, risk class, allowed files, forbidden files, category, and
+whether the case is flaky or transient. This allows PatchOps to be evaluated on the action it should have taken,
+not merely on whether it happened to emit a patch.
+
+This is methodologically important because the main PatchOps claim is asymmetric. On some failures, a patch is
+the correct action. On others, not patching is the correct action. A benchmark that cannot represent that
+distinction cannot evaluate the thesis contribution properly.
+
+\section{Localization Methodology as a Separate Study}
+
+The project treats localization as an explicit experimental subproblem. Rather than assuming that retrieved
+context is always adequate, PatchOps compares log-path ranking, category reranking, LLM-guided candidates,
+hybrid ranking, full-repository BM25, semantic embedding reranking, and later agentic exploration. All of these
+studies reuse the same benchmark family and matching discipline, which makes it possible to interpret later
+findings as a single evolving localization study rather than disconnected experiments.
+
+This explicit localization design is one of the strongest methodological choices in the thesis. It enables later
+claims such as ``localization is necessary but insufficient'' to be supported by measured transitions rather than
+by informal intuition.
+
+\section{Classifier Methodology as a Reproducibility Study}
+
+The learned classifier phase is methodologically scoped as a reproducibility and cost study rather than as a raw
+repair-improvement claim. The classifier is trained on compressed evidence features derived from the same
+preprocessing pipeline the live engine uses. It is evaluated on held-out data under both exact and lenient
+labeling rules and is compared with rule-based and LLM-based classification behavior.
+
+This framing matters because it keeps the classifier's role proportional. It is not presented as the central
+intelligence of PatchOps, but as a controlled and measurable way to make one stage of the pipeline open,
+cheaper, and more reproducible.
+
+\section{Selective Prediction and Calibration Methodology}
+
+The selective prediction phase extends the evaluation from action accuracy to confidence quality. Here, the
+question is whether the system's confidence signals can support principled abstention. The methodology compares
+learned-classifier confidence against engine decision confidence on held-out data and evaluates whether acting on
+only the more confident subset improves accuracy. Calibration methods such as isotonic regression are used to
+measure whether these confidence values can be made more reliable without changing their ranking behavior.
+
+This is important because it turns the thesis claim about abstention into something operationally tunable. A
+system can then be evaluated not only at one fixed threshold, but along a family of possible operating points.
+
+\section{Learned Decision-Gate Methodology}
+
+The Phase 15 decision-gate study extends selective prediction from confidence analysis into the actual
+act-versus-hold policy. The gate is trained and evaluated on the expanded 76-case Safety Set using
+cross-validation. Its inputs are pre-generation signals that the engine already computes, including calibrated
+classifier confidence, category risk, flaky status, semantic ambiguity, log-named-file count, and evidence
+length. The comparison baseline is the earlier hand-tuned threshold policy.
+
+This methodology is intentionally scoped as a decision-quality evaluation, not a repair-success evaluation. The
+reported metrics are act/hold accuracy, abstention accuracy, over-act count, calibration error for
+\(P(\mathrm{act})\), and risk-coverage behavior. The study also reports the low-risk lane separately, because
+that is the branch where the deployed engine actually uses the learned gate.
+
+Two caveats are built into the methodology. First, the expanded Safety Set is synthetic-heavy, so the result is
+an indicative labeled-set result rather than a field measurement. Second, at \(n=76\), confidence intervals
+overlap with the hand-tuned policy. The correct claim is therefore that the learned gate matches-or-beats the
+threshold policy while removing the magic constants, not that it is statistically separated.
+
+\section{Agentic Localization Methodology}
+
+The agentic localization phase adds a bounded read-only navigation loop over a repository clone. This phase is
+important methodologically because it tests whether the localization bottleneck is due merely to weak retrieval
+or whether even tool-using exploration struggles to recover the right files. The experiment keeps the slice,
+matching rules, and baseline comparisons aligned with earlier localization phases so that any gain or non-gain
+is interpretable against the same benchmark context.
+
+\section{Threats to Validity Built Into the Methodology}
+
+Several threats to validity are acknowledged directly in the methodology rather than being postponed to the
+results chapter alone.
+
+First, some cells operate on modest sample sizes. The methodology therefore treats counts and coverage as part
+of the result, not as footnotes.
+
+Second, validation support is partial. Pass@1 style results are tied to the supported subset of workflows, and
+that support boundary is disclosed rather than hidden.
+
+Third, synthetic safety cases may be cleaner than reality. They are therefore disclosed explicitly and used for
+the parts of the claim that require ground truth rather than for general repair claims.
+
+Fourth, public benchmarks may be contaminated by model pretraining. PatchOps addresses this not by pretending
+contamination is absent, but by scoping its strongest claims toward safety, abstention, and decision quality
+instead of headline repair leadership.
+
+\section{Methodological Honesty Rules}
+
+Two practical rules govern the write-up of the later results.
+
+First, when a figure or summary table disagrees with a per-phase findings document, the per-phase
+\texttt{findings.md} takes precedence. This avoids circular drift from re-summarization.
+
+Second, metrics must be read with their relevant context. For example, patch-apply rate must be interpreted
+alongside coverage, because a selective system can improve apparent quality partly by refusing hard cases. The
+project records these caveats as part of the methodology itself rather than treating them as optional
+discussion.
+
+\section{Chapter Conclusion}
+
+This chapter described the evaluation methodology used to study PatchOps across diagnosis, localization, repair,
+safety, abstention, and cost. The methodology combines a public CI repair benchmark, a labeled safety benchmark,
+a bounded local validation harness, a modular ablation ladder, and a project-wide pre-registration discipline.
+It also treats localization, classification, selective prediction, the learned decision gate, and agentic
+navigation as explicitly measured subproblems rather than informal side effects of one large repair score.
+
+With the datasets, baselines, metrics, and honesty rules now fixed, the next chapter can present the empirical
+results themselves. Those results will be organized around the thesis's four headline findings, using the
+canonical per-phase findings files as the source of truth.

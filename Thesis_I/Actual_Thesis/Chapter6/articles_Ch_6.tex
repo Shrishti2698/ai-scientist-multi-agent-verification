@@ -1,0 +1,151 @@
+\section{Introduction}
+
+AI-Scientist is a systems thesis, but it is also an evaluation thesis. The contribution depends not only on whether
+the software runs, but on whether its behaviour can be examined honestly against meaningful baselines on
+representative scientific questions. This chapter therefore explains the evaluation methodology used throughout the
+project.
+
+The methodology reflects a deliberate response to the risks identified in the literature review. Grounded question
+answering is easy to overclaim and hard to assess cleanly, because a fluent answer can hide whether it is actually
+supported by evidence. The central AI-Scientist claim concerns grounding, calibrated confidence, contradiction
+handling, abstention, and traceability rather than raw fluency. The evaluation is therefore organized around those
+qualities, uses real scholarly evidence rather than synthetic self-confirming text, and compares the multi-agent
+system against the two conventional alternatives it is meant to improve upon.
+
+\section{Evaluation Philosophy}
+
+The first methodological principle is that a fluent answer is not automatically a good one. A response counts as
+trustworthy only when its conclusions are tied to retrieved evidence, when its confidence reflects the strength and
+independence of that evidence, and when its uncertainty is reported rather than hidden. The evaluation therefore
+inspects the structure of the system's output --- its per-claim verdicts, confidence, evidence snippets, and
+orchestration trace --- not only the surface text of the summary.
+
+The second principle is that the comparison must isolate the effect of the design under study. The single-agent and
+RAG baselines are implemented on the same retrieval and scoring substrate as the full system, so any observed
+difference reflects orchestration, claim-level verification, and critique rather than incidental differences in
+retrieval or tokenization.
+
+The third principle is that honest, cautious behaviour is a success, not a failure. When the evidence for a claim
+is thin or contradictory, the correct outcome is an insufficient-evidence or contradicted verdict. The evaluation
+explicitly credits the system for abstaining and for surfacing disagreement, rather than rewarding it for always
+producing a confident-sounding conclusion.
+
+\section{Baselines}
+
+AI-Scientist is evaluated against two baselines that represent the conventional alternatives to a multi-agent
+verifier.
+
+The \textbf{single-agent baseline} models a direct reader: it retrieves the single most relevant paper and trusts a
+direct overlap check between the question and that paper's sentences. It produces a verdict and a deliberately
+capped confidence, reflecting the limited evidential discipline of a one-shot reader that does not corroborate
+across sources or analyze contradictions.
+
+The \textbf{RAG baseline} models a standard retrieval-augmented pipeline: it retrieves several papers and aggregates
+simple supporting overlap into a verdict, again with capped confidence. Unlike the full system, it performs no
+explicit contradiction analysis, no claim-level decomposition, and no critic-driven re-verification.
+
+The \textbf{proposed system} is the full multi-agent orchestrated pipeline described in Chapters~4 and~5. Holding
+the retrieval substrate fixed across all three systems makes the comparison a clean ablation of the contributions
+of orchestration, claim-level verification, confidence calibration, and critique.
+
+\section{The Cross-Domain Question Set}
+
+Because AI-Scientist is designed to be domain-general, it is evaluated on research questions drawn from several
+distinct fields rather than a single area. The question set spans medicine, computer science and artificial
+intelligence, biology, and psychology, with additional probes in physics, chemistry, and the life sciences to
+exercise the live-retrieval path. Representative questions include whether metformin improves weight and metabolic
+outcomes in type~2 diabetes, whether retrieval-augmented generation reduces hallucination in language models,
+whether CRISPR/Cas9 correction is a promising treatment for sickle cell disease, and how social-media use relates
+to adolescent depression and affect.
+
+These questions are chosen for three reasons. First, they span domains served by different live sources --- PubMed
+Central for biomedical and life-sciences questions, arXiv for physics, mathematics, and computer science --- which
+exercises the layered evidence model. Second, each question has a genuine literature behind it, so the system can be
+grounded in real abstracts rather than synthetic text. Third, the set deliberately mixes questions with strong,
+clear evidence and questions where the evidence is mixed or thin, so the evaluation can observe both confident
+support and honest abstention.
+
+\section{Evidence Conditions}
+
+Each question is evaluated under the layered evidence model. Where appropriate, a small set of genuinely relevant
+papers is supplied as session uploads to represent the user-provided evidence layer; the curated offline corpus
+provides an always-available grounding; and live retrieval from PubMed Central and arXiv supplies current results
+at query time. Crucially, the evidence is real: abstracts are the actual text returned by the scholarly sources,
+not fabricated, self-confirming passages. This matters because a verifier evaluated only on self-supporting
+synthetic text would appear far more confident than one tested against the genuine variability of the literature.
+
+Reporting the source of every retrieved paper --- uploaded, curated corpus, or live API --- is part of the
+methodology. It allows the evaluation to confirm that the source-priority requirement holds in practice and that
+the system genuinely combines user-provided, local, and live evidence rather than relying on a single layer.
+
+\section{Qualities Assessed}
+
+The methodology assesses AI-Scientist along the dimensions that follow directly from the thesis claims. These
+correspond to the evaluation axes set out in the project proposal and to the faithfulness-oriented dimensions
+emphasized in the grounded-generation literature.
+
+\textbf{Evidence grounding (faithfulness).} Whether each supported conclusion is actually backed by a retrieved
+sentence, inspected through the per-claim evidence snippets. A grounded system should never present a claim as
+supported when no evidence sentence aligns with it.
+
+\textbf{Claim verification behaviour.} Whether the verdicts --- supported, contradicted, or insufficient evidence
+--- are appropriate to the available evidence, including the correct use of abstention for thin evidence and of
+the contradicted verdict when counter-evidence dominates.
+
+\textbf{Confidence calibration.} Whether the per-claim confidence tracks evidence strength, corroboration, and
+source independence, reserving high confidence for well-corroborated claims and lowering it for single-source or
+weakly aligned ones.
+
+\textbf{Contradiction handling.} Whether the system surfaces disagreement in the literature explicitly rather than
+silently choosing the more agreeable side.
+
+\textbf{Hallucination resistance.} Whether the system avoids asserting claims that the evidence does not support, a
+property that follows from grounding and abstention together.
+
+\textbf{Reasoning traceability.} Whether the orchestration trace and per-claim evidence make the path to each
+conclusion reconstructable by a reader.
+
+\textbf{Domain generality.} Whether the system behaves consistently across domains and correctly declines clearly
+non-research queries through the scope guard.
+
+\section{Evaluation Protocol}
+
+For each question, the three systems are run under matched evidence conditions, and their outputs are examined
+side by side. The full system's report is inspected for its verdicts, confidence values, evidence attribution,
+critique notes, and whether the critic-driven re-verification loop is triggered. The baselines' outputs are
+examined for the same question to see what a single-agent reader and a standard RAG pipeline produce on the same
+evidence.
+
+The protocol is qualitative and behaviour-oriented by design. Rather than reducing trustworthiness to a single
+aggregate score, it presents representative case studies that show how the system grounds, calibrates, and
+criticizes its conclusions, and how that behaviour differs from the baselines. This case-study orientation is
+appropriate for a verification system whose central claims are about the \emph{structure} and \emph{honesty} of its
+reasoning, properties that a single accuracy number would obscure.
+
+\section{Reproducibility}
+
+The evaluation is designed to be reproducible. The deterministic core of the pipeline --- retrieval ranking,
+evidence scoring, verdict selection, confidence computation, and critique --- runs without any external model, so
+the same question over the same evidence yields the same structured assessment. Live retrieval introduces the
+natural variability of the scholarly sources, which is disclosed rather than hidden: a question asked on different
+days may surface a slightly different set of current papers. Where the optional language model is used, it refines
+fluency and borderline verdicts on top of the deterministic result, so the grounding and confidence behaviour does
+not depend on a particular model being available.
+
+\section{Honesty Rules for the Write-Up}
+
+Two practical rules govern the reporting of the evaluation. First, the system is credited for cautious behaviour:
+an insufficient-evidence verdict on a genuinely thin question is reported as correct conduct, not as a miss.
+Second, confidence is interpreted with its context: a high confidence is meaningful only when accompanied by
+independent corroboration, and the write-up reports the corroboration alongside the confidence rather than the
+number alone. These rules keep the evaluation aligned with the thesis claim that AI-Scientist values dependable,
+evidence-attributed answers over confident but unsupported ones.
+
+\section{Chapter Conclusion}
+
+This chapter described the methodology used to evaluate AI-Scientist: a clean comparison against single-agent and
+RAG baselines on a shared retrieval substrate, a cross-domain question set grounded in real scholarly evidence, an
+assessment organized around grounding, verification behaviour, calibration, contradiction handling, hallucination
+resistance, traceability, and domain generality, and a behaviour-oriented protocol that credits honest abstention.
+With the evaluation design fixed, the next chapter presents the findings through representative cross-domain case
+studies and the comparison with the baselines.

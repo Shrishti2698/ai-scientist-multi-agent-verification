@@ -1,0 +1,234 @@
+\section{Introduction}
+
+The PatchOps problem sits at the intersection of several active research areas rather than belonging to only one
+of them. It is related to log-based root-cause analysis, automated program repair, repository-level software
+engineering agents, CI benchmark construction, failure taxonomy studies, and the growing literature on
+calibration, abstention, and overfitting in LLM-based software systems
+\cite{logsage2025,llmaprsurvey2025,abstentionSurvey2026,aprtop2025}. A good related-work chapter for
+PatchOps therefore needs to do more than list nearby papers. It must explain which parts of the prior literature
+PatchOps inherits directly, which claims have already been established by others, and which gap still remains
+meaningful enough to support a thesis contribution.
+
+As of mid-2026, the field has moved beyond the stage where one can claim novelty simply by saying that an LLM
+reads CI logs and proposes a fix. Industrial and academic systems already demonstrate that CI diagnosis and even
+CI-validated repository repair are feasible tasks. The important question is no longer whether repair should be
+attempted at all, but rather how such repair should be \emph{framed}, \emph{controlled}, and \emph{evaluated}.
+This chapter reviews the most relevant prior work and shows why PatchOps is best positioned not as ``the first
+CI repair agent,'' but as a safety-gated, abstention-aware, closed-loop repair system built on top of an
+already established task.
+
+\section{LLM-Based CI/CD Diagnosis and Remediation}
+
+The closest diagnosis-oriented system to PatchOps is \textbf{LogSage} (ASE 2025), an industrially validated
+framework for CI/CD failure detection and remediation. LogSage combines an offline knowledge-building phase
+with an online diagnosis phase in which failed logs are filtered, expanded, and pruned before being passed to
+LLM prompts supported by retrieval \cite{logsage2025}. Its core strength is not repository patch generation, but industrial-scale
+root-cause analysis with high reported precision and a large deployment footprint. For PatchOps, LogSage is
+important for two reasons.
+
+First, it establishes that log preprocessing and focused evidence extraction matter. Raw CI logs are noisy,
+redundant, and often too large to feed directly to an LLM. PatchOps inherits this lesson through its log
+extraction stage and should be understood as part of the same design tradition: extract the critical signal
+before asking a model to reason.
+
+Second, LogSage sets a strong baseline in the diagnosis portion of the problem. It would be unrealistic and
+unnecessary for PatchOps to compete with a year-long industrial deployment on the narrow question of root-cause
+analysis precision. The more useful interpretation is that systems such as LogSage solve an important part of
+the diagnosis problem, while leaving open the question of how diagnosis should connect to repository edits,
+patch validation, and safety-sensitive action selection.
+
+The most directly relevant repair-oriented work is the reference workflow introduced with
+\textbf{CI-Repair-Bench} (arXiv, April 2026) \cite{cirepairbench2026}. Its pipeline follows a simple but consequential structure:
+analyze the CI log, localize the likely fault, generate a patch, and then re-run the original workflow to
+measure whether the fix succeeds under true CI-style validation. This benchmark is a turning point for the
+PatchOps thesis because it already establishes repository-aware, CI-verified repair as a public task. It also
+provides a concrete performance reference, with the strongest baseline still achieving only around one-fifth
+Pass@1 overall. In other words, CI repair has been formalized, but it remains far from solved.
+
+This matters for thesis positioning. PatchOps cannot honestly claim to be the first system to validate patches
+through CI, nor can it claim that repository-aware patch repair itself is unexplored. What remains open is what
+CI-Repair-Bench does not emphasize: when an agent should decline to patch, how it should behave on transient or
+risky failures, and how to prevent superficially successful but unsafe or off-target edits from being treated as
+wins. That reframing is central to PatchOps.
+
+\section{Automated Program Repair and Build Repair}
+
+PatchOps also belongs to the longer history of automated program repair (APR), especially the branch of APR
+concerned with build and compilation failures. Earlier systems such as \textbf{HireBuild} and
+\textbf{DeepDelta} addressed narrower but structurally similar tasks: they used mined fix patterns or learned
+transformations to repair failing build scripts or compilation errors. These systems demonstrated that repeated
+software failure patterns can often be corrected automatically, especially when the failure class is narrow and
+the repair space is constrained \cite{hirebuild2018,deepdelta2019}.
+
+Their relevance to PatchOps is historical and conceptual. They show that repair is not a brand-new ambition,
+but they also expose the limitations of narrow repair regimes. Build-script repair, compilation repair, and
+configuration repair work best when the failure type is predictable and the patch space is small. CI repair is
+harder because CI failures are broader in scope: they may arise from code, tests, dependencies, workflow YAML,
+environment setup, permissions, missing secrets, or flaky infrastructure. PatchOps therefore inherits the
+repair ambition of pre-LLM systems, but it operates in a setting that is more heterogeneous and less
+structurally constrained.
+
+The broader LLM-APR field makes this contrast even clearer. Surveys of LLM-based APR show fast progress in
+patch generation, but they also show that success depends heavily on task framing, benchmark contamination,
+validation quality, and the ability to localize the right files before editing them. Repository-level agentic
+benchmarks such as SWE-bench and its descendants show that well-structured pipelines can outperform overly
+complex multi-agent designs \cite{llmaprsurvey2025,llmaprslr2024,swebench2023,agentless2025}. This is an important design lesson for PatchOps. A staged state-machine pipeline,
+with explicit transitions from log evidence to localization, patch planning, generation, validation, and final
+decision, is not merely an engineering convenience. It is a research-informed choice that aligns with evidence
+that simpler, structured repair workflows are often easier to reproduce, analyze, and ablate than multi-agent
+systems built for appearance rather than clarity.
+
+\section{Why CI Repair Is Not the Same as Classical APR}
+
+Although PatchOps is related to APR, CI repair should not be reduced to a variant of classical test-suite-based
+program repair. Traditional APR usually assumes that a developer test suite exists, that one can execute it
+repeatedly, and that patch correctness is approximated by whether tests pass. CI repair is more operational and
+more fragile. It may involve infrastructure scripts, package installation, linter configuration, workflow
+permissions, or environmental mismatches rather than source-code semantics alone. A failing GitHub Actions run
+is therefore not simply a failed unit test. It is a signal produced by a workflow that may stop at the first
+failure and may expose only a partial view of the system state.
+
+This distinction becomes especially important when considering correctness. Classic APR literature has spent
+years documenting the gap between a \emph{plausible} patch and a \emph{correct} patch
+\cite{llmaprslr2024,aprtop2025,compass2026}. The same warning applies,
+and perhaps applies even more strongly, to CI repair. A patch that makes CI green is not automatically a good
+patch. It may silence a check, change the wrong file, overfit to the immediate failure, or exploit a weakness
+in the workflow itself. Because CI validation is a partial oracle, green should be interpreted as necessary but
+not sufficient evidence. This is one of the strongest motivations for PatchOps' safety gate, patch-plausibility
+logic, and abstention behavior.
+
+\section{Overfitting, Plausibility, and Reward Hacking}
+
+One of the most stable lessons from APR research is that passing the available tests is not the same as fixing
+the underlying defect. Multiple studies in both classical APR and LLM-based APR report high rates of
+overfitting, where a patch satisfies the visible oracle while remaining semantically wrong or behaviorally
+fragile. More recent LLM repair studies continue to confirm the same pattern: some patches pass benchmark tests
+yet fail stronger developer suites, and some even alter behavior in unintended ways while still looking
+plausible under the benchmark evaluation protocol \cite{llmaprslr2024,aprtop2025,compass2026}.
+
+For PatchOps, this literature is not background trivia. It directly motivates the decision to treat safety and
+honesty as first-class research concerns. If the field already knows that plausible patches can be wrong, then a
+CI repair system that automatically proposes or opens patches without explicit safeguards is not just
+incomplete; it is methodologically naive. PatchOps responds to this by adding layers that go beyond basic patch
+generation: reward-hack detection, patch-plausibility scoring, minimality-oriented gating, and abstention paths
+for ambiguous cases.
+
+This also helps explain why the thesis does not frame safety as a product add-on. Safety is not merely a user
+experience preference. It is a scientific necessity forced by the known limitations of CI and APR evaluation
+oracles. In this sense, the PatchOps safety gate is a direct descendant of the overfitting debate in APR.
+
+\section{Benchmarks and Datasets}
+
+The choice of benchmark shapes what claims can be made. For PatchOps, the most important benchmark is
+\textbf{CI-Repair-Bench}, which offers 567 CI failure instances across more than one hundred Python repositories,
+organized into twelve categories and validated through full workflow re-execution. Its main value is that it
+turns PatchOps into a comparable system rather than an isolated prototype \cite{cirepairbench2026}. A thesis evaluated on
+CI-Repair-Bench can be discussed alongside existing repair baselines, while a thesis evaluated only on a private
+demo set would be much harder to defend.
+
+However, no single dataset is enough for all PatchOps questions. CI-Repair-Bench is strong for end-to-end
+repair success but weaker for the kinds of safety claims that matter most to this thesis. It does not richly
+label risky conditions such as missing secrets, deployment permissions, or transient failures where rerunning is
+better than patching. This is why PatchOps also relies conceptually on controlled safety and fault-injection
+cases, as well as on broader CI log corpora such as \textbf{GHALogs}, which are useful for classification and
+distributional context even if they do not directly support patch validation.
+
+The literature also highlights the value of reproducible CI execution tooling, such as \textbf{GitBug-Actions},
+which shows how GitHub Actions workflows can be replayed locally in controlled environments. This line of work
+matters because practical CI evaluation is often bottlenecked not by the patch generator, but by the difficulty
+of re-executing workflows repeatedly, cheaply, and reproducibly. PatchOps fits naturally into this methodological
+space: its validation loop is meaningful only if the execution environment can be treated as dependable enough
+for repeated evaluation \cite{ghalogs2025,gitbugactions2024}.
+
+\section{Failure Taxonomy and the Diversity of CI Failures}
+
+Another important strand of related work studies why GitHub Actions workflows fail in the first place.
+Empirical taxonomy work, including the large-scale TOSEM 2025 study of GitHub Actions failures, shows that CI
+failures are diverse and cannot be reduced to one or two failure modes. Project-level configuration errors,
+dependency problems, runtime issues, environmental setup failures, permissions, and third-party service
+interactions all appear in practice \cite{ghataxonomy2025}. This diversity is essential for PatchOps because it justifies both the
+failure classifier and the decision policy.
+
+If all failures were simply code-edit problems, then an always-patch system might be a defensible first
+approximation. The literature shows the opposite. CI failures include many situations where the safest or most
+appropriate action is not a patch. This is why PatchOps organizes failures into operational categories and why
+the thesis places importance on taxonomy crosswalks between the project's own labels, CI-Repair-Bench's
+categories, and broader empirical taxonomies from the literature.
+
+This taxonomy perspective also strengthens the thesis gap. Public benchmarks emphasize repairable failures, but
+the operational world includes many cases that are better treated as rerun, preview, or escalate. PatchOps
+turns this mismatch into a contribution by explicitly modeling those decision classes rather than collapsing all
+failures into the same repair workflow.
+
+\section{Flaky and Transient Failures}
+
+Research on flaky tests and transient CI failures provides one of the strongest motivations for PatchOps'
+abstention-aware behavior. Studies on GitHub Actions flakiness show that some failures arise from instability in
+external services, timing effects, environment differences, network issues, or order-dependent test behavior.
+In such cases, producing a source-code patch is often the wrong response. A rerun, quarantine, or human review
+is safer and more informative \cite{ghaflaky2026}.
+
+This is a crucial distinction between PatchOps and simple repair pipelines. Most repair benchmarks reward only
+successful patches; they do not reward the model for correctly deciding \emph{not} to patch. PatchOps instead
+treats flaky detection and abstention as measurable successes. This creates a different notion of competence:
+the system is not judged solely by how often it edits, but by how often it chooses the right operational action.
+
+From a thesis perspective, this is one of the clearest novelty lanes available. Correctly distinguishing a
+repairable failure from a transient one is both practically valuable and under-measured in prior CI repair
+evaluations. It also produces compelling demos and easy-to-understand motivation, because a junk PR for a
+network timeout is obviously less desirable than a correct rerun recommendation.
+
+\section{Industry and Open-Source Landscape}
+
+The broader industry landscape confirms that the product idea of ``AI fixes CI'' is no longer novel by itself.
+GitHub Copilot Autofix, Dependabot, Renovate, Copilot coding-agent workflows, and multiple engineering blog
+posts on self-healing CI all point in the same direction: software teams increasingly expect automated help when
+pipelines fail. Some systems focus on vulnerabilities or dependency updates, some are issue-driven coding
+agents, and others wire LLMs into branch-level repair loops \cite{logsage2025}.
+
+This environment creates both a risk and an opportunity for PatchOps. The risk is that a vague thesis claim
+such as ``we built an AI system that fixes CI'' will sound derivative and underspecified. The opportunity is
+that most existing product narratives are not backed by public benchmarks, safety metrics, abstention analysis,
+taxonomy grounding, or reproducible academic evaluation. In other words, the concept is being commoditized, but
+the science is still underdeveloped.
+
+PatchOps should therefore be understood as an academic response to an emerging product category. It is not
+trying to beat commercial tools at deployment scale or enterprise integration. It is trying to provide the
+measurement discipline, safety framing, and reproducibility that public product claims rarely supply.
+
+\section{Implications for PatchOps Design}
+
+Taken together, the literature suggests several design consequences for PatchOps.
+
+First, log evidence extraction is necessary but insufficient. Systems such as LogSage show that careful log
+processing improves diagnosis, but CI-Repair-Bench and later PatchOps results show that diagnosis alone does not
+solve repair.
+
+Second, repository-level reasoning is unavoidable. Real CI failures often require context beyond the visible log,
+including workflow files, manifests, and source modules. This supports PatchOps' repository-aware design.
+
+Third, validation must be embedded into the loop. The literature repeatedly shows that patch plausibility is a
+weak signal of correctness. PatchOps therefore uses CI-style re-execution as part of its decision logic rather
+than as an afterthought.
+
+Fourth, abstention must be treated as a feature of competence, not as a failure of confidence. The taxonomy and
+flakiness literature make it clear that some failures should not be patched automatically. PatchOps therefore
+elevates rerun, preview, escalate, and abstain into first-class actions.
+
+Fifth, safety and honesty checks are not optional. Overfitting and reward hacking are known risks in APR and
+LLM repair. PatchOps responds by explicitly measuring unsafe actions, on-target behavior, and the difference
+between apparently green and genuinely trustworthy outcomes.
+
+\section{Chapter Conclusion and Positioning}
+
+The literature reviewed in this chapter leads to a clear and disciplined positioning for PatchOps. Prior work
+has already demonstrated that LLMs can assist with CI/CD diagnosis, that repository-aware CI repair can be
+benchmarked through workflow re-execution, and that software repair pipelines benefit from structured rather
+than purely free-form agent design. At the same time, prior work also makes clear that repair success remains
+low, that test- or CI-passing patches can still be wrong, and that current benchmarks under-measure the
+decision-theoretic aspects of safe automation.
+
+PatchOps therefore does not claim novelty in patch generation alone. Its contribution lies in reframing CI
+repair as a \emph{risk-sensitive, abstention-aware decision problem} built on top of repository context and
+closed-loop validation. That framing is supported, not contradicted, by the literature. The next chapter turns
+from this background to the formal problem definition, requirements, and scope of the PatchOps system.

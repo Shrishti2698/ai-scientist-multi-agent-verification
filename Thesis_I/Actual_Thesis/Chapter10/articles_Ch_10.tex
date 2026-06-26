@@ -1,0 +1,99 @@
+\section{Conclusion}
+
+This thesis presented AI-Scientist, a multi-agent orchestrated framework for scientific claim verification and
+adaptive reasoning. The project began from a practical goal: given a research question, retrieve relevant
+literature, extract its claims, verify each against evidence, criticize the weak ones, and produce an
+evidence-backed report with explicit confidence and a traceable record of the reasoning. The final contribution is
+more specific and more defensible than simply ``an AI that answers research questions.'' AI-Scientist is a research
+assistant that treats \emph{when not to assert} as a first-class concern.
+
+The thesis deliberately avoids claiming to be the first system to ground answers in retrieved evidence, the first to
+verify scientific claims against abstracts, or the first to use multiple cooperating agents. Prior work already
+establishes each of these. AI-Scientist instead contributes a verification-first composition of these ideas, in
+which the unit of output is a checked claim with a calibrated confidence and attributed evidence, realized as a
+working system across arbitrary research domains.
+
+\section{Summary of Contributions}
+
+The first contribution is the AI-Scientist architecture itself: a structured pipeline in which an Orchestrator
+coordinates retrieval, claim extraction, verification, critique, synthesis, and reporting. The system grounds its
+reasoning in a layered, source-prioritized evidence model and turns a research question into a set of verified
+claims rather than a single undifferentiated paragraph.
+
+The second contribution is a verification-first formulation of scientific question answering. By decomposing an
+answer into atomic claims and attaching a verdict, an explicit confidence, and supporting evidence to each,
+AI-Scientist makes factuality measurable at the level where support, contradiction, and uncertainty actually
+differ.
+
+The third contribution is a transparent confidence and critique mechanism. Confidence is computed from evidence
+strength, corroboration, and source independence and is bounded away from absolute certainty; a separate Critic
+agent flags insufficient, low-confidence, single-source, and contradicted claims and drives a targeted, bounded
+re-verification loop. Together these turn restraint and self-criticism from prompt instructions into engineered
+system behaviour.
+
+The fourth contribution is claim discipline. The thesis separates grounding from correctness, credits honest
+abstention as a success, and positions the multi-agent design against single-agent and RAG baselines on a shared
+substrate so that its added value is isolated. That honesty is part of the scientific value of the work: it makes
+clear where a grounded verifier helps and where it remains bounded by its evidence.
+
+\section{Answers to the Research Questions}
+
+RQ1 asked whether a multi-agent orchestrated framework improves verification quality and reasoning traceability
+compared with a single-agent reader and a standard RAG pipeline. The evaluation supports this as the strongest
+thesis claim: only the multi-agent system decomposes the answer into evidence-attributed claims, computes confidence
+from corroboration and independence, handles contradiction, abstains honestly, and records a traceable orchestration
+trace, whereas the baselines do none of these on the same evidence.
+
+RQ2 asked whether grounding in a layered evidence base reduces unsupported claims. The system binds every supported
+verdict to a retrieved sentence and returns insufficient evidence when no sentence aligns, which structurally
+prevents the assertion of ungrounded claims; the layered model is confirmed to combine uploaded, curated, and live
+evidence with the intended priority.
+
+RQ3 asked whether per-claim confidence is a usable trust signal. The confidence behaves monotonically in evidence
+strength, corroboration, and source independence, penalizes self-only corroboration, and never reaches certainty,
+giving the user a transparent, well-behaved ordering of how trustworthy each conclusion is.
+
+RQ4 asked whether an explicit critic-driven loop improves the handling of weak claims. The Critic reliably flags the
+four weakness patterns and triggers targeted re-verification for the specific weak claims, concentrating additional
+effort where the first pass was most uncertain.
+
+RQ5 asked whether the system remains domain-general while rejecting non-research queries. The same workflow applies
+across medicine, computer science, biology, and psychology, and the scope guard declines clearly non-research
+queries with an explicit message, confirming both breadth and appropriate refusal.
+
+\section{Future Work}
+
+The most important future direction is deeper semantic verification. AI-Scientist currently matches evidence
+primarily through token overlap and reasons over abstracts. Future systems should incorporate semantic entailment
+models and full-text reading so that paraphrased support and subtle contradictions are detected, and so that
+methodological details in the body of a paper inform the verdict.
+
+A second direction is stronger, learned confidence calibration. The current confidence is a transparent heuristic;
+future work could calibrate it against labelled support judgments so that the reported number carries a frequentist
+interpretation, while preserving the inspectability that makes the present design trustworthy.
+
+A third direction is broader and more reliable evidence coverage. Connecting additional scholarly sources, handling
+more document formats, and improving relevance ranking would extend the system's reach beyond the domains best
+served by PubMed Central and arXiv, and would reduce its sensitivity to question phrasing.
+
+A fourth direction is richer contradiction and consensus modelling. Beyond labelling a single claim as contradicted,
+the system could characterize the state of a debate --- how many sources support each side and how strong each is
+--- giving the user a map of the literature rather than a single verdict.
+
+A fifth direction is human-in-the-loop verification. Because AI-Scientist is designed to be inspectable, it is a
+natural substrate for interactive workflows in which a researcher accepts, rejects, or refines individual claims and
+the system updates its synthesis accordingly, combining machine recall with human judgement.
+
+\section{Final Remarks}
+
+AI-Scientist does not solve scientific question answering, and the thesis does not need it to. The project shows
+something more useful for the current state of language-model assistants: a research assistant must know when not to
+assert. The evaluation demonstrates that grounding can be made visible, that confidence can be made transparent,
+that contradiction can be surfaced, and that abstention can be engineered rather than hoped for. In response,
+AI-Scientist builds grounding, calibrated confidence, structured critique, and traceability into the answering loop.
+
+The final lesson is therefore practical as well as scientific. Future research assistants should not be judged only
+by how fluently they answer. They should be judged by whether their conclusions are grounded, whether their
+confidence reflects the evidence, whether they surface disagreement, and whether they decline to assert what the
+evidence does not support. AI-Scientist is a step toward that kind of assistant: not an overconfident oracle, but a
+cautious, evidence-aware collaborator whose reasoning a human can always inspect.

@@ -1,0 +1,271 @@
+\section{Introduction}
+
+The previous chapter defined AI-Scientist as a verification-first, evidence-grounded research assistant. This
+chapter shows how that definition is realized architecturally. The most important high-level point is that
+AI-Scientist is not a single prompt or a free-form swarm of agents. It is a structured pipeline of specialized
+agents coordinated by an explicit Orchestrator, in which control flow is deterministic and only specific stages
+delegate to a language model. This is a deliberate design decision, not a missing feature.
+
+The architecture follows the evidence discussed in the literature review. Grounded reasoning systems are easier to
+defend, inspect, and reason about when their stages and transitions are visible. AI-Scientist therefore separates
+retrieval, claim extraction, verification, critique, synthesis, and reporting into distinct agents with typed
+inputs and outputs. This separation gives the thesis a clear systems story: trustworthy scientific answering is not
+one monolithic generation step, but a controlled workflow that transforms a research question into an
+evidence-backed, confidence-annotated report.
+
+\section{Architectural Philosophy}
+
+AI-Scientist is best understood as a \emph{multi-agent orchestrated pipeline} with an embedded re-verification
+loop. A single Orchestrator owns the workflow state and invokes each agent in turn; the agents do not coordinate
+autonomously among themselves. In the terminology used throughout the project:
+
+\begin{enumerate}
+\item an \textbf{agent} is a component with one specialized responsibility (retrieval, extraction, verification,
+critique, synthesis, or reporting);
+\item a \textbf{deterministic stage} uses fixed rules, token-overlap measures, and thresholds and does not call a
+language model;
+\item an \textbf{LLM-backed stage} performs bounded model-assisted refinement on top of a deterministic result;
+and
+\item the \textbf{critic loop} is the adaptive act-observe-revise step in which the Critic's assessment of weak
+claims feeds a second, targeted retrieval-and-verification pass.
+\end{enumerate}
+
+This distinction matters because it clarifies where intelligence is spent. The backbone of AI-Scientist ---
+retrieval ranking, evidence scoring, verdict selection, confidence computation, and critique --- is deterministic
+and therefore reproducible and inspectable. Language-model assistance is layered on selected stages as an optional
+refinement, and the system degrades gracefully to its deterministic behaviour when no model is available.
+Figure~\ref{fig:architecture} shows the high-level organization, and Figure~\ref{fig:pipeline} shows the
+end-to-end data flow including the critic loop.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners, align=center, minimum height=8mm, inner sep=4pt, fill=black!3},
+  orch/.style={draw, rounded corners, align=center, minimum height=9mm, inner sep=5pt, fill=black!8},
+  >={Stealth[round]}
+]
+\node[box] (user) {User Question};
+\node[orch, below=7mm of user, minimum width=86mm] (orch) {Orchestrator Agent\\ \scriptsize (workflow state, stopping criteria, scope guard)};
+
+\node[box, below=10mm of orch.south, xshift=-34mm] (ret) {Retrieval};
+\node[box, right=5mm of ret] (claim) {Claim\\Extraction};
+\node[box, right=5mm of claim] (ver) {Verification};
+\node[box, right=5mm of ver] (crit) {Critic};
+
+\node[box, below=9mm of claim, xshift=6mm] (syn) {Synthesis};
+\node[box, right=22mm of syn] (rep) {Report};
+\node[box, below=8mm of syn, xshift=14mm] (out) {Evidence-Backed Report\\ \scriptsize (verdicts, confidence, trace)};
+
+\draw[->] (user) -- (orch);
+\draw[->] (orch.south) -- (ret.north);
+\draw[->] (orch.south) -- (claim.north);
+\draw[->] (orch.south) -- (ver.north);
+\draw[->] (orch.south) -- (crit.north);
+\draw[->] (syn) -- (rep);
+\draw[->] (syn) -- (out);
+\draw[->] (rep) -- (out);
+
+\begin{scope}[on background layer]
+\node[draw, dashed, rounded corners, fit=(ret)(crit), inner sep=4mm, label={[yshift=-1mm]above:\scriptsize Specialized agents}] {};
+\end{scope}
+\end{tikzpicture}
+\caption[High-level AI-Scientist architecture]{\textbf{High-level AI-Scientist architecture.} A single
+Orchestrator coordinates six specialized agents. The Orchestrator owns the workflow state, applies the scope
+guard, and decides when additional verification is needed before composing the final evidence-backed report.}
+\label{fig:architecture}
+\end{figure}
+
+\section{The Orchestrator Agent}
+
+The Orchestrator is the central controller of AI-Scientist. It receives the user's research question, applies the
+scope guard, and then drives the agents in a fixed order: retrieve evidence, extract claims, verify each claim,
+criticize the results, optionally re-verify weak claims, synthesize a summary, and build the report. It also owns
+the workflow's early-exit conditions: if the question is out of scope, if no relevant papers are found, or if no
+sufficiently aligned claims can be extracted, the Orchestrator stops early and returns an honest report explaining
+why, rather than forcing the pipeline forward into a fabricated answer.
+
+Crucially, the Orchestrator maintains the \emph{orchestration trace} --- a running list of human-readable steps
+describing what happened at each stage, such as how many papers were retrieved, how many claims were extracted,
+how many critique notes were raised, and whether a second verification pass was triggered. This trace is part of
+the final report and is the mechanism by which the system's reasoning becomes inspectable.
+
+\section{The Evidence Layer and the Retrieval Agent}
+
+The Retrieval agent realizes the layered evidence model from Chapter~3. It maintains a local pool that lists
+user-uploaded papers first and then the curated corpus, deduplicated so that an uploaded paper wins on a tie. When
+live retrieval is enabled, it augments this local pool with results fetched at query time from PubMed Central and
+arXiv.
+
+Ranking is where the source-priority requirement becomes concrete. Each candidate paper is scored by its
+query-coverage relevance plus a source-dependent bonus, with uploaded papers receiving the largest bonus, curated
+corpus papers an intermediate bonus, and live-API papers the smallest. Candidates are then admitted only if their
+raw coverage clears the minimum threshold, so the source bonus changes ordering but cannot smuggle in an
+irrelevant paper. The agent also applies a quality filter to live results --- penalizing very short or metadata-poor
+abstracts --- so that low-quality API hits do not dilute the evidence pool. The result is a ranked evidence set in
+which user-provided and locally trusted papers surface first, while genuinely relevant live results can still
+appear.
+
+\section{The Claim Extraction Agent}
+
+Once evidence has been retrieved, the Claim Extraction agent converts the unstructured abstracts into discrete,
+checkable claims. It scans each retrieved paper sentence by sentence and selects candidate statements that either
+contain research-assertion cues (such as ``improves,'' ``reduces,'' ``demonstrates,'' or ``outperforms'') or share
+content tokens with the user's question. Each selected sentence becomes a structured claim that records its text, a
+coarse claim type (performance, finding, implication, limitation, or observation), its source paper, and the focus
+terms it shares with the question.
+
+This stage is the architectural embodiment of the claim-level factuality principle from the literature. By turning
+a paper into a small set of explicit claims, AI-Scientist ensures that verification, confidence, and critique all
+operate at the granularity where support and contradiction actually differ, rather than on a single fused answer.
+The number of claims per question is bounded so that the workflow stays focused on the statements most relevant to
+the query.
+
+\section{The Verification Agent}
+
+The Verification agent is the analytical core of AI-Scientist. For each claim, it examines the sentences of the
+candidate papers and computes an evidence score that blends Jaccard overlap with focus-term and content-term
+agreement, plus small bonuses when a sentence comes from the claim's own source or matches its rhetorical type. It
+then classifies each scored sentence as supporting or contradicting the claim, using negation and
+contradiction-cue analysis: a sentence whose polarity disagrees with the claim's polarity is treated as
+contradictory.
+
+From the collected evidence, the agent selects one of the four verdicts defined in Chapter~3. A claim with
+adequate aligned support becomes supported; a claim where strong, multi-source counter-evidence dominates becomes
+contradicted; an overgeneralized claim, or one without sufficient overlap, becomes insufficient evidence. The
+confidence attached to each verdict is computed deterministically from evidence strength, the number of additional
+supporting snippets, and the number of independent corroborating sources, with an explicit penalty when a claim is
+only self-corroborated. This is the architectural point at which the honesty requirements become operational:
+verdicts are bound to evidence, contradictions are representable, and self-corroboration is discounted.
+
+When a language model is available, the verifier can pass its preliminary verdict, together with the selected
+supporting and contradicting snippets, to a bounded refinement step that may adjust the verdict and rationale. This
+refinement is constrained to the already-retrieved evidence and is optional; if it is unavailable or fails, the
+deterministic assessment stands.
+
+\section{The Critic Agent and the Re-Verification Loop}
+
+The Critic agent implements the adaptive-reasoning requirement. After the first verification pass, it reviews all
+assessments and raises critique notes for four weakness patterns: claims with insufficient evidence, claims whose
+confidence falls below a threshold, claims supported by only a single source, and claims that are contradicted.
+These notes are reported to the user, but more importantly they can drive action.
+
+For claims that are weak in a way that more evidence might resolve, the Critic produces a re-verification decision:
+a targeted follow-up query built from the claim text, its focus terms, and its source title, with an added
+counter-evidence probe when the claim contains absolute or contradiction-prone language. The Orchestrator then
+runs a second retrieval pass for that specific claim, merges the new papers with the first-pass evidence, and
+re-verifies the claim with a preference for resolving contradictions. Overgeneralized claims are deliberately
+excluded from this loop, because seeking more evidence cannot rescue a claim that is too broad to settle.
+
+This loop is the architectural difference between AI-Scientist and a fixed RAG pipeline. The effort spent on a
+claim is conditioned on how uncertain the first pass was, and the additional retrieval is aimed precisely at the
+weak claim rather than re-running the whole query. Figure~\ref{fig:pipeline} shows this feedback path explicitly.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  node distance=6mm,
+  stage/.style={draw, rounded corners, align=center, text width=26mm, minimum height=9mm, inner sep=3pt, fill=black!3},
+  io/.style={draw, rounded corners, align=center, text width=26mm, minimum height=9mm, inner sep=3pt, fill=black!8},
+  >={Stealth[round]}
+]
+\node[io] (q) {Research Question};
+\node[stage, below=of q] (scope) {Scope Guard};
+\node[stage, below=of scope] (ret) {Retrieval\\ \scriptsize (uploads / corpus / live)};
+\node[stage, below=of ret] (claim) {Claim Extraction};
+\node[stage, below=of claim] (ver) {Verification\\ \scriptsize (verdict + confidence)};
+\node[stage, below=of ver] (crit) {Critic\\ \scriptsize (flag weak claims)};
+\node[stage, below=of crit] (syn) {Synthesis};
+\node[io, below=of syn] (rep) {Report + Trace};
+
+\draw[->] (q) -- (scope);
+\draw[->] (scope) -- (ret) node[midway,right]{\scriptsize in scope};
+\draw[->] (ret) -- (claim);
+\draw[->] (claim) -- (ver);
+\draw[->] (ver) -- (crit);
+\draw[->] (crit) -- (syn) node[midway,right]{\scriptsize accepted};
+\draw[->] (syn) -- (rep);
+
+% critic re-verification loop
+\draw[->, dashed] (crit.east) -- ++(20mm,0) |- (ret.east)
+  node[pos=0.25, right, align=left]{\scriptsize targeted\\ \scriptsize re-verification};
+
+% early exits
+\draw[->, dotted] (scope.west) -- ++(-14mm,0) |- (rep.west)
+  node[pos=0.25, left, align=right]{\scriptsize out of scope /\\ \scriptsize no evidence};
+\end{tikzpicture}
+\caption[The AI-Scientist verification pipeline]{\textbf{The AI-Scientist verification pipeline end-to-end.} A
+research question passes the scope guard, is grounded by layered retrieval, decomposed into claims, and verified
+into per-claim verdicts with confidence. The Critic flags weak claims and can trigger a targeted re-verification
+pass (dashed). Honest early exits (dotted) return a report when the question is out of scope or no relevant
+evidence exists. Synthesis and reporting produce the final evidence-backed report and orchestration trace.}
+\label{fig:pipeline}
+\end{figure}
+
+\section{The Synthesis Agent}
+
+The Synthesis agent composes the executive summary from the verified claims and the critique notes. Its
+deterministic form aggregates the assessments into a short, calibrated statement: how many claims are supported,
+how many are contradicted, and how many remain unresolved, with an explicit note that weakly supported or
+contradicted claims should be read cautiously. When a language model is available, the agent can rewrite this
+summary into more fluent prose under tight constraints --- it is instructed to state the overall finding in a few
+sentences, to remain grounded in the verified claims, and not to overclaim --- and it falls back to the
+deterministic summary if the model is unavailable.
+
+The architectural significance of this stage is that synthesis is downstream of verification, not a substitute for
+it. The summary describes the verified evidence; it does not introduce new conclusions that were not checked.
+
+\section{The Report Agent and the Orchestration Trace}
+
+The Report agent assembles the final structured output: the question, the executive summary, the list of retrieved
+papers, the orchestration trace, the per-claim verification details (claim text, type, source, verdict, confidence,
+rationale, and evidence snippets), and the critique notes. The report is produced as both a structured object and a
+rendered Markdown document so that it can be displayed in the user interface, returned through the API, or exported.
+
+The trace-based design is intentional. Because the thesis emphasizes trustworthy reasoning, it is not enough for
+the system to output a conclusion. The conclusion must be inspectable, explainable, and attributable to its
+intermediate stages. A reader can see why a claim was marked insufficient, which paper supported a supported claim,
+and whether a second verification pass was run.
+
+\section{Graceful Degradation and the Optional LLM Layer}
+
+A defining architectural property of AI-Scientist is that the language model is an optional accelerator rather than
+a hard dependency. The Verification and Synthesis agents consult a provider-backed model only when one is
+configured; otherwise the system runs entirely on its deterministic heuristics. The model layer is also written to
+tolerate provider differences: reasoning-capable models receive an effort parameter, while chat models that reject
+that parameter are detected and called without it, and any model failure is logged and falls back to the
+deterministic result.
+
+This design serves three purposes. First, it makes the core pipeline reproducible and offline-capable, which is
+essential for a thesis that emphasizes inspectable reasoning rather than opaque cloud orchestration. Second, it
+lets the model improve fluency and borderline verdicts without ever being able to override the grounding and
+honesty rules, because those rules run first and constrain what the model sees. Third, it keeps the architecture
+model-agnostic, so the system is not tied to a single vendor.
+
+\section{Why the Architecture Matches the Thesis Claim}
+
+The AI-Scientist architecture is not merely a sequence of implementation modules. It is a direct structural
+expression of the thesis claim. The system begins by grounding reasoning in layered, source-prioritized evidence
+rather than trusting the model's parametric memory, decomposes that evidence into discrete claims, verifies each
+claim against evidence with explicit confidence, criticizes the weak claims and re-verifies them adaptively, and
+records a trace of the whole process. In doing so, it embodies four commitments:
+
+\begin{enumerate}
+\item \textbf{Evidence grounding:} reasoning is bound to retrieved sources, not to generation.
+\item \textbf{Calibrated confidence:} every verdict carries a transparent confidence derived from evidence
+strength, corroboration, and independence.
+\item \textbf{Self-critique:} a separate Critic agent flags weak claims and can demand more evidence.
+\item \textbf{Traceability:} the orchestration trace and per-claim evidence make every conclusion auditable.
+\end{enumerate}
+
+These commitments are what distinguish AI-Scientist from both single-pass readers and standard RAG pipelines.
+
+\section{Chapter Conclusion}
+
+This chapter described the AI-Scientist system design as a structured, orchestrated verification pipeline rather
+than a generic language-model application. The architecture begins with layered retrieval, moves through claim
+extraction and deterministic evidence-bound verification, narrows uncertainty through the Critic agent and a
+targeted re-verification loop, and ends with synthesis and a traceable report. The language model is an optional
+refinement layer that never overrides the grounding and honesty rules. With the architecture now established, the
+next chapter maps these agents to the actual implementation.

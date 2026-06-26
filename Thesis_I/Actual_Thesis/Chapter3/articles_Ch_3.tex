@@ -1,0 +1,217 @@
+\section{Introduction}
+
+The previous chapter established that grounded scientific answering is already a recognized research task, but
+that the most defensible remaining gap lies in \emph{verification-first}, \emph{evidence-attributed}, and
+\emph{honest} answering. This chapter turns that positioning into a precise problem statement. Rather than treating
+AI-Scientist as a generic question-answering agent, the thesis defines it as a constrained verification system: it
+observes a research question, gathers layered evidence, decomposes the relevant material into discrete claims,
+assigns each claim a grounded verdict and confidence, criticizes the weak claims, and reports the result with a
+traceable rationale.
+
+This precision matters for two reasons. First, it prevents overclaiming. A thesis that vaguely states
+``AI-Scientist answers research questions'' would blur together retrieval, claim extraction, verification, and
+synthesis. Second, a well-defined problem statement makes the evaluation meaningful. The qualities examined later
+in the thesis measure not only whether an answer is produced, but whether the answer is grounded, calibrated, and
+inspectable.
+
+\section{Task Definition}
+
+AI-Scientist addresses the following task: given a natural-language research question \(q\) from any academic
+domain, and an evidence environment consisting of optional user-uploaded papers, a curated offline corpus, and
+optional live scholarly sources, produce a structured report that contains a grounded conclusion supported by
+traceable evidence. The task is therefore not merely ``generate an answer.'' It is a structured verification
+problem over noisy and incomplete evidence.
+
+At a high level, the system input consists of:
+
+\begin{enumerate}
+\item the research question or claim \(q\) submitted by the user,
+\item an optional set of user-uploaded papers supplied for the session, and
+\item an evidence environment: a curated corpus that is always available offline, and optional live retrieval from
+PubMed Central and arXiv.
+\end{enumerate}
+
+The system output is a structured report containing an executive summary, the list of retrieved papers, a set of
+per-claim assessments, a set of critique notes, and an orchestration trace. In the implementation this structure is
+explicit: each assessment materializes a claim, a verdict, a confidence, the supporting or contradicting evidence
+snippets, and a rationale. Making this structure explicit, rather than leaving it implicit in free-form text, is a
+deliberate design choice because it makes the system measurable and auditable.
+
+\section{Verdict Space}
+
+The central abstraction in AI-Scientist is the \emph{verified claim} rather than the free-form answer. Each
+extracted claim is assigned exactly one verdict from a bounded set:
+
+\begin{enumerate}
+\item \textbf{Supported:} retrieved evidence aligns with the claim, with confidence weighted by evidence strength,
+corroboration, and source independence.
+\item \textbf{Contradicted:} the available evidence trends against the claim, or strong counter-evidence coexists
+with partial support; the disagreement is reported explicitly rather than hidden.
+\item \textbf{Insufficient evidence:} the evidence pool does not provide enough overlapping support to settle the
+claim; the system abstains instead of overclaiming.
+\item \textbf{Out of scope:} the query is not a research question and is declined before analysis begins.
+\end{enumerate}
+
+The thesis treats \emph{insufficient evidence} as a first-class, desirable outcome rather than a failure. In a
+verification system, declining to assert an unsupported claim is the correct behaviour, and much of the value of
+AI-Scientist lies in preferring an honest abstention over a confident fabrication. This is the verification-first
+analogue of the abstention principle that recurs throughout the trustworthy-LLM literature.
+
+\section{The Layered Evidence Model}
+
+Because grounding is the foundation of every verdict, the problem definition fixes where evidence may come from
+and how the sources are prioritized. AI-Scientist uses three evidence layers:
+
+\begin{enumerate}
+\item \textbf{User-uploaded papers:} documents the user supplies for the current session, treated as the most
+authoritative source because they reflect the user's intent and provenance.
+\item \textbf{Curated corpus:} an offline collection of real paper records that is always available, giving the
+system a deterministic grounding even without network access.
+\item \textbf{Live scholarly sources:} results retrieved at query time from PubMed Central and arXiv, which keep
+the evidence current and broaden coverage beyond the local material.
+\end{enumerate}
+
+The layers are not treated as equal. The problem definition imposes a strict source priority --- uploaded papers
+outrank curated-corpus papers, which in turn outrank live-API papers --- so that user-provided and locally
+trusted evidence is preferred when relevance is comparable. Concretely, a paper's local rank score combines its
+relevance to the query with a source-dependent bonus,
+\begin{equation}
+\mathrm{score}(d, q) \;=\; \min\!\big(1,\; \mathrm{cov}(q, d) + b_{s(d)}\big),
+\qquad b_{\mathrm{upload}} > b_{\mathrm{corpus}} > b_{\mathrm{live}},
+\end{equation}
+where \(s(d)\) is the source of document \(d\) and \(\mathrm{cov}(q,d)\) is the query-coverage relevance defined
+below. This makes the source-priority requirement an explicit, inspectable property of retrieval rather than an
+emergent accident of ranking.
+
+\section{Relevance and the Coverage Measure}
+
+A recurring subproblem is deciding whether a paper is relevant enough to a query to serve as evidence. A natural
+first choice is Jaccard token overlap,
+\begin{equation}
+\mathrm{ovl}(a,b) \;=\; \frac{|T(a) \cap T(b)|}{|T(a) \cup T(b)|},
+\end{equation}
+where \(T(\cdot)\) is the set of normalized content tokens of a text. Jaccard overlap is appropriate when comparing
+two short texts, such as a claim and a single sentence, and the system uses it for sentence-level evidence scoring.
+However, it is a poor signal for ranking whole papers against a short query, because a long abstract inflates the
+union \(|T(a) \cup T(b)|\) and drives the score down even when the abstract contains every query term. A genuinely
+relevant paper can thus be pushed below a relevance threshold purely because its abstract is long.
+
+To avoid this length bias, AI-Scientist ranks and filters candidate papers with a length-robust query-coverage
+measure,
+\begin{equation}
+\mathrm{cov}(q, d) \;=\; \frac{|T(q) \cap T(d)|}{|T(q)|},
+\end{equation}
+the fraction of the query's content tokens that appear in the document. A paper is admitted as evidence only if its
+coverage exceeds a minimum threshold \(\tau_{\mathrm{cov}}\). This separation --- coverage for paper-level ranking,
+Jaccard overlap for sentence-level evidence --- is part of the problem definition because it directly determines
+which evidence the verifier ever sees.
+
+\section{Confidence as a First-Class Output}
+
+The problem definition requires that every verdict carry an explicit confidence \(c \in [c_{\min}, c_{\max}]\),
+bounded away from both \(0\) and \(1\) so that the system never reports absolute certainty. For a supported claim,
+confidence increases with the strength of the best supporting evidence, with the amount of additional
+corroborating evidence, and with the number of \emph{independent} sources --- sources other than the paper the
+claim was extracted from --- and it is penalized when a claim is corroborated only by its own source paper.
+Schematically,
+\begin{equation}
+c \;=\; \mathrm{clip}\Big(\beta_0 + \beta_1\,\mathrm{ovl}_{\max} + \beta_2\,n_{\mathrm{extra}}
++ \beta_3\,n_{\mathrm{indep}} - \gamma\,\mathbb{1}[\text{self-only}],\; c_{\min},\; c_{\max}\Big),
+\end{equation}
+where \(\mathrm{ovl}_{\max}\) is the strongest evidence overlap, \(n_{\mathrm{extra}}\) is the count of additional
+supporting snippets, \(n_{\mathrm{indep}}\) is the number of independent corroborating sources, and the indicator
+penalizes claims supported only by their own source. The exact coefficients are part of the implementation; the
+requirement at the problem level is that confidence be a transparent function of evidence strength, corroboration,
+and independence, never a free-form number emitted by a model.
+
+\section{Scope: A Domain-General Research Assistant}
+
+AI-Scientist is intentionally domain-general. The system is designed to accept research questions from medicine,
+biology, computer science, physics, psychology, economics, and other academic fields, because the verification
+machinery --- retrieve, extract claims, check against evidence, criticize, synthesize --- does not depend on the
+subject area. Domain generality is therefore a scope decision, not an afterthought.
+
+At the same time, AI-Scientist is not a general chatbot. A scope guard rejects clearly non-research, commercial, or
+entertainment queries before any analysis begins, returning an explicit out-of-scope message. The guard is
+deliberately permissive about academic subject matter and restrictive only about non-research intent: it admits a
+question unless it matches a list of non-research cues such as shopping, product recommendations, or personal
+advice. This keeps the system broad across legitimate research domains while preventing it from being misused as a
+generic assistant for which its verification design provides no benefit.
+
+\section{Verification and Honesty Requirements}
+
+The core requirement of AI-Scientist is that an answer must never be detached from its evidence. Several concrete
+requirements follow from this commitment.
+
+\begin{enumerate}
+\item \textbf{Evidence-bound verdicts.} A claim may be marked supported only if at least one retrieved sentence
+aligns with it above the support threshold; otherwise it is insufficient or contradicted.
+\item \textbf{Explicit contradiction handling.} When supporting and contradicting evidence coexist, the system must
+be able to report a contradicted verdict and describe the disagreement, rather than silently choosing the more
+agreeable side.
+\item \textbf{Abstention over overclaiming.} Overgeneralized claims and claims without adequate overlap must return
+insufficient evidence rather than a fabricated conclusion.
+\item \textbf{Source independence awareness.} Confidence must account for whether corroboration comes from
+independent papers or only from the claim's own source, so that self-corroboration does not masquerade as
+consensus.
+\item \textbf{Traceability.} Each verdict must retain its evidence snippets and rationale, and the run must record
+an orchestration trace describing the steps taken.
+\end{enumerate}
+
+These requirements embody the thesis claim that trustworthiness must be engineered explicitly. Because the
+verification and confidence logic is encoded as transparent rules over retrieved evidence, the later evaluation can
+examine the system's behaviour directly rather than inferring it informally.
+
+\section{Adaptive Reasoning Requirement}
+
+Beyond single-pass verification, the problem definition requires \emph{adaptive} reasoning. The system must be able
+to recognize that a first-pass verdict is weak --- because it is insufficient, low-confidence, or single-source ---
+and respond by gathering more targeted evidence and re-verifying that specific claim. This requirement is what
+distinguishes AI-Scientist from a fixed RAG pipeline: the depth of effort spent on a claim is conditioned on how
+uncertain the first pass was, rather than being uniform across all claims.
+
+This adaptivity is bounded. The re-verification loop is targeted at specific weak claims and is constrained so that
+the system does not iterate indefinitely. The goal is disciplined additional effort where it is warranted, not
+open-ended search.
+
+\section{Non-Goals}
+
+Several tempting claims are explicitly outside the scope of this thesis.
+
+\begin{enumerate}
+\item \textbf{Autonomous scientific discovery} is not claimed. AI-Scientist verifies and reports on existing
+literature; it does not design experiments or generate novel hypotheses as established findings.
+\item \textbf{Full-text deep reading} is not claimed. The system reasons primarily over titles, abstracts, and
+uploaded paper records, not over the complete text of every paper.
+\item \textbf{Guaranteed factual correctness} is not claimed. A grounded verdict is stronger evidence than an
+ungrounded assertion, but it remains bounded by the quality and coverage of the retrieved evidence.
+\item \textbf{Exhaustive literature coverage} is not claimed. Live retrieval surfaces a relevant subset of sources,
+not the entire body of work on a topic.
+\item \textbf{Replacing human judgement} is not the goal. AI-Scientist is designed as an inspectable assistant
+whose conclusions a human can audit, not as a final authority.
+\end{enumerate}
+
+These non-goals are important because they protect the thesis from being judged against claims it does not need to
+make. A well-scoped verification assistant is a stronger contribution than an over-ambitious but indefensible
+oracle.
+
+\section{From Problem Statement to Architecture}
+
+The formal problem statement in this chapter now gives a clean lens for reading the rest of the thesis.
+AI-Scientist accepts a research question, gathers layered and source-prioritized evidence, decomposes it into
+claims, verifies each claim against evidence with explicit confidence, criticizes the weak claims and re-verifies
+them adaptively, and reports the result with a traceable rationale. The system is therefore defined not by answer
+generation alone, but by a disciplined pipeline that links retrieval, verification, critique, and synthesis.
+
+This framing also clarifies why the architecture in the next chapter looks the way it does. The orchestrated agent
+pipeline, the layered evidence model, the confidence function, the critic-driven re-verification loop, and the
+scope guard are not independent engineering tricks. They are architectural consequences of the problem definition
+established here.
+
+\section{Chapter Conclusion}
+
+This chapter has defined the AI-Scientist task, its verdict space, the layered evidence model, the relevance and
+confidence measures, the verification and honesty requirements, the adaptive-reasoning requirement, and the scope
+boundaries. These definitions make the later architecture and evaluation measurable: AI-Scientist is judged not
+only by whether it can produce an answer, but by whether it grounds, calibrates, criticizes, and traces that answer
+under explicit honesty constraints. The next chapter translates these requirements into the system architecture.

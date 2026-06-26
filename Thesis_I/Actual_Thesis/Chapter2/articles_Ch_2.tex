@@ -1,0 +1,195 @@
+\section{Introduction}
+
+The AI-Scientist problem sits at the intersection of several active research areas rather than belonging to only
+one of them. It is related to the study of hallucination in large language models, to retrieval-augmented
+generation, to automated fact-checking and scientific claim verification, and to the growing literature on
+multi-agent reasoning and self-critique \cite{ji2023hallucination,ragsurvey2024,wadden2020scifact,wu2023autogen}.
+A good related-work chapter for AI-Scientist therefore needs to do more than list nearby papers. It must explain
+which parts of the prior literature AI-Scientist inherits directly, which capabilities have already been
+established by others, and which gap still remains meaningful enough to support a thesis contribution.
+
+As of the time of writing, the field has moved well beyond the point where one can claim novelty simply by saying
+that a model retrieves evidence before answering. Retrieval-augmented and self-reflective systems already
+demonstrate that grounding and self-critique reduce hallucination. The important question is no longer whether
+grounding should be used at all, but rather how scientific answering should be \emph{structured},
+\emph{verified}, and \emph{made transparent}. This chapter reviews the most relevant prior work and shows why
+AI-Scientist is best positioned not as ``the first grounded research assistant,'' but as an orchestrated,
+verification-first, evidence-attributed system built on top of an already established grounding setting.
+
+\section{Hallucination in Large Language Models}
+
+The motivating problem for AI-Scientist is hallucination: the tendency of generative models to produce statements
+that are fluent and confident but unsupported by, or contradictory to, the underlying facts. Surveys of the
+phenomenon distinguish between intrinsic hallucination, where the output contradicts the provided source, and
+extrinsic hallucination, where the output cannot be verified against any available source
+\cite{ji2023hallucination,huang2023hallucinationsurvey}. Both are damaging in a scientific setting, but extrinsic
+hallucination is especially dangerous because it includes fabricated findings and invented citations that a
+non-expert reader cannot easily detect.
+
+This literature matters for AI-Scientist in two ways. First, it establishes that hallucination is not a rare edge
+case but a structural property of how current models generate text, which justifies building verification into the
+system rather than trusting the base model. Second, it motivates the central design decision of the thesis: to
+make the evidence for each statement explicit, so that intrinsic hallucination becomes checkable against the
+retrieved sources and extrinsic hallucination is surfaced as ``insufficient evidence'' rather than presented as
+fact.
+
+A related strand of work focuses on \emph{detecting} hallucination after generation. SelfCheckGPT, for example,
+samples multiple responses and measures their consistency as a black-box signal of factuality, on the intuition
+that hallucinated content varies more across samples than grounded content \cite{manakul2023selfcheckgpt}.
+AI-Scientist shares the underlying goal of flagging untrustworthy statements, but takes a complementary route:
+rather than detecting hallucination by self-consistency alone, it grounds each claim in retrieved evidence and
+assigns confidence from the strength and independence of that evidence.
+
+\section{Measuring Factual Precision}
+
+Detecting hallucination is only useful if factuality can be measured at a meaningful granularity. Coarse,
+response-level judgments hide the fact that a long answer may be partly correct and partly fabricated. FActScore
+addresses this by decomposing a generated passage into atomic facts and scoring each against a knowledge source,
+yielding a fine-grained precision measure \cite{min2023factscore}. This decomposition principle is directly
+relevant to AI-Scientist, whose Claim Extraction agent performs an analogous step: it breaks the retrieved
+material into discrete, individually checkable claims so that verification and confidence can be reported per
+claim rather than per answer.
+
+The lesson AI-Scientist takes from this line of work is methodological. A trustworthy research assistant should
+not output a single monolithic verdict on a whole answer. It should expose the unit of evidence at the level of
+individual claims, because that is the level at which support, contradiction, and uncertainty actually differ.
+
+\section{Retrieval-Augmented Generation}
+
+The closest architectural ancestor of AI-Scientist is retrieval-augmented generation. The original RAG formulation
+conditions a generator on passages retrieved from an external corpus, improving performance on knowledge-intensive
+tasks and reducing reliance on parametric memory \cite{lewis2020rag}. Subsequent surveys document a rich design
+space covering how to index, retrieve, rerank, and fuse evidence, and how to balance retrieval cost against answer
+quality \cite{ragsurvey2024}. AI-Scientist inherits the core RAG insight that grounding generation in retrieved
+text reduces fabrication, and its Retrieval agent and layered evidence model are squarely within this tradition.
+
+However, standard RAG also sets a baseline that AI-Scientist must improve upon rather than merely reproduce. In a
+typical RAG pipeline, retrieval is a silent preprocessing step and the model still emits a single fused answer. The
+reader sees neither which passages actually supported each part of the answer nor how confident the system is in
+each component. Self-RAG sharpens this picture by training a model to decide when to retrieve and to critique its
+own generations with reflection tokens, moving RAG from a fixed pipeline toward an adaptive, self-evaluating one
+\cite{asai2024selfrag}. AI-Scientist pursues the same adaptive spirit, but realizes it through an explicit
+multi-agent division of labour and an external critic rather than through learned reflection tokens, which keeps
+the verification logic inspectable and model-agnostic.
+
+For AI-Scientist, the most useful interpretation of the RAG literature is that grounding is necessary but not
+sufficient. Retrieval supplies the raw material for verification; it does not, on its own, tell the user which
+claims are well-supported, which rest on a single source, and which are contradicted.
+
+\section{Automated Fact-Checking and Scientific Claim Verification}
+
+A second direct ancestor is automated fact-checking, and in particular scientific claim verification. The FEVER
+task framed fact verification as retrieving evidence sentences and labeling a claim as supported, refuted, or
+lacking information \cite{thorne2018fever}. SciFact specialized this setting to scientific claims, requiring a
+system to find abstracts that support or contradict a claim and to identify the specific rationale sentences
+\cite{wadden2020scifact}. This labeling scheme --- supported, contradicted, or insufficient evidence --- maps
+almost directly onto the verdict space used by the AI-Scientist Verification agent.
+
+This correspondence is important for positioning. AI-Scientist does not claim to invent the idea of labeling a
+scientific claim against retrieved evidence; that task is well established. What the fact-checking literature
+generally does not provide is an end-to-end \emph{assistant} that takes a free-form research question, extracts its
+own claims from retrieved papers, verifies them, criticizes the weak ones, and synthesizes a confidence-annotated
+report for a human user across arbitrary domains. AI-Scientist is best understood as embedding the claim-level
+verification paradigm inside a usable, orchestrated research workflow.
+
+The fact-checking tradition also reinforces a key design constraint: the evidence rationale must be explicit. A
+verdict without the supporting sentence is not auditable. AI-Scientist therefore attaches, to each verdict, the
+specific evidence snippets and their overlap with the claim, mirroring the rationale-selection requirement of
+scientific claim verification.
+
+\section{Reasoning, Self-Critique, and Verification Loops}
+
+A third strand of related work concerns how language-model systems reason and check themselves over multiple
+steps. ReAct interleaves reasoning traces with actions such as retrieval, improving grounding and interpretability
+\cite{yao2023react}. Reflexion adds a verbal self-feedback loop in which an agent reflects on a failed attempt and
+retries with that feedback \cite{shinn2023reflexion}. Chain-of-Verification has a model draft an answer, generate
+verification questions, answer them independently, and revise, explicitly reducing hallucination through a
+self-checking loop \cite{dhuliawala2023cove}.
+
+These systems are conceptually close to the AI-Scientist Critic agent and its re-verification loop. The shared
+idea is that a first attempt should not be trusted as final, and that a structured second look can catch errors the
+first pass missed. AI-Scientist differs in where it places the critique. Rather than asking one model to critique
+itself --- which risks the critique inheriting the same blind spots as the original answer --- it assigns critique
+to a separate agent with explicit rules for flagging insufficient, low-confidence, single-source, and contradicted
+claims, and it routes the resulting re-verification at the granularity of the individual weak claim. This makes the
+loop transparent and targeted rather than global and opaque.
+
+\section{Multi-Agent Frameworks}
+
+The final and most architecturally relevant strand is the recent wave of multi-agent LLM frameworks. AutoGen
+provides infrastructure for multiple conversational agents that cooperate and use tools \cite{wu2023autogen};
+CAMEL studies role-playing communicative agents \cite{li2023camel}; and multi-agent debate shows that having
+several model instances argue and converge can improve factuality and reasoning over a single instance
+\cite{du2023debate}. Orchestration libraries such as LangGraph make it practical to express such systems as
+explicit state machines over cooperating actors \cite{langgraph2024}.
+
+This environment creates both a risk and an opportunity for AI-Scientist. The risk is that a vague claim such as
+``we built a multi-agent system'' will sound derivative, because multi-agent scaffolding is now common. The
+opportunity is that most multi-agent demonstrations emphasize open-ended collaboration or debate, whereas
+AI-Scientist uses a small, fixed set of specialized roles wired into a deterministic orchestration with a clear
+purpose: verify claims against layered evidence and report the result honestly. The contribution is therefore not
+the existence of multiple agents, but the disciplined, verification-oriented way they are composed.
+
+The debate literature is particularly instructive. Multi-agent debate improves factuality by forcing disagreement
+to surface before consensus \cite{du2023debate}. AI-Scientist obtains a related benefit more cheaply: instead of
+several generalist agents debating, a single Critic agent applies explicit weakness criteria and can demand more
+evidence, which provides much of the value of adversarial review without the cost and unpredictability of free
+debate.
+
+\section{Evaluating Grounded Systems}
+
+Because AI-Scientist makes claims about grounding and trustworthiness, it must be read alongside the literature on
+how such systems are evaluated. Frameworks such as RAGAS propose reference-light metrics for retrieval-augmented
+systems, including faithfulness (whether the answer is entailed by the retrieved context), answer relevance, and
+context relevance \cite{es2023ragas}. These dimensions correspond closely to the qualities AI-Scientist is
+designed to optimize: faithfulness maps to evidence grounding, and context relevance maps to the quality of
+retrieval ranking.
+
+The evaluation literature also cautions that grounded systems are easy to over-credit. A system can appear faithful
+simply by hedging, or appear confident simply by ignoring contradictory evidence. This caution shapes the
+evaluation philosophy adopted later in this thesis, which emphasizes whether the system grounds, calibrates, and
+exposes its reasoning, rather than only whether it produces an agreeable-sounding answer.
+
+\section{Infrastructure: Scholarly Retrieval Sources}
+
+Finally, AI-Scientist depends on concrete scholarly retrieval infrastructure. Live evidence is drawn from PubMed
+Central through the NCBI E-utilities programming interface \cite{ncbi_eutils} and from arXiv through its public API
+\cite{arxiv_api}. Classical lexical relevance ideas, exemplified by the BM25 family of ranking functions
+\cite{robertson2009bm25}, inform the token-overlap and coverage measures used to rank candidate evidence. These
+are not contributions of the thesis, but they are essential building blocks, and the way AI-Scientist combines
+them with user uploads and a curated corpus is part of its evidence-layering design.
+
+\section{Implications for AI-Scientist Design}
+
+Taken together, the literature suggests several design consequences for AI-Scientist.
+
+First, grounding is necessary but insufficient. RAG reduces hallucination, but the user still needs per-claim
+support, confidence, and contradiction information that a fused answer does not provide.
+
+Second, factuality should be measured at the claim level. FActScore and scientific claim verification both argue
+for decomposing answers into atomic, individually checkable units.
+
+Third, verdicts must carry their evidence. The fact-checking tradition shows that a label without a rationale is
+not auditable.
+
+Fourth, self-critique helps, but it is most trustworthy when it is structured and external rather than left to the
+same model that produced the answer.
+
+Fifth, multi-agent orchestration is valuable not for its novelty but for the discipline it imposes: a fixed set of
+specialized roles with a clear verification purpose is easier to reproduce, inspect, and reason about than
+free-form agent collaboration.
+
+\section{Chapter Conclusion and Positioning}
+
+The literature reviewed in this chapter leads to a clear and disciplined positioning for AI-Scientist. Prior work
+has already demonstrated that grounding reduces hallucination, that factuality can be measured at the claim level,
+that scientific claims can be labeled against retrieved abstracts, and that self-critique and multi-agent
+collaboration can improve reasoning. At the same time, prior work also makes clear that standard grounded systems
+still tend to emit single fused answers without exposing per-claim support, confidence, and disagreement to the
+user.
+
+AI-Scientist therefore does not claim novelty in grounding or in the use of multiple agents. Its contribution lies
+in composing these established ideas into a \emph{verification-first, evidence-attributed, self-critical research
+assistant} in which every conclusion is a checked claim with a calibrated confidence and a traceable rationale.
+That framing is supported, not contradicted, by the literature. The next chapter turns from this background to the
+formal problem definition, requirements, and scope of the AI-Scientist system.

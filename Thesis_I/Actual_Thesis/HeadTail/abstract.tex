@@ -1,0 +1,28 @@
+\FrontMatterChapter{Abstract}
+
+Large language models can answer scientific questions fluently, but they frequently assert claims that are not
+grounded in evidence, fabricate or misattribute citations, and offer no transparent account of how a conclusion
+was reached. This thesis presents \textbf{AI-Scientist}, a multi-agent orchestrated framework for scientific
+claim verification and adaptive reasoning that addresses these weaknesses by separating the work of a research
+assistant into specialized, cooperating agents rather than entrusting it to a single monolithic model.
+
+In AI-Scientist, an Orchestrator coordinates a Retrieval agent, a Claim Extraction agent, a Verification agent,
+a Critic agent, a Synthesis agent, and a Report agent. Given a research question from any academic
+domain, the system grounds its reasoning in evidence drawn from three layers --- user-uploaded papers, a curated
+offline corpus, and live scholarly sources retrieved from PubMed Central and arXiv --- and produces an
+evidence-backed verdict for each extracted claim, an explicit confidence estimate, and a traceable record of the
+reasoning steps that led to the answer. A central design commitment is that the system should report
+\emph{insufficient evidence} rather than overclaim, and should surface contradictions instead of hiding them.
+
+The framework is studied against two baselines that represent the conventional alternatives: a direct
+single-agent reader and a standard retrieval-augmented generation pipeline. The thesis argues, and the system
+demonstrates, that an orchestrated multi-agent design improves verification quality and reasoning traceability
+along several axes: it grounds conclusions in retrieved evidence, it makes its uncertainty explicit through
+calibrated confidence and an iterative critic-driven re-verification loop, and it favours dependable,
+source-attributed answers over confident but unsupported ones. AI-Scientist is therefore positioned not as a
+system that replaces human scientific judgement, but as a cautious, evidence-aware collaborator that makes the
+basis for every conclusion inspectable.
+
+\vspace{1em}
+\noindent\textbf{Keywords:} \ThesisKeywords.
+\clearpage

@@ -1,0 +1,29 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Learned decision gate architecture (Stage 6b)}}{28}{figure.caption.106}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces The implemented PatchOps pipeline end-to-end}}{30}{figure.caption.113}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces CI-Repair-Bench category distribution used as the main public benchmark context.}}{43}{figure.caption.157}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Diagnosis ablation ladder showing the effect of context and gating on diagnosis and localization.}}{54}{figure.caption.200}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Per-category diagnosis behavior on the scaled benchmark slice.}}{54}{figure.caption.201}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Log-only localization strategies. The corrected LLM-first hybrid is strongest but remains below the target bar.}}{55}{figure.caption.204}%
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Localization strategies across Phases 6, 8, and 10. None clears the 0.45 Recall@3 target.}}{57}{figure.caption.212}%
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Agentic localization result and termination behavior. Agentic exploration is useful in isolated cases but does not clear the localization plateau.}}{58}{figure.caption.213}%
+\contentsline {figure}{\numberline {7.6}{\ignorespaces Localization-to-repair linkage: full-repository retrieval removes the apply-rate bottleneck among attempted patches, but repair success remains blocked by semantic correctness.}}{59}{figure.caption.216}%
+\contentsline {figure}{\numberline {7.7}{\ignorespaces Docker repair evaluation on the reproducible subset. Ungated repair obtains some CI-green outcomes, while the gated policy remains conservative.}}{59}{figure.caption.217}%
+\contentsline {figure}{\numberline {7.8}{\ignorespaces Learned classifier compared with the rule baseline. The classifier is a reproducibility and cost contribution, not a repair-rate claim.}}{60}{figure.caption.220}%
+\contentsline {figure}{\numberline {7.9}{\ignorespaces Reward-hacking audit. The observed cheat rate is low but non-zero, justifying an explicit detector and gate.}}{61}{figure.caption.223}%
+\contentsline {figure}{\numberline {7.10}{\ignorespaces Plausibility gate. Precision improves as automatic action is restricted to more plausible patches.}}{62}{figure.caption.225}%
+\contentsline {figure}{\numberline {7.11}{\ignorespaces Risk-coverage behavior. Learned classifier confidence is a much stronger abstention signal than hand-rolled engine confidence.}}{63}{figure.caption.229}%
+\contentsline {figure}{\numberline {7.12}{\ignorespaces Reliability diagram showing the value of isotonic calibration.}}{63}{figure.caption.230}%
+\contentsline {figure}{\numberline {7.13}{\ignorespaces Learned decision gate. The calibrated policy matches-or-beats the hand-tuned threshold policy and recovers held-back low-risk actions without over-acting on that lane.}}{65}{figure.caption.232}%
+\contentsline {figure}{\numberline {7.14}{\ignorespaces Safety Set behavior. The original 20-case result measures decision accuracy, abstention, and unsafe auto-fix behavior.}}{66}{figure.caption.235}%
+\contentsline {figure}{\numberline {7.15}{\ignorespaces Token-cost profile for the scaled evaluation configuration.}}{67}{figure.caption.238}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

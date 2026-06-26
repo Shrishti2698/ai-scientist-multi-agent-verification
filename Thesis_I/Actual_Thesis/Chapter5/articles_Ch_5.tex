@@ -1,0 +1,224 @@
+\section{Introduction}
+
+The previous chapter described the AI-Scientist architecture as an orchestrated verification pipeline. This chapter
+maps that design onto the actual implementation. The goal is not to list every file mechanically, but to explain
+how the main modules cooperate to realize evidence-grounded, self-critical, traceable verification in code.
+
+The implementation is organized as a single Python package, \texttt{ai\_scientist}, with the agents in an
+\texttt{agents} subpackage and a set of supporting modules for configuration, data models, corpus access,
+ingestion, retrieval utilities, scope control, and the optional language-model layer. A Streamlit user interface
+and a programmatic API sit on top of the same package. This separation is intentional: the package contains the
+reasoning logic, while the interfaces are thin clients that drive it.
+
+\section{Implementation Structure}
+
+At the highest level, the codebase is divided into:
+
+\begin{enumerate}
+\item \textbf{agent modules} under \path{ai_scientist/agents/}, which implement retrieval, claim extraction,
+verification, critique, synthesis, reporting, and live retrieval;
+\item \textbf{the orchestrator} in \path{ai_scientist/agents/orchestrator.py}, which wires the agents into the
+end-to-end workflow;
+\item \textbf{core modules} --- \path{models.py}, \path{config.py}, \path{corpus.py}, \path{ingestion.py},
+\path{utils.py}, \path{scope.py}, and \path{llm.py} --- which provide the data types, settings, evidence access,
+and shared logic;
+\item \textbf{baselines} in \path{baselines.py}, which implement the single-agent and RAG comparison systems on
+top of the same retrieval and scoring code; and
+\item \textbf{interfaces}: a Streamlit application (\path{app.py}) and a FastAPI service
+(\path{ai_scientist/api.py}).
+\end{enumerate}
+
+This layered structure keeps the reasoning system reusable. The same \texttt{analyze\_question(...)} entry point
+used by the user interface is also used by the API and by the baselines harness, so that what is demonstrated is
+the real system rather than a simplified mock-up.
+
+\section{Typed Data Models}
+
+The pipeline communicates through explicit dataclasses defined in \path{models.py}. A \texttt{PaperDocument}
+carries a paper's identifier, title, abstract, year, authors, and topics. A \texttt{StructuredClaim} records a
+claim's text, type, source paper, source sentence, and focus terms. An \texttt{EvidenceSnippet} pairs a sentence
+with its overlap score and source. A \texttt{ClaimAssessment} bundles a claim with its verdict, confidence,
+evidence list, and rationale. Finally, a \texttt{FinalReport} aggregates the question, summary, verified claims,
+critique notes, retrieved papers, rendered Markdown, and the iteration trace.
+
+These typed structures are important because every stage writes to a shared, serializable interface rather than
+passing unstructured text. This is what makes the system auditable: the report is not a paragraph that happens to
+mention sources, but a structured object in which each conclusion is explicitly linked to its evidence.
+
+\section{The Orchestrator}
+
+The practical center of the implementation is \texttt{MultiAgentResearchSystem} in \path{orchestrator.py}. Its
+\texttt{analyze\_question} method realizes the workflow described in Chapter~4: it applies the scope guard,
+retrieves evidence, extracts claims, verifies them through a refinement routine, runs the Critic, optionally
+re-verifies weak claims, synthesizes the summary, and builds the report. The method also implements the honest
+early exits: if the question is out of scope, if retrieval returns no papers, or if no aligned claims can be
+extracted, it returns a report that explains the situation instead of fabricating an answer.
+
+Adaptive re-verification is implemented in the private \texttt{\_refine\_assessments} and \texttt{\_run\_second\_pass}
+routines. After the first pass, the Critic's \texttt{identify\_reverification\_targets} produces a list of
+follow-up decisions; for each, the Orchestrator retrieves additional papers for that claim's follow-up query,
+merges them with the first-pass evidence, and re-verifies the claim with contradiction resolution preferred. Every
+step appends a human-readable line to the iteration trace, which is what the user ultimately sees as the
+orchestration trace.
+
+\section{Retrieval and the Layered Evidence Pool}
+
+The Retrieval agent in \path{agents/retrieval.py} implements the layered evidence model. Its \texttt{\_local\_pool}
+builds a deduplicated pool that lists uploaded papers before curated-corpus papers, and \texttt{\_local\_rank\_score}
+adds the source-dependent bonus so that uploads outrank corpus papers at comparable relevance. The
+\texttt{\_rank\_subset} routine ranks candidates by this source-weighted score but gates admission on the raw
+query-coverage clearing the configured minimum, so the bonus can reorder evidence but never inject an irrelevant
+paper.
+
+When live retrieval is enabled, \texttt{retrieve} layers API results on top of the local pool. Live papers pass
+through a quality filter that rewards adequate abstract length, query relevance in title and abstract, recency, and
+the presence of research-indicator terms, and they are merged with a strict source priority: uploads first, then
+corpus, then live. A title-similarity check removes near-duplicates so the same paper is not counted twice across
+sources. The agent is wrapped so that any network failure falls back cleanly to the local pool, keeping the system
+usable offline.
+
+\section{Retrieval Utilities}
+
+The relevance measures live in \path{utils.py}. Tokenization normalizes case, strips stopwords, and applies a
+small morphological normalization so that, for example, plural and singular forms of common research terms match.
+On top of tokenization, \texttt{overlap\_score} computes Jaccard overlap for short-text comparison, and
+\texttt{coverage\_score} computes the length-robust query coverage used for paper-level ranking. Keeping both
+measures in one module makes the design decision from Chapter~3 --- coverage for ranking, Jaccard for
+sentence-level evidence --- explicit and reusable across the verifier, the retriever, and the baselines.
+
+\section{Claim Extraction}
+
+The Claim Extraction agent in \path{agents/claim_extraction.py} scans each retrieved paper sentence by sentence. A
+sentence becomes a candidate claim if it contains a positive research cue or shares content tokens with the
+question. Each candidate is wrapped in a \texttt{StructuredClaim} whose type is inferred from surface cues ---
+limitation, performance, finding, implication, or observation --- and whose focus terms are the intersection of the
+question and sentence tokens. Extraction stops once a configured maximum number of claims is reached, keeping the
+workflow focused on the statements most relevant to the query.
+
+\section{Verification}
+
+The Verification agent in \path{agents/verification.py} is the analytical heart of the implementation. For each
+claim it iterates over the sentences of the candidate papers and computes an evidence score that combines Jaccard
+overlap with focus-term and content-term agreement and small type- and source-aware bonuses. Each scored sentence
+is then classified as supporting or contradicting the claim, using negation and contradiction-cue analysis so that
+a polarity mismatch between claim and sentence is treated as a contradiction.
+
+From the collected evidence the agent selects a verdict. An overgeneralized claim returns insufficient evidence
+unless a contradiction pass is explicitly requested; strong, multi-source counter-evidence yields a contradicted
+verdict; adequate aligned support yields a supported verdict; and the absence of sufficient overlap yields
+insufficient evidence. Confidence is computed by \texttt{\_supported\_confidence} and \texttt{\_contradicted\_confidence}
+from the strongest evidence overlap, the count of additional supporting snippets, and the number of independent
+corroborating sources, with an explicit penalty when a claim is corroborated only by its own source. All confidence
+values are clamped between a floor and a ceiling so the system never reports absolute certainty. The optional
+language-model refinement is invoked only after this deterministic assessment is formed, and only over the
+evidence already selected.
+
+\section{Critique and Adaptive Re-Verification}
+
+The Critic agent in \path{agents/critic.py} implements both reporting and adaptivity. Its \texttt{critique} method
+produces notes for insufficient, low-confidence, single-source, and contradicted claims, including details such as
+whether a single-source claim is merely self-corroborated. Its \texttt{identify\_reverification\_targets} method
+selects which weak claims warrant another pass and builds a follow-up query from the claim text, its focus terms,
+its source title, and a counter-evidence probe when the claim uses absolute or contradiction-prone language.
+Overgeneralized claims are excluded, because additional retrieval cannot settle a claim that is too broad. This is
+the implementation of the bounded, targeted adaptivity required in Chapter~3.
+
+\section{Synthesis and Reporting}
+
+The Synthesis agent in \path{agents/synthesis.py} aggregates the assessments into a calibrated summary, optionally
+rewritten by the language model under instructions to stay grounded and avoid overclaiming, with a deterministic
+fallback. The Report agent in \path{agents/report.py} renders the structured \texttt{FinalReport}, including the
+retrieved papers, the orchestration trace, and the full per-claim verification details with evidence snippets and
+overlap scores. Because the report is both a structured object and rendered Markdown, the same result can be shown
+in the interface, returned by the API, or exported.
+
+\section{The Optional Language-Model Layer}
+
+The language-model abstraction in \path{llm.py} wraps a provider client behind a single interface. It is available
+only when an API key is configured; otherwise the agents run on their deterministic logic. The module is written to
+be provider-tolerant: a helper detects whether the configured model accepts a reasoning-effort parameter and
+includes it only for reasoning-capable models, while models that would reject it are called without it. Structured
+outputs are parsed into small typed schemas for the refined verdict and the rewritten summary, and any call failure
+is logged and degrades to the deterministic result rather than breaking the pipeline.
+
+This design serves three purposes. First, it makes the core pipeline reproducible and offline-capable. Second, it
+ensures the model can improve fluency and borderline verdicts but can never bypass the grounding and honesty rules,
+which run first. Third, it keeps the system model-agnostic, so a different model or provider can be substituted
+through configuration.
+
+\section{Live Scholarly Retrieval}
+
+Live evidence is implemented in \path{agents/live_retrieval.py}. The agent queries PubMed Central through the NCBI
+E-utilities (search, summary, and fetch) and arXiv through its Atom API. Two implementation details are important
+for evidence quality. First, PubMed Central searches are sorted by relevance rather than date, because the default
+date ordering surfaces recent but off-topic papers. Second, abstracts in the PubMed Central XML are nested inside
+structured elements, so the agent gathers all descendant text rather than only the top-level text node, which is
+what allows it to recover full abstracts instead of empty placeholders. The agent also derives cleaner search
+variants from a natural-language question by removing generic filler words, and it identifies itself to NCBI and
+backs off on rate-limit responses, optionally using an API key to raise the request rate.
+
+\section{Configuration and Scope}
+
+Behaviour is centralized in the \texttt{Settings} dataclass in \path{config.py}, which holds the retrieval depth,
+the coverage and support thresholds, the confidence floor and ceiling, the source-priority bonuses, the model
+configuration, and the keyword lists used by the scope guard. Settings can be constructed directly or built from
+environment variables, which is how the interfaces enable live retrieval and the language model when the
+appropriate keys are present. The scope guard in \path{scope.py} uses the non-research keyword list to decline
+clearly non-research queries while admitting research questions from any academic domain, returning an explicit
+out-of-scope message that names the offending topic when possible.
+
+\section{Ingestion of User Papers}
+
+User-provided papers enter the system through \path{ingestion.py}, which parses Markdown, plain-text, JSON, and PDF
+inputs into \texttt{PaperDocument} records. JSON is the most reliable format because it carries explicit metadata;
+Markdown and text files are parsed for front-matter or a leading abstract paragraph; and PDFs are handled with a
+best-effort text extractor. This is the mechanism by which the highest-priority evidence layer --- the user's own
+papers --- is brought into the retrieval pool.
+
+\section{Baselines as First-Class Clients}
+
+The single-agent and RAG baselines in \path{baselines.py} are implemented as disciplined clients of the same
+retrieval and scoring code rather than as separate systems. The single-agent baseline retrieves the top paper and
+trusts a direct overlap check, while the RAG baseline retrieves several papers and aggregates simple supporting
+overlap without explicit contradiction analysis; both cap their confidence to reflect their weaker evidential
+discipline. Implementing the baselines on the shared substrate ensures that the comparison in the evaluation
+isolates the effect of orchestration, claim-level verification, and critique, rather than confounding it with
+unrelated differences in retrieval.
+
+\section{Interfaces}
+
+The Streamlit application in \path{app.py} exposes the full pipeline interactively: the user uploads papers, selects
+a model, asks a question, and sees the executive summary, the retrieved papers with their source labels (uploaded,
+corpus, or live API), the orchestration trace, and the per-claim verdicts with confidence and evidence. The FastAPI
+service exposes the same capability programmatically. Both interfaces construct settings that enable live retrieval
+and the language model from the environment, and both rely entirely on the package's reasoning logic, so the
+interface and the studied system are one and the same.
+
+\section{Implementation Principles}
+
+Several principles recur across the codebase:
+
+\begin{enumerate}
+\item \textbf{Graceful degradation.} The language model and live retrieval are additive; the system retains full
+deterministic functionality when they are unavailable.
+\item \textbf{Grounding before generation.} Deterministic evidence scoring and verdict selection run first and
+constrain any model refinement.
+\item \textbf{Bounded effort.} Retrieval depth, claim counts, and the re-verification loop are bounded to keep the
+workflow focused and predictable.
+\item \textbf{Modularity.} Retrieval, extraction, verification, critique, synthesis, and reporting are separable
+enough to be reused by the baselines and the interfaces.
+\item \textbf{Traceability.} Each stage contributes explicit, typed outputs and trace lines that can be inspected
+later by the user.
+\end{enumerate}
+
+These principles are what make AI-Scientist more than a prompt chain. They turn it into a controlled software
+system whose behaviour can be studied systematically.
+
+\section{Chapter Conclusion}
+
+This chapter mapped the AI-Scientist architecture to its concrete implementation. The pipeline centers on a typed,
+traceable set of agents behind a single Orchestrator; retrieval realizes the layered, source-prioritized evidence
+model; verification and confidence are computed deterministically and refined optionally; the Critic drives bounded
+adaptive re-verification; and the language model and live retrieval are optional enhancements that never override
+the grounding rules. The same package drives the user interface, the API, and the baselines. With the
+implementation now grounded in code, the next chapter describes how the system is evaluated.

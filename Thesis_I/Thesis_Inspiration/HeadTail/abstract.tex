@@ -1,0 +1,24 @@
+\FrontMatterChapter{Abstract}
+
+PatchOps is a repository-aware, safety-gated, abstention-aware repair system for GitHub Actions failures. It
+combines log extraction, failure classification, fault localization, repair planning, patch generation, and a
+closed CI validation loop to decide whether the system should open a fix pull request, request review, rerun
+the workflow, escalate, or abstain.
+
+The thesis investigates not only whether an AI system can repair CI failures, but under what conditions it
+should decline to act. Across the evaluated method families, fault localization remains the dominant
+bottleneck, with Recall@3 staying below 0.45 and peaking at 0.32. The results also show that improved
+localization is necessary but not sufficient for successful repair: full-repository retrieval can raise
+patch-apply rate to 1.00 on the gated path without lifting CI Pass@1 above 0.00 on that same path.
+
+PatchOps is therefore positioned not as a state-of-the-art repair engine on raw Pass@1 alone, but as a
+reproducible and safety-conscious repair workflow that emphasizes honesty, calibrated decision-making, and
+closed-loop validation. On the original 20-case Safety Set it records 0/20 unsafe auto-fixes while maintaining
+high abstention accuracy, and on the expanded 76-case decision-gate study the learned calibrated act-versus-hold
+policy reaches 0.91 act/hold accuracy versus 0.855 for the earlier hand-set threshold policy. This framing
+aligns the system with the practical needs of software engineering teams that value dependable automation over
+aggressive but unsafe patch generation.
+
+\vspace{1em}
+\noindent\textbf{Keywords:} \ThesisKeywords.
+\clearpage
