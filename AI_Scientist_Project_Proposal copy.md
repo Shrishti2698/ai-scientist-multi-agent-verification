@@ -88,7 +88,7 @@ What do CRISPR translational reviews say about cancer treatment applications, et
 
 # CS/ AI:-
 Does uncertainty detection improve dynamic retrieval-augmented generation when deciding whether to retrieve external knowledge?
-How do THaMES and similar tools mitigate hallucination in large language models?
+- How do THaMES and similar tools mitigate hallucination in large language models? 
 How do RAGPart, RAGMask, and query-level robustness studies improve retrieval-augmented generation reliability and defense against corpus poisoning?
 
 

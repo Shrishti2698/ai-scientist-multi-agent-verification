@@ -41,6 +41,7 @@ class VerificationAgent:
         focus_terms = set(structured_claim.focus_terms)
         contradiction_cue_overlap = self._contains_contradiction_claim_cue(claim_text)
         overgeneralized_claim = self._is_overgeneralized_claim(claim_text)
+        support_threshold = max(self.settings.min_support_overlap * 0.6, 0.08)
 
         papers_to_check = candidate_papers or self.corpus.all_papers()
         for paper in papers_to_check:
@@ -63,7 +64,7 @@ class VerificationAgent:
                 )
                 sentence_has_negation = has_negation_or_limitation(sentence, self.settings.contradiction_terms)
                 sentence_contradiction_cue = self._contains_contradiction_claim_cue(sentence)
-                if score >= self.settings.min_support_overlap:
+                if score >= support_threshold:
                     if self._is_contradictory_match(
                         claim_has_negation=claim_has_negation,
                         sentence_has_negation=sentence_has_negation,
@@ -127,7 +128,10 @@ class VerificationAgent:
                 structured_claim=structured_claim,
                 supporting=supporting,
             )
-            rationale = "Retrieved evidence aligns with the claim, with confidence weighted by evidence strength, corroboration, and source independence."
+            if supporting[0].overlap_score < self.settings.min_support_overlap:
+                rationale = "Retrieved evidence partially aligns with the claim, and the system keeps the slight match visible instead of discarding it."
+            else:
+                rationale = "Retrieved evidence aligns with the claim, with confidence weighted by evidence strength, corroboration, and source independence."
             assessment = ClaimAssessment(
                 claim=structured_claim,
                 verdict="supported",

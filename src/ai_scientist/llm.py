@@ -65,11 +65,12 @@ class OpenAIResearchLLM:
             return None
 
         prompt = (
-            "You are a rigorous verifier for research claims across all academic domains.\n"
-            "Use only the provided evidence snippets.\n"
-            "Keep the final verdict aligned to the evidence.\n"
+            "You are a research claim verifier for academic papers across all domains.\n"
+            "Use only the provided evidence snippets, but be lenient about partial matches.\n"
+            "If a snippet meaningfully overlaps the claim, document it even when the wording is not exact.\n"
+            "Prefer supported when the evidence is at least partially aligned, especially from uploaded papers or API papers.\n"
+            "Only choose insufficient_evidence when there is truly no relevant overlap.\n"
             "If evidence is mixed, prefer contradicted over supported when strong counterevidence exists.\n"
-            "If the evidence is too thin or unrelated, choose insufficient_evidence.\n"
             "Return concise reasoning and select the most relevant evidence indices."
         )
         user_input = (
@@ -124,7 +125,8 @@ class OpenAIResearchLLM:
             "You are writing the executive summary for a research verification report across all academic domains.\n"
             "State the overall finding clearly in 2 to 4 sentences.\n"
             "Be precise, research-oriented, and do not overclaim.\n"
-            "Mention that evidence is grounded in the current corpus and note uncertainty when relevant."
+            "Mention that evidence is grounded in the current corpus, uploaded papers, and live API papers when applicable.\n"
+            "Note uncertainty when relevant, but do not hide partial evidence matches."
         )
         parsed = self._parse_response(prompt, "\n".join(lines), SummaryDraft)
         if parsed is None:

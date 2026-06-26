@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/ai_scientist/__init__.py
+src/ai_scientist/accuracy.py
 src/ai_scientist/api.py
 src/ai_scientist/baselines.py
 src/ai_scientist/bootstrap.py
@@ -27,6 +28,7 @@ src/ai_scientist.egg-info/top_level.txt
 src/ai_scientist/agents/__init__.py
 src/ai_scientist/agents/claim_extraction.py
 src/ai_scientist/agents/critic.py
+src/ai_scientist/agents/live_retrieval.py
 src/ai_scientist/agents/orchestrator.py
 src/ai_scientist/agents/report.py
 src/ai_scientist/agents/retrieval.py

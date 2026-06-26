@@ -38,9 +38,9 @@ INGESTOR = RawPaperIngestor()
 load_environment()
 
 
-def build_active_corpus(corpus_path: Path, uploaded_files=None):
-    # Start from the curated base corpus, then merge any uploaded papers into it.
-    base_papers = CorpusRepository.from_path(corpus_path).all_papers()
+def build_active_corpus(corpus_path: Path, uploaded_files=None, include_curated: bool = True):
+    # Start from the curated base corpus if enabled, then merge any uploaded papers into it.
+    base_papers = CorpusRepository.from_path(corpus_path).all_papers() if include_curated else []
     uploaded_papers = []
     upload_errors: list[str] = []
 
@@ -54,16 +54,22 @@ def build_active_corpus(corpus_path: Path, uploaded_files=None):
     return active_corpus, uploaded_papers, upload_errors
 
 
-def compute_corpus_signature(corpus_path: Path, uploaded_files=None) -> str:
-    digest = hashlib.sha256(str(corpus_path).encode("utf-8"))
+def compute_corpus_signature(corpus_path: Path, uploaded_files=None, include_curated: bool = True) -> str:
+    digest = hashlib.sha256(f"{corpus_path}::{include_curated}".encode("utf-8"))
     for uploaded_file in uploaded_files or []:
         digest.update(uploaded_file.name.encode("utf-8"))
         digest.update(uploaded_file.getvalue())
     return digest.hexdigest()
 
 
-def load_systems(corpus_path: Path, uploaded_files=None, use_llm: bool = False, model: str | None = None):
-    corpus, uploaded_papers, upload_errors = build_active_corpus(corpus_path, uploaded_files)
+def load_systems(
+    corpus_path: Path,
+    uploaded_files=None,
+    use_llm: bool = False,
+    model: str | None = None,
+    include_curated: bool = True,
+):
+    corpus, uploaded_papers, upload_errors = build_active_corpus(corpus_path, uploaded_files, include_curated=include_curated)
     # Hybrid demo: LLM when a key is present, plus live API augmentation on top of the corpus.
     # A wider retrieval window so uploaded papers AND live-API papers both surface
     # (with the default top_k=3, a handful of uploads would crowd out every API result).
@@ -107,6 +113,26 @@ def get_paper_source_info(paper, uploaded_papers, corpus_ids=None):
     else:
         # Fallback for any paper whose source we can't classify.
         return "unknown", "❓ Unknown", "#f8f8f8"
+
+
+def get_uploaded_usage_ids(report, uploaded_ids: set[str]) -> set[str]:
+    used_ids: set[str] = set()
+    retrieved_ids = {p.paper_id for p in report.retrieved_papers}
+    evidence_ids = {
+        snippet.paper_id
+        for item in report.verified_claims
+        for snippet in item.evidence
+    }
+    claim_source_ids = {item.claim.source_paper_id for item in report.verified_claims}
+
+    for uploaded_id in uploaded_ids:
+        if (
+            uploaded_id in retrieved_ids
+            or uploaded_id in evidence_ids
+            or uploaded_id in claim_source_ids
+        ):
+            used_ids.add(uploaded_id)
+    return used_ids
 
 
 def render_paper_source_badge(source_type, source_label, bg_color, paper_title):
@@ -254,6 +280,11 @@ def main() -> None:
     with st.sidebar:
         st.header("Demo Setup")
         corpus_choice = st.info("📚 **Multi-domain Research System**: Hybrid approach combining uploaded papers + live API retrieval")
+        include_curated = st.checkbox(
+            "Include curated corpus",
+            value=False,
+            help="Turn this on only if you want the built-in offline corpus mixed into retrieval. Default is OFF so uploads stay the focus.",
+        )
         llm_available = bool(os.getenv("OPENAI_API_KEY"))
         model_choice = st.selectbox(
             "LLM model",
@@ -285,18 +316,19 @@ def main() -> None:
 
     corpus_path = Path(str(DEFAULT_CORPUS))  # Use default since no dropdown
     selected_model = model_choice[0]
-    corpus_signature = f"{compute_corpus_signature(corpus_path, uploaded_files)}::{selected_model}"
+    corpus_signature = f"{compute_corpus_signature(corpus_path, uploaded_files, include_curated=include_curated)}::{selected_model}"
     system, single_agent, rag, corpus, uploaded_papers, upload_errors = load_systems(
         corpus_path,
         uploaded_files,
         use_llm=llm_available,
         model=selected_model,
+        include_curated=include_curated,
     )
 
     for message in upload_errors:
         st.sidebar.error(message)
 
-    if run_clicked or st.session_state.get("last_run_signature") != corpus_signature:
+    if run_clicked:
         start_time = time.time()
         report = system.analyze_question(question)
         response_time = time.time() - start_time
@@ -308,8 +340,11 @@ def main() -> None:
         st.session_state["baseline_single"] = single_agent.verify_claim(question)
         st.session_state["baseline_rag"] = rag.verify_claim(question)
         st.session_state["last_run_signature"] = corpus_signature
-    else:
+    elif "last_report" in st.session_state:
         report = st.session_state["last_report"]
+    else:
+        st.info("Upload papers, choose your source settings, then click **Run Analysis** to start.")
+        st.stop()
 
     left, right = st.columns([1.35, 1])
 
@@ -321,9 +356,11 @@ def main() -> None:
 
         corpus_ids = {paper.paper_id for paper in corpus.all_papers()}
         uploaded_ids = {up.paper_id for up in uploaded_papers}
+        uploaded_used_ids = get_uploaded_usage_ids(report, uploaded_ids)
 
         # Classify every retrieved paper by source (priority: uploaded > API > corpus).
-        uploaded_retrieved = [p for p in report.retrieved_papers if p.paper_id in uploaded_ids]
+        uploaded_retrieved = [p for p in report.retrieved_papers if p.paper_id in uploaded_used_ids]
+        uploaded_retrieved_count = len(uploaded_used_ids)
         api_retrieved = [p for p in report.retrieved_papers if p.paper_id.startswith(("PMC_", "ARXIV_"))]
         corpus_retrieved = [
             p for p in report.retrieved_papers
@@ -363,28 +400,41 @@ def main() -> None:
         # Optional section for uploaded papers (only show if papers were uploaded)
         if uploaded_papers:
             with st.expander(f"📤 Uploaded Papers ({len(uploaded_papers)} total)", expanded=False):
-                st.caption("Papers uploaded this session (used only when relevant to the query)")
+                st.caption("Papers uploaded this session. ✅ Used means the paper influenced retrieval, claim extraction, or evidence.")
                 for paper in uploaded_papers:
-                    used_icon = "✅ Used" if paper.paper_id in {p.paper_id for p in report.retrieved_papers} else "⚪ Available"
+                    used_icon = "✅ Used" if paper.paper_id in uploaded_used_ids else "⚪ Available"
                     st.write(f"- {used_icon} **{paper.title}** ({paper.year}) | {', '.join(paper.authors)}")
 
         # Source breakdown summary
-        if report.retrieved_papers:
+        if report.retrieved_papers or uploaded_retrieved_count:
             with st.container():
                 st.markdown("#### 📊 Source Analysis Summary")
                 source_cols = st.columns(3)
-                source_cols[0].metric("📤 Uploaded", len(uploaded_retrieved), help="Your uploaded papers used (preferred over all other sources)")
-                source_cols[1].metric("📚 Curated Corpus", len(corpus_retrieved), help="Papers from the built-in offline corpus")
-                source_cols[2].metric("🌐 Live APIs", len(api_retrieved), help="Papers fetched live from PubMed / arXiv")
+                source_cols[0].metric(
+                    "📤 Uploaded",
+                    uploaded_retrieved_count,
+                    help="Your uploaded papers used, cited, or directly contributing to the final analysis",
+                )
+                source_cols[1].metric(
+                    "📚 Curated Corpus",
+                    len(corpus_retrieved),
+                    help="Papers from the built-in offline corpus",
+                )
+                source_cols[2].metric(
+                    "🌐 Live APIs",
+                    len(api_retrieved),
+                    help="Papers fetched live from PubMed / arXiv",
+                )
 
                 parts = []
-                if uploaded_retrieved:
-                    parts.append(f"{len(uploaded_retrieved)} uploaded")
-                if corpus_retrieved:
+                if uploaded_retrieved_count:
+                    parts.append(f"{uploaded_retrieved_count} uploaded")
+                if len(corpus_retrieved):
                     parts.append(f"{len(corpus_retrieved)} from the curated corpus")
-                if api_retrieved:
+                if len(api_retrieved):
                     parts.append(f"{len(api_retrieved)} from live databases")
-                st.info("Grounded on " + ", ".join(parts) + ".")
+                if parts:
+                    st.info("Grounded on " + ", ".join(parts) + ".")
 
         st.subheader("Verified Claims")
 

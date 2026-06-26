@@ -3,6 +3,7 @@ openai>=1.86.0
 pydantic>=2.7.0
 python-dotenv>=1.0.1
 pypdf>=5.0.0
+requests>=2.31.0
 streamlit>=1.36.0
 uvicorn>=0.30.0
 

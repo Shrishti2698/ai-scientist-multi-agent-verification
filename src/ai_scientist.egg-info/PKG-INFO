@@ -9,6 +9,7 @@ Requires-Dist: openai>=1.86.0
 Requires-Dist: pydantic>=2.7.0
 Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: pypdf>=5.0.0
+Requires-Dist: requests>=2.31.0
 Requires-Dist: streamlit>=1.36.0
 Requires-Dist: uvicorn>=0.30.0
 Provides-Extra: dev

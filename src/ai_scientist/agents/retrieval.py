@@ -174,28 +174,28 @@ class RetrievalAgent:
     def _merge_and_rank_papers(self, local_papers: list[PaperDocument], api_papers: list[PaperDocument], query: str) -> list[PaperDocument]:
         """Merge and rank papers, preferring curated local/uploaded papers."""
 
-        # Score all papers with a bias toward the curated local pool.
+        # Score all papers with a strict source priority:
+        # uploads first, then curated corpus, then live API results.
         scored_papers = []
 
-        # Local papers (uploads + corpus) get a quality bonus; uploads rank highest.
         uploaded_ids = self._uploaded_ids()
         for paper in local_papers:
+            source_group = 0 if paper.paper_id in uploaded_ids else 1
             final_score = self._local_rank_score(paper, query, uploaded_ids)
-            scored_papers.append((final_score, paper, 'local'))
+            scored_papers.append((source_group, final_score, paper, 'local'))
 
-        # API papers use live-source scoring so high-quality live results can surface.
         for paper in api_papers:
             # Skip if we already have this paper (by title similarity)
             if not self._is_duplicate(paper, local_papers):
                 live_score = self._live_rank_score(paper, query)
-                scored_papers.append((live_score, paper, 'api'))
+                scored_papers.append((2, live_score, paper, 'api'))
         
-        # Sort by score (descending)
-        scored_papers.sort(key=lambda x: x[0], reverse=True)
+        # Sort by source priority first, then by score.
+        scored_papers.sort(key=lambda x: (x[0], -x[1]))
         
-        # Filter by coverage threshold
+        # Filter by coverage threshold, but keep the source order above intact.
         filtered_papers = [
-            paper for score, paper, source in scored_papers
+            paper for _source_group, score, paper, _source in scored_papers
             if score >= self.settings.min_query_coverage
         ]
         
