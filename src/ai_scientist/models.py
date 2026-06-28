@@ -59,6 +59,9 @@ class FinalReport:
     retrieved_papers: list[PaperDocument]
     markdown: str
     iteration_trace: list[str] = field(default_factory=list)
+    # Direct, user-facing answer to the question, composed by the Final Answer agent
+    # from the verified claims (falls back to the claims summary when absent).
+    final_answer: str = ""
 
 
 @dataclass(slots=True)
