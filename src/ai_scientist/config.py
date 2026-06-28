@@ -27,6 +27,11 @@ class Settings:
     critic_confidence_threshold: float = 0.6
     critic_min_evidence_count: int = 2
     enable_openai_llm: bool = False
+    # When the retrieved papers are on-topic but the extracted claims are too thin to
+    # answer the question, the Final Answer agent is allowed to complete the answer using
+    # broadly established scientific knowledge. Kept on by default; the gate only opens
+    # when claims are genuinely insufficient AND on-topic papers were retrieved.
+    enable_adaptive_answer: bool = True
     # Live retrieval is opt-in so the default pipeline stays deterministic and
     # offline-testable. The app/API enable it explicitly for the hybrid demo.
     enable_live_retrieval: bool = False

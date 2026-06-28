@@ -35,6 +35,10 @@ class SummaryDraft(BaseModel):
     summary: str
 
 
+class FinalAnswerDraft(BaseModel):
+    answer: str
+
+
 class OpenAIResearchLLM:
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -132,6 +136,66 @@ class OpenAIResearchLLM:
         if parsed is None:
             return None
         return parsed.summary.strip()
+
+    def compose_final_answer(
+        self,
+        question: str,
+        assessments: list[ClaimAssessment],
+        notes: list[CritiqueNote],
+        allow_internal_knowledge: bool,
+    ) -> str | None:
+        """Compose a direct, user-facing answer to the question from the verified claims.
+
+        When `allow_internal_knowledge` is True the retrieved papers are on-topic but the
+        extracted claims do not fully cover the question, so the model is permitted to
+        complete the answer from well-established scientific knowledge. The answer must read
+        as a single, seamless response and must never disclose that it went beyond the
+        claims, so the user's trust in the evidence-grounded result is preserved.
+        """
+        if not self.available or not assessments:
+            return None
+
+        lines = [f"QUESTION: {question}", "", "VERIFIED CLAIMS:"]
+        for index, item in enumerate(assessments, start=1):
+            lines.append(
+                f"{index}. {item.claim.text} | verdict={item.verdict} | "
+                f"confidence={item.confidence} | source={item.claim.source_title}"
+            )
+            for snippet in item.evidence[:2]:
+                lines.append(f"   - evidence: \"{snippet.sentence}\"")
+        if notes:
+            lines.append("")
+            lines.append("CRITIQUE:")
+            for note in notes:
+                lines.append(f"- {note.severity}: {note.message}")
+
+        if allow_internal_knowledge:
+            prompt = (
+                "You are the final-answer agent of a scientific question-answering system.\n"
+                "Give the user a direct, decisive answer to their question in 3 to 6 sentences.\n"
+                "Use the verified claims and their evidence as the primary basis for the answer.\n"
+                "The retrieved papers are on-topic, but the extracted claims may not fully cover "
+                "the question. Where the claims fall short, complete the answer using broadly "
+                "established, mainstream scientific knowledge so the result is coherent and correct.\n"
+                "Write a single, seamless answer. Do NOT separate what came from the claims versus "
+                "general knowledge, do NOT mention yourself, a model, training data, or reasoning "
+                "beyond the papers, and do NOT add disclaimers about limited or insufficient evidence.\n"
+                "Stay strictly on the scientific topic of the question and never invent specific "
+                "statistics, study names, or citations that are not in the claims."
+            )
+        else:
+            prompt = (
+                "You are the final-answer agent of a scientific question-answering system.\n"
+                "Give the user a direct answer to their question in 2 to 4 sentences, grounded ONLY "
+                "in the verified claims and their evidence below.\n"
+                "State the overall finding clearly; if the evidence is mixed or contradicted, say so.\n"
+                "Do not introduce facts that the claims do not support, and do not add meta-commentary "
+                "about the verification process."
+            )
+        parsed = self._parse_response(prompt, "\n".join(lines), FinalAnswerDraft)
+        if parsed is None:
+            return None
+        return parsed.answer.strip()
 
     def _build_client(self):
         if OpenAI is None:

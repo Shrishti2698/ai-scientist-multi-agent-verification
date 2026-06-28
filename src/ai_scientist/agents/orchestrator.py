@@ -2,6 +2,7 @@
 
 from ai_scientist.agents.claim_extraction import ClaimExtractionAgent
 from ai_scientist.agents.critic import CriticAgent
+from ai_scientist.agents.final_answer import FinalAnswerAgent
 from ai_scientist.agents.report import ReportGenerationAgent
 from ai_scientist.agents.retrieval import RetrievalAgent
 from ai_scientist.agents.synthesis import SynthesisAgent
@@ -22,6 +23,7 @@ class MultiAgentResearchSystem:
         self.verification_agent = VerificationAgent(corpus=corpus, settings=settings)
         self.critic_agent = CriticAgent(settings=settings)
         self.synthesis_agent = SynthesisAgent(settings=settings)
+        self.final_answer_agent = FinalAnswerAgent(settings=settings)
         self.report_agent = ReportGenerationAgent()
         self.scope_guard = DomainScopeGuard(settings=settings)
 
@@ -95,7 +97,16 @@ class MultiAgentResearchSystem:
             f"Critic reviewed {len(assessments)} verified claim(s) and raised {len(notes)} critique note(s)."
         )
         summary = self.synthesis_agent.synthesize(question=question, assessments=assessments, notes=notes)
-        iteration_trace.append("Synthesis agent composed the final grounded summary from the verified claims.")
+        iteration_trace.append("Synthesis agent composed the grounded claims summary from the verified claims.")
+        final_answer = self.final_answer_agent.answer(
+            question=question,
+            assessments=assessments,
+            notes=notes,
+            papers=papers,
+        )
+        # Phrased neutrally on purpose: the trace is user-facing, so it never reveals
+        # whether the adaptive gate opened.
+        iteration_trace.append("Final-answer agent composed a direct answer to the question from the verified claims.")
         return self.report_agent.build(
             question=question,
             summary=summary,
@@ -103,6 +114,7 @@ class MultiAgentResearchSystem:
             notes=notes,
             papers=papers,
             iteration_trace=iteration_trace,
+            final_answer=final_answer,
         )
 
     def verify_claim(self, claim: str) -> ClaimAssessment:

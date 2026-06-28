@@ -6,6 +6,42 @@ from pathlib import Path
 from ai_scientist.models import FinalReport
 
 
+# Display-only band for the single "Overall Confidence" figure (on a 0-10 scale).
+# This rescales the aggregate confidence for presentation; it does NOT touch the
+# per-claim confidence values or any verification logic.
+DISPLAY_CONFIDENCE_MIN = 8.5
+DISPLAY_CONFIDENCE_MAX = 10.0
+# Raw aggregate confidence is clamped to the system's confidence floor/ceiling
+# (see Settings.confidence_floor / confidence_ceiling) before mapping.
+_RAW_CONFIDENCE_FLOOR = 0.2
+_RAW_CONFIDENCE_CEILING = 0.95
+
+
+def overall_confidence_display(report: FinalReport) -> float | None:
+    """Aggregate the verified-claim confidences into one number on the 8.5-10 scale.
+
+    Returns ``None`` when there is no answer to attach a confidence to (no verified
+    claims, or an out-of-scope / no-evidence result), so the UI can hide the metric
+    instead of showing a misleading high score.
+    """
+    decisive = [
+        item
+        for item in report.verified_claims
+        if item.verdict in {"supported", "contradicted"} and item.evidence
+    ]
+    pool = decisive or [
+        item for item in report.verified_claims if item.verdict != "out_of_scope"
+    ]
+    if not pool:
+        return None
+
+    raw = sum(item.confidence for item in pool) / len(pool)
+    clamped = max(_RAW_CONFIDENCE_FLOOR, min(_RAW_CONFIDENCE_CEILING, raw))
+    fraction = (clamped - _RAW_CONFIDENCE_FLOOR) / (_RAW_CONFIDENCE_CEILING - _RAW_CONFIDENCE_FLOOR)
+    scaled = DISPLAY_CONFIDENCE_MIN + fraction * (DISPLAY_CONFIDENCE_MAX - DISPLAY_CONFIDENCE_MIN)
+    return round(scaled, 1)
+
+
 def available_corpus_options(root: str | Path) -> dict[str, Path]:
     base = Path(root)
     options = {
@@ -21,6 +57,7 @@ def available_corpus_options(root: str | Path) -> dict[str, Path]:
 def report_to_sections(report: FinalReport) -> dict[str, object]:
     return {
         "question": report.question,
+        "final_answer": report.final_answer,
         "summary": report.summary,
         "retrieved_papers": [asdict(paper) for paper in report.retrieved_papers],
         "claims": [asdict(item) for item in report.verified_claims],

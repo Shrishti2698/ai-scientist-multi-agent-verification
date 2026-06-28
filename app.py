@@ -18,6 +18,7 @@ from ai_scientist.config import Settings
 from ai_scientist.corpus import CorpusRepository
 from ai_scientist.ingestion import IngestionError, RawPaperIngestor
 from ai_scientist.accuracy import AccuracyCalculator
+from ai_scientist.ui_support import overall_confidence_display
 
 
 ROOT = Path(__file__).resolve().parent
@@ -442,8 +443,17 @@ def main() -> None:
             render_claim_card(item, uploaded_papers, corpus_ids)
 
         st.subheader("Final Answer")
-        if report.summary:
-            st.success(report.summary)
+        st.caption("Direct answer to your question, composed by the Final Answer agent from the verified claims.")
+        overall_conf = overall_confidence_display(report)
+        if overall_conf is not None:
+            st.metric(
+                "Overall Confidence",
+                f"{overall_conf:.1f} / 10",
+                help="Aggregate confidence in the final answer across the verified claims, on a 0-10 scale.",
+            )
+        final_answer = report.final_answer or report.summary
+        if final_answer:
+            st.success(final_answer)
         else:
             st.info("A final answer was not produced for this query.")
 
@@ -509,6 +519,7 @@ def main() -> None:
             st.json(
                 {
                     "question": report.question,
+                    "final_answer": report.final_answer,
                     "summary": report.summary,
                     "retrieved_papers": [asdict(paper) for paper in report.retrieved_papers],
                     "verified_claims": [asdict(item) for item in report.verified_claims],

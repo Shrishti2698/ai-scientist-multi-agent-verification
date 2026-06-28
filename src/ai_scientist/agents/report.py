@@ -12,17 +12,23 @@ class ReportGenerationAgent:
         notes: list[CritiqueNote],
         papers: list[PaperDocument],
         iteration_trace: list[str],
+        final_answer: str | None = None,
     ) -> FinalReport:
+        # The Final Answer is the direct response to the user's question. When the
+        # Final Answer agent does not supply one (e.g. early-exit paths), fall back to the
+        # claims summary so the section is never empty.
+        final_answer = (final_answer or summary or "").strip()
+
         lines = [
             f"# AI-Scientist Report",
             "",
             f"## Question",
             question,
             "",
-            "## Verified Claims Summary",
-            summary,
-            "",
             "## Final Answer",
+            final_answer,
+            "",
+            "## Verified Claims Summary",
             summary,
             "",
         ]
@@ -79,4 +85,5 @@ class ReportGenerationAgent:
             retrieved_papers=papers,
             iteration_trace=iteration_trace,
             markdown=markdown,
+            final_answer=final_answer,
         )

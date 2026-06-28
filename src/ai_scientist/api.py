@@ -66,6 +66,7 @@ else:
         report = multi_agent_system.analyze_question(request.question)
         return {
             "question": report.question,
+            "final_answer": report.final_answer,
             "summary": report.summary,
             "markdown": report.markdown,
             "verified_claims": [asdict(item) for item in report.verified_claims],
