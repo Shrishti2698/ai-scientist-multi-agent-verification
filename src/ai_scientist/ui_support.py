@@ -17,6 +17,19 @@ _RAW_CONFIDENCE_FLOOR = 0.2
 _RAW_CONFIDENCE_CEILING = 0.95
 
 
+def scale_confidence_to_display(raw: float) -> float:
+    """Map a raw confidence in [floor, ceiling] onto the 8.5-10 presentation band.
+
+    Display-only: callers pass a raw 0-1 confidence (e.g. a per-claim value or a
+    session average) and get back a value on the 0-10 scale. The underlying confidence
+    numbers and verification logic are never modified.
+    """
+    clamped = max(_RAW_CONFIDENCE_FLOOR, min(_RAW_CONFIDENCE_CEILING, raw))
+    fraction = (clamped - _RAW_CONFIDENCE_FLOOR) / (_RAW_CONFIDENCE_CEILING - _RAW_CONFIDENCE_FLOOR)
+    scaled = DISPLAY_CONFIDENCE_MIN + fraction * (DISPLAY_CONFIDENCE_MAX - DISPLAY_CONFIDENCE_MIN)
+    return round(scaled, 1)
+
+
 def overall_confidence_display(report: FinalReport) -> float | None:
     """Aggregate the verified-claim confidences into one number on the 8.5-10 scale.
 
@@ -36,10 +49,7 @@ def overall_confidence_display(report: FinalReport) -> float | None:
         return None
 
     raw = sum(item.confidence for item in pool) / len(pool)
-    clamped = max(_RAW_CONFIDENCE_FLOOR, min(_RAW_CONFIDENCE_CEILING, raw))
-    fraction = (clamped - _RAW_CONFIDENCE_FLOOR) / (_RAW_CONFIDENCE_CEILING - _RAW_CONFIDENCE_FLOOR)
-    scaled = DISPLAY_CONFIDENCE_MIN + fraction * (DISPLAY_CONFIDENCE_MAX - DISPLAY_CONFIDENCE_MIN)
-    return round(scaled, 1)
+    return scale_confidence_to_display(raw)
 
 
 def available_corpus_options(root: str | Path) -> dict[str, Path]:

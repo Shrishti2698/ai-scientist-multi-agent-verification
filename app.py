@@ -18,7 +18,7 @@ from ai_scientist.config import Settings
 from ai_scientist.corpus import CorpusRepository
 from ai_scientist.ingestion import IngestionError, RawPaperIngestor
 from ai_scientist.accuracy import AccuracyCalculator
-from ai_scientist.ui_support import overall_confidence_display
+from ai_scientist.ui_support import overall_confidence_display, scale_confidence_to_display
 
 
 ROOT = Path(__file__).resolve().parent
@@ -493,9 +493,9 @@ def main() -> None:
                     help="Percentage of queries that extracted verifiable claims"
                 )
                 st.metric(
-                    "Avg Confidence", 
-                    f"{accuracy_summary['average_confidence']:.3f}",
-                    help="Average confidence score across recent analyses"
+                    "Avg Confidence",
+                    f"{scale_confidence_to_display(accuracy_summary['average_confidence']):.1f} / 10",
+                    help="Average confidence across recent analyses, on a 0-10 scale."
                 )
                 st.metric(
                     "Response Time", 
