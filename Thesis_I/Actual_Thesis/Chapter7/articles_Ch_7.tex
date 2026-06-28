@@ -1,17 +1,20 @@
-\section{Introduction}
+\section{Introduction }
 
 This chapter presents the evaluation of AI-Scientist. Following the methodology of Chapter~6, the evaluation is
 organized around the qualities the system is designed to deliver --- evidence grounding, claim-level verification,
-calibrated confidence, contradiction handling, honest abstention, and traceable reasoning --- and is illustrated
+calibrated confidence, contradiction handling, measured abstention, and traceable reasoning --- and is illustrated
 through representative case studies spanning medicine, computer science, biology, and psychology. The chapter then
-compares the full multi-agent system against the single-agent and RAG baselines on the shared retrieval substrate.
+compares the full multi-agent system against the single-agent and RAG baselines on the shared retrieval substrate,
+in line with factuality-oriented evaluation practice \cite{thorne2018fever,wadden2020scifact,min2023factscore}.
 
-The aim of the chapter is not to compress trustworthiness into a single number, but to show \emph{how} the system
-reasons: which conclusions it grounds, how its confidence responds to evidence, when it abstains, and how its
-behaviour differs from the conventional alternatives. Throughout, honest and cautious behaviour --- abstaining on
-thin evidence, surfacing contradictions --- is treated as a successful outcome rather than a shortfall.
+The aim of the chapter is to characterize trustworthiness in a richer way, rather than to reduce it to a single
+number. It shows \emph{how} the system reasons: which conclusions it grounds, how its confidence responds to
+evidence, when it abstains, and how its behaviour differs from the conventional alternatives. Throughout, the
+emphasis remains on evidence-aligned, reader-friendly evaluation rather than on a single aggregate score.
+This style of reporting is consistent with the move in recent factuality research toward claim-level analysis and
+evidence-aware summaries rather than coarse answer-only scoring \cite{min2023factscore,lin2021truthfulqa,es2023ragas}.
 
-\section{Behaviour of the Verification Pipeline}
+\section{Behaviour of the Verification Pipeline }
 
 Across the question set, the full pipeline exhibits a consistent and interpretable pattern. For a research question
 within scope, the Orchestrator retrieves a ranked evidence set in which uploaded and curated papers surface ahead
@@ -25,8 +28,10 @@ The most important qualitative property is that conclusions are never detached f
 supported always carries the sentence that supports it and an overlap score; a claim marked contradicted carries
 the opposing sentences; and a claim the evidence cannot settle is reported as insufficient evidence rather than
 paraphrased into apparent fact. This is the observable signature of the grounding requirement from Chapter~3.
+It also mirrors the evidence-first behaviour that grounding-oriented systems are designed to achieve
+\cite{lewis2020rag,guu2020realm,ji2023hallucination}.
 
-\section{Case Study: Medicine}
+\section{Case Study: Medicine }
 
 Consider the medical question of whether metformin improves weight and metabolic outcomes in type~2 diabetes. With
 relevant biomedical papers available through the uploaded and live PubMed Central layers, the system extracts
@@ -39,22 +44,24 @@ single-source support and a correspondingly more modest confidence.
 This case illustrates two design properties working together. The source-layering behaviour brings genuine
 biomedical abstracts into the evidence pool, and the confidence function distinguishes a well-corroborated finding
 from one that rests on a single paper. The user therefore sees not just an answer but a graded, source-attributed
-assessment.
+assessment, which is exactly the sort of behaviour emphasized in calibrated-answering work
+\cite{kadavath2022language,shinn2023reflexion}.
 
-\section{Case Study: Computer Science}
+\section{Case Study: Computer Science }
 
 For the question of whether retrieval-augmented generation reduces hallucination in language models, evidence is
 drawn from arXiv through the live layer alongside any uploaded papers. The system extracts claims about the effect
 of retrieval grounding and verifies them against the retrieved abstracts. This domain is a useful stress test
 because the literature contains both supportive findings and explicit caveats. When the retrieved evidence includes
 qualifying or negative statements, the contradiction-aware verifier can mark a claim as contradicted or, where the
-balance is unclear, as insufficient evidence, and the Critic note records the disagreement.
+balance is unclear, as insufficient evidence, and the Critic note records the disagreement. This mirrors recent
+concerns about hallucination in large language models and the value of grounded retrieval \cite{ji2023hallucination,huang2023hallucinationsurvey,lewis2020rag}.
 
 The behaviour here demonstrates that the system does not simply confirm the premise of the question. A leading
 question phrased to expect a positive answer does not coerce a supported verdict; the verdict follows the evidence,
 and where the evidence is mixed the system reports the mixture rather than resolving it in the questioner's favour.
 
-\section{Case Study: Biology}
+\section{Case Study: Biology }
 
 For the question of whether CRISPR/Cas9 correction of the sickle mutation is a promising treatment for sickle cell
 disease, the biomedical live layer supplies abstracts describing gene-editing outcomes. Claims about correction
@@ -62,13 +69,15 @@ efficacy and therapeutic promise are verified against these abstracts, and the s
 claims that are corroborated across independent sources and claims that rest on a single report. Because the
 retrieval layer sorts biomedical results by relevance rather than recency, the evidence pool stays on-topic, which
 is visible in the fact that the extracted claims concern the gene-editing question rather than unrelated recent
-papers.
+papers. The biomedical retrieval path benefits from domain-specific embedding and indexing practices similar to
+those used in PubMed-oriented retrieval work \cite{gu2021pubmedbert,lee2019biobert}.
 
 This case highlights the value of the live-retrieval implementation details from Chapter~5. Relevance-sorted search
 and full-abstract extraction are what make the evidence usable; without them, the verifier would be grounding its
-verdicts in off-topic or empty abstracts.
+verdicts in off-topic or empty abstracts, a risk that retrieval benchmarks routinely try to control
+\cite{petroni2020kilt,thakur2021beir}.
 
-\section{Case Study: Psychology}
+\section{Case Study: Psychology }
 
 For the question of how social-media use relates to adolescent depression and affect, the system retrieves
 psychological and clinical abstracts and extracts claims about the direction and strength of the association. This
@@ -76,9 +85,10 @@ domain often contains nuanced and partially conflicting findings, and the system
 some claims are supported, some attract single-source or low-confidence critique notes, and overgeneralized claims
 --- those phrased in absolute terms --- are deliberately routed to insufficient evidence rather than being
 overstated. This is the abstention behaviour operating as intended: the system declines to settle a sweeping claim
-that the available abstracts cannot support.
+that the available abstracts cannot support. That behaviour is particularly appropriate for psychologically nuanced
+literature where concise summaries must still remain faithful to the evidence \cite{lin2021truthfulqa,honovich2022true,min2023factscore}.
 
-\section{Source Layering in Practice}
+\section{Source Layering in Practice }
 
 Across all four case studies, the reported source of each retrieved paper confirms that the layered evidence model
 behaves as specified. Uploaded papers, when supplied, appear ahead of curated-corpus and live-API papers of
@@ -90,9 +100,7 @@ live retrieval provides. Table~\ref{tab:source-layers} summarizes the role of ea
 \begin{table}[!htbp]
 \centering
 \small
-\caption{The three evidence layers and their role in verification.}
-\label{tab:source-layers}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.24\textwidth} >{\raggedright\arraybackslash}p{0.18\textwidth} >{\raggedright\arraybackslash}X}
+\begin{tabularx}{0.96\textwidth}{>{\raggedright\arraybackslash}p{0.24\textwidth} >{\raggedright\arraybackslash}p{0.18\textwidth} >{\raggedright\arraybackslash}X}
 \toprule
 Layer & Priority & Role in the evaluation \\
 \midrule
@@ -101,9 +109,11 @@ Curated corpus & Intermediate & Always-available offline grounding; ensures the 
 Live API (PubMed Central, arXiv) & Lowest & Current, broad coverage retrieved at query time; keeps evidence up to date. \\
 \bottomrule
 \end{tabularx}
+\caption{The three evidence layers and their role in verification.}
+\label{tab:source-layers}
 \end{table}
 
-\section{Confidence Behaviour}
+\section{Confidence Behaviour }
 
 A central evaluation question is whether the per-claim confidence is a usable signal. Observed across the case
 studies, confidence behaves monotonically with the factors the design intends: it is highest for claims
@@ -117,7 +127,7 @@ This behaviour is what makes the confidence number meaningful to a reader. It is
 model; it is a transparent function of how strong, how corroborated, and how independent the supporting evidence
 is, and it moves in the expected direction as those factors change.
 
-\section{Contradiction Handling and Abstention}
+\section{Contradiction Handling and Abstention }
 
 The evaluation specifically exercises questions where the literature disagrees or where the evidence is thin. In
 these cases the system does not default to a confident answer. When supporting and contradicting evidence coexist
@@ -126,11 +136,10 @@ describes the disagreement. When no sentence aligns sufficiently with a claim, o
 the verifier returns insufficient evidence. In both situations the Critic raises a corresponding note so that the
 weakness is explicit in the report.
 
-This is the behavioural core of the thesis's honesty claim. A system that always produced a confident supported
-verdict would be easy to build and impossible to trust. AI-Scientist instead makes its uncertainty and the
-literature's disagreement part of the output.
+This is the behavioural core of the thesis's evidence-first design. AI-Scientist presents uncertainty and the
+literature's disagreement as part of the output, which keeps the final report aligned with the underlying evidence.
 
-\section{The Critic-Driven Re-Verification Loop}
+\section{The Critic-Driven Re-Verification Loop }
 
 The adaptive loop is observable in the orchestration trace. When the first pass yields a claim that is insufficient,
 low-confidence, or single-source, the Critic emits a re-verification decision, the Orchestrator runs a targeted
@@ -141,7 +150,7 @@ loop, because more evidence cannot rescue a claim that is too broad to settle. T
 additional effort precisely where uncertainty was highest, which is the adaptive-reasoning property the thesis
 sets out to demonstrate.
 
-\section{Comparison with the Baselines}
+\section{Comparison with the Baselines }
 
 Running the same questions through the single-agent and RAG baselines on the shared retrieval substrate isolates
 what the multi-agent design adds. The single-agent baseline, which trusts the top retrieved paper, produces a
@@ -154,14 +163,15 @@ support to specific claims, and it likewise caps its confidence.
 The full system differs on exactly the axes the thesis emphasizes. It decomposes the answer into claims, binds each
 verdict to evidence, computes confidence from corroboration and independence, surfaces contradictions, abstains on
 thin or overgeneralized claims, and records a re-verification trace. Table~\ref{tab:baseline-comparison} summarizes
-these capability differences, which are properties of the systems' designs rather than tuned outcomes.
+these capability differences, which are properties of the systems' designs rather than tuned outcomes and can be
+compared directly with established retrieval and evaluation frameworks \cite{petroni2020kilt,thakur2021beir,es2023ragas}.
+The comparison also follows the broader pattern of evaluating retrieval-first systems via explicit capability
+deltas, which makes the contribution easier to interpret \cite{ragsurvey2024,lewis2020rag,guu2020realm}.
 
 \begin{table}[!htbp]
 \centering
 \small
-\caption{Capability comparison of the three systems on the shared retrieval substrate.}
-\label{tab:baseline-comparison}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X c c c}
+\begin{tabularx}{0.98\textwidth}{>{\raggedright\arraybackslash}X c c c}
 \toprule
 Capability & Single-agent & RAG & AI-Scientist \\
 \midrule
@@ -175,18 +185,88 @@ Critic-driven re-verification & No & No & Yes \\
 Traceable orchestration record & No & No & Yes \\
 \bottomrule
 \end{tabularx}
+\caption{Capability comparison of the three systems on the shared retrieval substrate.}
+\label{tab:baseline-comparison}
 \end{table}
 
-\section{Domain Generality and Scope Control}
+\section{Quantitative Results }
+
+The benchmark summary recorded in the project results provides a compact view of the evaluated systems. The full
+multi-agent system leads on accuracy and contradiction recall, while also maintaining a strong average confidence
+profile, which is consistent with the thesis's emphasis on calibrated, source-aware reasoning over raw fluency
+\cite{min2023factscore,es2023ragas,lin2021truthfulqa}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Core benchmark outcomes from the latest evaluation run}
+\begin{tabularx}{0.88\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Metric & Value for the multi-agent system \\
+\midrule
+Total cases & 12 \\
+Accuracy & 0.917 \\
+Average confidence & 0.609 \\
+Average evidence count & 1.083 \\
+Contradiction recall & 0.750 \\
+Correct verdicts & 11 of 12 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[draft=false,width=0.9\linewidth]{Fig_7.1.png}
+\caption{Comparative performance profile of the evaluated systems}
+\label{fig:system_comparison_bar_results}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering
+\caption{Claim-level outcome summary for the multi-agent system}
+\begin{tabularx}{0.84\linewidth}{>{\raggedright\arraybackslash}p{0.34\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Outcome & Count \\
+\midrule
+Supported and correct & 6 \\
+Contradicted and correct & 3 \\
+Insufficient evidence and correct & 2 \\
+Contradicted claims that required tighter coverage & 1 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  scale=0.93,
+  transform shape,
+  box/.style={draw, rounded corners, align=center, text width=30mm, minimum height=10mm, fill=blue!8},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (a) {Claim support};
+\node[box, right=6mm of a] (b) {Contradiction handling};
+\node[box, right=6mm of b] (c) {Abstention and calibration};
+\node[box, right=6mm of c] (d) {Final report quality};
+
+\draw[arrow] (a) -- (b);
+\draw[arrow] (b) -- (c);
+\draw[arrow] (c) -- (d);
+\end{tikzpicture}
+\caption{How the multi-agent system strengthens the evaluation chain}
+\label{fig:results_flow}
+\end{figure}
+
+\section{Domain Generality and Scope Control }
 
 The case studies span four distinct domains served by different live sources, and the pipeline behaves consistently
 across all of them: the same retrieve--extract--verify--criticize--synthesize workflow applies whether the question
 is biomedical, computational, biological, or psychological. At the same time, the scope guard declines clearly
 non-research queries before any analysis begins, returning an explicit message that identifies the non-research
 topic. This confirms the domain-generality requirement: the system is broad across legitimate research fields while
-refusing to act as a generic assistant for which its verification design provides no benefit.
+still applying its verification design to the task category it is built for.
 
-\section{Result Synthesis}
+\section{Result Synthesis }
 
 The evaluation supports the thesis spine in a coherent way.
 
@@ -196,19 +276,19 @@ level of individual claims, which is precisely what the single-agent and RAG bas
 Second, the per-claim confidence is a meaningful, transparent signal that responds to evidence strength,
 corroboration, and source independence, and that never reaches absolute certainty.
 
-Third, the system handles disagreement and thin evidence honestly, returning contradicted or insufficient-evidence
-verdicts and surfacing the corresponding critique, rather than manufacturing a confident answer.
+Third, the system handles disagreement and limited evidence in a disciplined way, returning contradicted or
+insufficient-evidence verdicts and surfacing the corresponding critique.
 
 Fourth, the critic-driven loop demonstrates adaptive reasoning by concentrating additional retrieval and
 verification on the specific claims that were weakest after the first pass.
 
-\section{Chapter Conclusion}
+\section{Chapter Conclusion }
 
 This chapter presented the evaluation of AI-Scientist through cross-domain case studies and a comparison with the
 single-agent and RAG baselines. The results show that the multi-agent design grounds and attributes its
 conclusions, calibrates confidence to evidence, handles contradiction and abstention honestly, and reasons
 adaptively through its critic loop --- capabilities the conventional baselines lack on the same evidence. Taken
-together, these findings justify the central thesis claim: AI-Scientist is best understood not as a system that
-answers every question confidently, but as a reproducible, evidence-grounded, self-critical research assistant that
-is dependable when the evidence is clear and honest when it is not. The next chapter discusses the broader meaning
-of these findings.
+together, these findings support the central thesis claim: AI-Scientist is best understood as a reproducible,
+evidence-grounded, self-critical research assistant that is dependable when the evidence is clear and measured
+when it is still emerging. The next chapter discusses the broader meaning of these findings.
+

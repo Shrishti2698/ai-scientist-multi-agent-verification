@@ -80,6 +80,10 @@ class DemoAssetBuilder:
         {''.join(claim_cards)}
       </div>
     </section>
+    <section class="card" style="margin-top:20px;">
+      <h2>Final Answer</h2>
+      <p>{escape(report.summary)}</p>
+    </section>
   </main>
 </body>
 </html>

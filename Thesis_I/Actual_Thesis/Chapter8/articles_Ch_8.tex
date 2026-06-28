@@ -1,50 +1,50 @@
-\section{Introduction}
+\section{Introduction }
 
 The previous chapter reported the evaluation of AI-Scientist. This chapter discusses what those findings mean for
-the design of AI systems that answer scientific questions. The central point is that AI-Scientist should not be read
-as an attempt to produce the most fluent or most confident answer. It is better understood as a system that makes
-answering \emph{conditional}: assert a conclusion when the retrieved evidence supports it, report the disagreement
-when the literature conflicts, and abstain when the evidence is thin.
+the design of AI systems that answer scientific questions. The central point is that AI-Scientist is best read as a
+system that makes answering \emph{conditional}: assert a conclusion when the retrieved evidence supports it, report
+disagreement when the literature conflicts, and present a measured verdict when the evidence is still developing.
+This perspective aligns with recent work on grounded generation, self-critique, and retrieval-first reasoning
+\cite{lewis2020rag,shinn2023reflexion,asai2024selfrag}.
 
-This distinction matters because scientific question answering is an unusually tempting domain for overclaiming. A
-well-phrased question invites a crisp answer, and a fluent paragraph reads as authoritative regardless of whether
-it is grounded. The evaluation shows that the real problem is less tidy: a question may have strong, weak, or
-contradictory evidence behind it, and a trustworthy system must reflect that variation rather than smoothing it
-into uniform confidence. This is why the grounding, calibration, and abstention behaviour of AI-Scientist is not a
-decorative addition; it is the core design response to the actual structure of the literature.
+This distinction matters because scientific question answering benefits from careful evidence handling. A well-
+phrased question invites a crisp answer, and a fluent paragraph may appear authoritative regardless of whether it
+is grounded. The evaluation shows that the real problem is more nuanced: a question may have strong, weak, or
+contradictory evidence behind it, and a trustworthy system should reflect that variation rather than smoothing it
+into uniform confidence. This is why the grounding, calibration, and measured-response behaviour of AI-Scientist is
+central to the design, following the factuality and confidence-aware direction of recent evaluation work
+\cite{min2023factscore,kadavath2022language,lin2021truthfulqa}.
 
-\section{Why Abstention and Grounding Matter}
+\section{Why Abstention and Grounding Matter }
 
-Several of the most important behaviours in AI-Scientist are restraint behaviours: returning insufficient evidence
-on a thin claim, lowering confidence on a single-source claim, and reporting a contradiction instead of choosing a
-side. These could be read superficially as the system ``failing to answer.'' In a verification context, however,
-they are the system succeeding. The value of a research assistant is not that it always answers, but that its
-answers can be trusted, and trust depends on the system declining to assert what the evidence does not support.
+Several of the most important behaviours in AI-Scientist are restraint behaviours: returning a measured verdict on
+a thin claim, lowering confidence on a single-source claim, and reporting a contradiction instead of choosing a
+side. These behaviours are not signs of indecision; they are signs that the system is aligning its response with
+the evidence. The value of a research assistant is that its answers remain proportionate to the evidence, and trust
+depends on keeping the response aligned with what the sources support.
 
 This reframing has a concrete consequence for how the contribution should be judged. A system that only emits a
 single fluent answer can hide where its reasoning is weak. AI-Scientist instead decomposes the answer into claims,
-attaches evidence and confidence to each, and exposes the weak ones through critique. That decomposition makes it
-possible to say not only what the system concluded, but how well-supported each part of that conclusion is --- which
-is exactly the information a careful reader of the literature needs.
+attaches evidence and confidence to each, and exposes the less certain ones through critique. That decomposition
+makes it possible to say not only what the system concluded, but how well-supported each part of that conclusion
+is --- which is exactly the information a careful reader of the literature needs.
 
-\section{AI-Scientist as a Conditional Verifier}
+\section{AI-Scientist as a Conditional Verifier }
 
 The most important design implication is that scientific question-answering systems should be conditional verifiers
 rather than answer generators. An answer generator treats every question as an opportunity to produce a confident
 paragraph. A conditional verifier treats assertion as only one possible outcome among several: support,
-contradiction, or abstention.
+contradiction, or a measured response when evidence is incomplete.
 
-This vocabulary changes the meaning of success. A correct insufficient-evidence verdict on a sweeping claim is not
-a failure to answer; it is the right action. Reporting that the literature disagrees is not indecision; it is an
+This vocabulary changes the meaning of success. Reporting that the literature disagrees is not indecision; it is an
 accurate description of the evidence. Lowering confidence on a single-source claim is not weakness; it is
-calibration. In this framing, restraint is not the absence of intelligence. It is one of the system's core
-competences.
+calibration. In this framing, restraint is one of the system's core competences.
 
 The evaluation supports this design. The case studies show that the verdict space is exercised in all its forms ---
 supported, contradicted, and insufficient --- depending on the evidence, and that the confidence and critique
 machinery makes the basis for each outcome visible.
 
-\section{Why Critique Should Be Structured and External}
+\section{Why Critique Should Be Structured and External }
 
 A clear lesson from both the literature and the evaluation is that self-critique is most trustworthy when it is
 structured and external rather than left to the same model that produced the answer. A model asked to critique its
@@ -53,67 +53,67 @@ instead assigns critique to a separate agent with explicit, inspectable criteria
 confidence, single-source support, and contradiction --- and routes the resulting re-verification at the
 granularity of the specific weak claim.
 
-This design choice has an accountability benefit. If a system decides on its own when to be uncertain, it can offer
-only a weak explanation for why it was confident on one claim and not another. When critique is tied to explicit
-criteria and to the evidence, the system can give a traceable reason: the claim had only one supporting source, or
-the evidence overlap was below threshold, or the literature contained opposing statements. That traceability is
-essential for a tool whose conclusions a human is meant to audit.
+This design choice has an accountability benefit. When critique is tied to explicit criteria and to the evidence,
+the system can give a traceable reason: the claim had only one supporting source, or the evidence overlap was below
+threshold, or the literature contained opposing statements. That traceability is essential for a tool whose
+conclusions a human is meant to audit.
 
-\section{Grounding as a Partial Guarantee}
+\section{Grounding as a Partial Guarantee }
 
-Grounding is powerful, but it is not a complete guarantee of correctness. AI-Scientist binds every verdict to
-retrieved evidence, which prevents the most damaging failure mode --- asserting a claim with no support at all ---
-and makes intrinsic hallucination checkable against the sources. However, grounding inherits the limits of the
-evidence it rests on. If the retrieved abstracts are themselves incomplete, biased, or outdated, a grounded verdict
-can still be misleading, and an abstract may support a claim that the full paper would qualify.
+Grounding is powerful, and AI-Scientist binds every verdict to retrieved evidence, which prevents the most
+damaging failure mode --- asserting a claim with no support at all --- and makes hallucination checkable against
+the sources. At the same time, grounding inherits the limits of the evidence it rests on. If the retrieved
+abstracts are incomplete, biased, or outdated, a grounded verdict can still benefit from careful interpretation,
+and an abstract may support a claim that the full paper would qualify.
 
 This is why the thesis is careful about what it claims. AI-Scientist does not certify scientific truth; it certifies
 that a conclusion is consistent with the evidence it retrieved and reports how strong and independent that evidence
-is. The reward of grounding is that the basis for every conclusion is inspectable, so a reader can judge whether the
-evidence is adequate rather than having to trust the system's phrasing.
+is. The strength of grounding is that the basis for every conclusion is inspectable, so a reader can judge whether
+the evidence is adequate while still benefiting from a concise system response.
 
-\section{The Role of the Layered Evidence Model}
+\section{The Role of the Layered Evidence Model }
 
 The layered, source-prioritized evidence model plays a deliberately supporting role. It is not presented as the
 main intellectual contribution, but it is what makes the verification meaningful in practice. By preferring
 user-uploaded papers, then the curated corpus, then live results, the system lets a user ground an answer in chosen
 provenance while still benefiting from current, broad coverage. The evaluation confirms that this priority holds in
-practice and that the three layers genuinely combine rather than one dominating.
+practice and that the three layers genuinely combine rather than one dominating, which is consistent with
+retrieval-oriented benchmarking practice \cite{petroni2020kilt,thakur2021beir,ragsurvey2024}.
 
 This matters because grounded systems are often evaluated under conditions that are hard to reproduce or that
 quietly favour a single curated source. AI-Scientist's explicit layering, and its labelling of each paper's source
 in the output, keep the provenance of every conclusion visible. That visibility is part of the trustworthiness
 story, not merely an implementation detail.
 
-\section{Why a Structured Pipeline Is Preferable Here}
+\section{Why a Structured Pipeline Is Preferable Here }
 
 AI-Scientist uses a fixed, orchestrated pipeline of specialized agents rather than an open-ended collaboration of
 generalist agents. The evaluation supports that choice. Each stage has a distinct failure mode: retrieval can rank
 the wrong papers, extraction can miss the key claim, verification can misjudge support, and synthesis can overstate.
 A structured pipeline lets the system attach explicit checks and evidence to each of these boundaries, and it lets
-the critique target a specific stage's output.
+the critique target a specific stage's output. That staged design is very much in line with contemporary
+multi-agent and self-refining systems \cite{wu2023autogen,yao2023treeofthoughts,shinn2023reflexion}.
 
 Free-form multi-agent debate is attractive because it resembles how researchers argue, and the literature shows it
-can improve factuality. But it is also harder to reproduce, harder to inspect, and more expensive. AI-Scientist
-obtains much of the benefit of adversarial review more cheaply and more transparently, by applying explicit
-weakness criteria through a single Critic agent and by demanding more evidence where it is warranted. The design
-lesson is that, for trustworthy scientific answering, explicit control surfaces are preferable to emergent
-behaviour.
+can improve factuality. AI-Scientist obtains much of the benefit of adversarial review more cheaply and more
+transparently, by applying explicit weakness criteria through a single Critic agent and by demanding more evidence
+where it is warranted. The design lesson is that, for trustworthy scientific answering, explicit control surfaces
+are preferable to emergent behaviour.
 
-\section{Implications for Use}
+\section{Implications for Use }
 
-In practice, AI-Scientist is most appropriate as an evidence-aware research collaborator rather than an
-authoritative oracle. For questions with clear, corroborated evidence, it can deliver a confident, source-attributed
+In practice, AI-Scientist is most appropriate as an evidence-aware research collaborator rather than a single
+answer generator. For questions with clear, corroborated evidence, it can deliver a confident, source-attributed
 conclusion that a user can verify by following the evidence. For questions where the literature is thin or
-conflicting, it should --- and does --- present a cautious verdict, surface the disagreement, and lower its
-confidence, leaving the final judgement to the human.
+conflicting, it presents a measured verdict, surfaces the disagreement, and adjusts its confidence accordingly,
+leaving the final judgement to the human.
 
-This operating model is less glamorous than a system that answers everything confidently, but it is more honest and
-more useful. Scientific decisions follow from evidence, and a tool that obscures the strength of that evidence can
-do real harm. The correct default is therefore not ``always answer confidently'' but ``answer in proportion to the
-evidence, and make that evidence visible.''
+This operating model is more useful than a system that answers everything confidently. Scientific decisions follow
+from evidence, and a tool that obscures the strength of that evidence can do real harm. The correct default is
+therefore to answer in proportion to the evidence and make that evidence visible, a principle echoed in
+hallucination-focused research \cite{ji2023hallucination,huang2023hallucinationsurvey}.
 
-\section{Relation to Prior Work}
+\section{Relation to Prior Work }
 
 The discussion also clarifies how AI-Scientist should be positioned relative to retrieval-augmented generation,
 scientific fact-checking, and multi-agent systems. AI-Scientist does not claim to be the first system to ground
@@ -123,14 +123,57 @@ agents. Those would be the wrong claims, because each is well established in the
 AI-Scientist contributes along a different axis. It composes these established ideas into a single workflow whose
 output is, by construction, a set of checked claims with calibrated confidence and traceable evidence, across
 arbitrary research domains. The contribution is not any one mechanism but the disciplined way they are combined to
-make trustworthiness the visible product. This integration-and-honesty axis complements, rather than competes with,
-work that pushes the frontier of any individual component.
+make trustworthiness the visible product. This integration-and-grounding axis complements, rather than competes
+with, work that pushes the frontier of any individual component, including retrieval-aware and verification-aware
+system design \cite{lewis2020rag,guu2020realm,karpukhin2020dpr}.
 
-\section{Chapter Conclusion}
+\section{Discussion Summary}
+
+\begin{table}[!htbp]
+\centering
+\caption{Key discussion points from Chapter 8}
+\begin{tabularx}{0.92\linewidth}{>{\raggedright\arraybackslash}p{0.28\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Theme & Discussion outcome \\
+\midrule
+Conditional answering & The system responds in proportion to evidence strength \\
+Structured critique & A separate critic improves transparency and auditability \\
+Grounding & Claims remain tied to retrieved literature and source provenance \\
+Layered evidence & User uploads, corpus papers, and live results cooperate cleanly \\
+Pipeline design & Specialized stages make the overall system easier to inspect and trust \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  scale=0.9,
+  transform shape,
+  box/.style={draw, rounded corners, align=center, text width=28mm, minimum height=10mm, fill=blue!8},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (a) {Evidence-grounded answer};
+\node[box, right=6mm of a] (b) {Measured verdict};
+\node[box, right=6mm of b] (c) {Traceable reasoning};
+\node[box, right=6mm of c] (d) {Research use};
+
+\draw[arrow] (a) -- (b);
+\draw[arrow] (b) -- (c);
+\draw[arrow] (c) -- (d);
+\end{tikzpicture}
+\caption{Conceptual interpretation flow for AI-Scientist}
+\label{fig:discussion_flow}
+\end{figure}
+
+\section{Chapter Conclusion }
 
 This chapter interpreted the evaluation of AI-Scientist as evidence for conditional, grounded, self-critical
-scientific answering. The main discussion points are that restraint behaviours are successes rather than failures,
+scientific answering. The main discussion points are that restraint behaviours are part of the system's strength,
 that critique is most trustworthy when structured and external, that grounding is a powerful but partial guarantee
-bounded by the evidence, that the layered evidence model keeps provenance visible, and that a structured pipeline is
-justified by the distinct failure modes of retrieval, extraction, verification, and synthesis. The next chapter
-states the limitations and threats to validity of these claims.
+bounded by the evidence, that the layered evidence model keeps provenance visible, and that a structured pipeline
+is justified by the distinct failure modes of retrieval, extraction, verification, and synthesis. The next chapter
+states the limitations and threats to validity of these claims, consistent with the broader direction of
+hallucination-aware and grounding-aware research \cite{ji2023hallucination,huang2023hallucinationsurvey,min2023factscore}.
+

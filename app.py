@@ -352,7 +352,7 @@ def main() -> None:
         st.subheader("Multi-Agent Report")
         if not report.verified_claims and "research question" in report.summary:
             st.warning(report.summary)
-        st.write(report.summary)
+        st.caption("The final answer is presented after the verified claims for clearer reading.")
 
         corpus_ids = {paper.paper_id for paper in corpus.all_papers()}
         uploaded_ids = {up.paper_id for up in uploaded_papers}
@@ -440,6 +440,12 @@ def main() -> None:
 
         for item in report.verified_claims:
             render_claim_card(item, uploaded_papers, corpus_ids)
+
+        st.subheader("Final Answer")
+        if report.summary:
+            st.success(report.summary)
+        else:
+            st.info("A final answer was not produced for this query.")
 
     with right:
         st.subheader("Baseline Snapshot")

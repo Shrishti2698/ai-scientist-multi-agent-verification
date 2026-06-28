@@ -11,7 +11,6 @@ service built on top of it.
 
 \begin{table}[!htbp]
 \centering
-\caption{Core implementation modules of the AI-Scientist package.}
 \label{tab:module-map}
 \begin{tabular}{p{0.34\textwidth}p{0.55\textwidth}}
 \toprule
@@ -34,13 +33,13 @@ Module & Responsibility \\
 \path{baselines.py} & Single-agent and RAG comparison systems. \\
 \bottomrule
 \end{tabular}
+\caption{Core implementation modules of the AI-Scientist package.}
 \end{table}
 
 \section{Interfaces}
 
 \begin{table}[!htbp]
 \centering
-\caption{User-facing entry points.}
 \label{tab:interface-map}
 \begin{tabular}{p{0.30\textwidth}p{0.59\textwidth}}
 \toprule
@@ -50,13 +49,13 @@ Entry point & Role \\
 \path{ai_scientist/api.py} & FastAPI service exposing the same pipeline programmatically. \\
 \bottomrule
 \end{tabular}
+\caption{User-facing entry points.}
 \end{table}
 
 \section{Verdict and Confidence Reference}
 
 \begin{table}[!htbp]
 \centering
-\caption{Verdict space used by the Verification agent.}
 \label{tab:verdict-map}
 \begin{tabular}{p{0.26\textwidth}p{0.63\textwidth}}
 \toprule
@@ -68,6 +67,7 @@ Verdict & Meaning \\
 \texttt{out\_of\_scope} & The query is not a research question and is declined before analysis. \\
 \bottomrule
 \end{tabular}
+\caption{Verdict space used by the Verification agent.}
 \end{table}
 
 \section{Running the System}

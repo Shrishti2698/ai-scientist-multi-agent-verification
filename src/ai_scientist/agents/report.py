@@ -13,7 +13,19 @@ class ReportGenerationAgent:
         papers: list[PaperDocument],
         iteration_trace: list[str],
     ) -> FinalReport:
-        lines = [f"# AI-Scientist Report", "", f"## Question", question, "", "## Executive Summary", summary, ""]
+        lines = [
+            f"# AI-Scientist Report",
+            "",
+            f"## Question",
+            question,
+            "",
+            "## Verified Claims Summary",
+            summary,
+            "",
+            "## Final Answer",
+            summary,
+            "",
+        ]
 
         lines.append("## Retrieved Papers")
         for paper in papers:

@@ -1,3 +1,9 @@
+\documentclass[12pt,a4paper,twoside,openright,titlepage]{book}
+
+% Lightweight Overleaf entrypoint for free-plan compiles.
+% It keeps the thesis content intact, skips heavy BibTeX passes,
+% and omits list-of-figures/list-of-tables generation.
+\input{HeadTail/metadata}
 \usepackage[a4paper,top=1.5in,bottom=1in,left=1.5in,right=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -7,8 +13,9 @@
 \usepackage{newtxmath}
 \usepackage{microtype}
 \usepackage{setspace}
+\PassOptionsToPackage{draft}{graphicx}
 \usepackage{graphicx}
-\usepackage{rotating}   % sidewaysfigure: full-page landscape for wide architecture diagrams
+\usepackage{rotating}
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage[section]{placeins}
@@ -24,20 +31,10 @@
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
 \usepackage{hyperref}
 
-% Support the three common Overleaf layouts:
-% 1. Actual_Thesis contents uploaded as the project root,
-% 2. an Actual_Thesis folder uploaded into the project root,
-% 3. the whole repository uploaded as the project root.
 \graphicspath{
   {Figures/}
   {./Figures/}
-  {Actual_Thesis/Figures/}
-  {./Actual_Thesis/Figures/}
-  {Thesis/Actual_Thesis/Figures/}
-  {./Thesis/Actual_Thesis/Figures/}
 }
-
-\input{HeadTail/metadata}
 
 \setstretch{1.15}
 \setlength{\parindent}{0.2in}
@@ -123,3 +120,23 @@
     #2
   \end{minipage}%
 }
+
+\begin{document}
+\input{HeadTail/head_fast}
+
+\input{Chapter1/chapter1}
+\input{Chapter2/chapter2}
+\input{Chapter3/chapter3}
+\input{Chapter4/chapter4}
+\input{Chapter5/chapter5}
+\input{Chapter6/chapter6}
+\input{Chapter7/chapter7}
+\input{Chapter8/chapter8}
+\input{Chapter9/chapter9}
+\input{Chapter10/chapter10}
+
+\appendix
+\input{Appendix/appendix}
+
+\input{HeadTail/tail_fast}
+\end{document}

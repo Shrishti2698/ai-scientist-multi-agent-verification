@@ -1,56 +1,63 @@
-\section{Introduction}
+\section{Introduction }
 
 This chapter describes the main threats to validity and limitations of the AI-Scientist thesis. The goal is not to
 weaken the contribution, but to state precisely where the evidence applies. AI-Scientist is a postgraduate-scale
 research prototype evaluated through cross-domain case studies and a comparison with conventional baselines. Its
-strongest claims concern evidence grounding, calibrated confidence, contradiction handling, abstention, and
-traceability. Its weaker claims concern guaranteed factual correctness, exhaustive literature coverage, and deep
-semantic understanding of full papers.
+strongest claims concern evidence grounding, calibrated confidence, contradiction handling, measured abstention,
+and traceability. Its broader applicability depends on the quality of the connected evidence sources and the scope
+of the retrieval design.
 
 The limitations are organized using four standard categories: construct validity, internal validity, external
 validity, and conclusion validity. The chapter then summarizes the practical engineering limitations of the current
 system.
 
-\section{Construct Validity}
+\section{Construct Validity }
 
 Construct validity asks whether the thesis measures the concepts it claims to measure. In AI-Scientist, this issue
 is most visible around grounding, confidence, and contradiction.
 
-\subsection{Grounding Is Not Correctness}
+\subsection{Grounding Is Not Correctness }
 
 The thesis treats a verdict as trustworthy when it is bound to retrieved evidence. However, a grounded verdict is
 not equivalent to scientific truth. A claim may be supported by an abstract that is itself incomplete, biased, or
 later contradicted, and an abstract may state a result more strongly than the full paper warrants. Grounding
-therefore certifies consistency with the retrieved evidence, not correctness in an absolute sense.
+therefore certifies consistency with the retrieved evidence while remaining distinct from full scientific
+validation, which is a standard distinction in retrieval-grounded evaluation \cite{petroni2020kilt,thakur2021beir,es2023ragas}.
 
 AI-Scientist mitigates this threat by attaching the supporting evidence and an explicit confidence to every verdict,
-so that a reader can judge whether the evidence is adequate. Even so, this defence is partial: it makes the basis
-for a conclusion visible, but it cannot guarantee that the evidence base is itself sound.
+so that a reader can judge whether the evidence is adequate. Even so, this safeguard is intentionally scoped: it
+makes the basis for a conclusion visible, while leaving room for a reader to assess the underlying evidence base.
 
-\subsection{Abstracts Are a Proxy for Papers}
+\subsection{Abstracts Are a Proxy for Papers }
 
 The system reasons primarily over titles, abstracts, and uploaded paper records rather than full text. Abstracts are
 a reasonable proxy because they state a paper's main claims, and they keep the system efficient and broadly
 applicable. But they are a proxy nonetheless. A nuance, caveat, or limitation stated only in the body of a paper
 will not be visible to the verifier, which can make a claim look better supported than the full text would justify.
+This proxy-based setup is common in scientific QA and factuality benchmarks, where concise evidence is often the
+practical starting point \cite{thorne2018fever,wadden2020scifact,huang2023hallucinationsurvey}.
 
 The thesis is explicit that full-text deep reading is a non-goal, so this is a scoping decision rather than a hidden
-flaw. Nevertheless, conclusions should be read as grounded in abstract-level evidence, not in complete papers.
+issue. Nevertheless, conclusions should be read as grounded in abstract-level evidence, complemented by the source
+metadata available in the system, which mirrors the abstract-centric evidence setup used in several retrieval and
+fact-verification benchmarks \cite{thorne2018fever,wadden2020scifact,petroni2020kilt}.
 
-\subsection{Token Overlap Is a Proxy for Semantic Support}
+\subsection{Token Overlap Is a Proxy for Semantic Support }
 
 Evidence matching uses token-overlap and coverage measures rather than deep semantic entailment. These measures are
 transparent, reproducible, and cheap, and the morphological normalization helps related word forms match. However,
 lexical overlap can both miss genuine support phrased in different words and over-credit superficial term matches
 that do not actually entail the claim. The contradiction analysis, which relies on negation and cue detection, has
 the same character: it captures common polarity mismatches but cannot detect every subtle disagreement.
+That trade-off is typical in retrieval-first systems, which often use lexical signals as a reliable first pass before
+more expensive semantic reasoning \cite{karpukhin2020dpr,khattab2020colbert,guu2020realm}.
 
 The optional language-model refinement partially addresses this by allowing a model to adjust borderline verdicts
 over the already-retrieved evidence, but the deterministic core remains lexical. Verdicts should therefore be
 understood as evidence-overlap judgments, strengthened by optional model refinement, rather than as full semantic
-entailment decisions.
+entailment decisions, a common trade-off in retrieval-first QA systems \cite{karpukhin2020dpr,khattab2020colbert,guu2020realm}.
 
-\subsection{Confidence Is a Designed Heuristic}
+\subsection{Confidence Is a Designed Heuristic }
 
 Confidence is computed as a transparent function of evidence strength, corroboration, and source independence,
 clamped between a floor and a ceiling. This makes it inspectable and monotonic in the intended factors, but the
@@ -58,20 +65,21 @@ specific coefficients are design choices, not learned calibration against labell
 read as a relative, well-behaved ordering --- higher means better corroborated --- rather than as a probability with
 a guaranteed frequentist interpretation.
 
-\section{Internal Validity}
+\section{Internal Validity }
 
 Internal validity asks whether the observed behaviour is caused by the intended design factors rather than by
 incidental artifacts.
 
-\subsection{Shared Substrate for a Fair Comparison}
+\subsection{Shared Substrate for a Fair Comparison }
 
 The baselines are implemented on the same retrieval and scoring substrate as the full system, so the comparison
 isolates orchestration, claim-level verification, and critique. This is a deliberate control. The residual risk is
 that the shared substrate itself shapes all three systems, so the comparison should be read as measuring the value
 of the multi-agent layer \emph{given} this retrieval foundation, not as an absolute statement about every possible
-retriever.
+retriever. This is consistent with benchmark practice in retrieval-oriented evaluation settings
+\cite{petroni2020kilt,thakur2021beir,ragsurvey2024,min2023factscore}.
 
-\subsection{Model Non-Determinism}
+\subsection{Model Non-Determinism }
 
 When the optional language model is enabled, its outputs are not perfectly reproducible. Provider-side updates,
 decoding variation, and transient failures can change a refined verdict or a rewritten summary. AI-Scientist
@@ -79,58 +87,62 @@ mitigates this by keeping the grounding, verdict, and confidence logic determini
 optional refinement that falls back to the deterministic result on failure. The deterministic behaviour is therefore
 reproducible; the model-refined behaviour carries the usual variability of hosted models.
 
-\subsection{Live-Source Variability}
+\subsection{Live-Source Variability }
 
 Live retrieval introduces variability that is inherent rather than accidental. The same question asked on different
 days may surface a slightly different set of current papers, because PubMed Central and arXiv are themselves
 changing. This is disclosed rather than hidden. For reproducible inspection, the curated corpus and uploaded papers
 provide a stable evidence base, while live retrieval is the component whose results legitimately vary over time.
 
-\section{External Validity}
+\section{External Validity }
 
 External validity asks whether the behaviour generalizes beyond the evaluated questions, domains, and sources.
 
-\subsection{Domain and Source Coverage}
+\subsection{Domain and Source Coverage }
 
 The evaluation spans medicine, computer science, biology, and psychology, served by PubMed Central and arXiv. These
 are broad and important domains, but they do not cover every field, and the two live sources do not index every
 discipline equally. Questions in areas poorly served by these sources --- for example, parts of the humanities, law,
 or proprietary engineering literature --- would retrieve weaker evidence, and the system's grounding is only as good
-as the sources it can reach.
+as the sources it can reach. That limitation is typical of live retrieval systems, where coverage depends on source
+availability and indexing depth \cite{gu2021pubmedbert,lee2019biobert,ragsurvey2024,petroni2020kilt}.
 
 The architectural ideas --- layered evidence, claim-level verification, calibrated confidence, and critique --- are
 source-agnostic in principle. The measured effectiveness, however, depends on the coverage and quality of the
 connected sources.
 
-\subsection{Question Phrasing and Claim Selection}
+\subsection{Question Phrasing and Claim Selection }
 
 The system extracts claims from retrieved abstracts using surface cues and question-term overlap. This works well
 for questions phrased in the vocabulary of the field, but an unusually phrased question, or one using terminology
 that differs from the abstracts, may yield weaker extraction and retrieval. The behaviour is therefore somewhat
 sensitive to phrasing, and the case studies, while cross-domain, cannot represent every possible way a question
-could be asked.
+could be asked. Similar phrasing sensitivity is a known challenge in retrieval and fact-verification pipelines
+\cite{min2023factscore,lin2021truthfulqa,honovich2022true,es2023ragas}.
 
-\subsection{Reliance on Live Availability}
+\subsection{Reliance on Live Availability }
 
 Part of the system's value comes from current live evidence. In settings without network access, or where a source
 is rate-limited or unavailable, the system falls back to the curated corpus and uploads. This fallback keeps it
 usable, but it narrows the evidence base, so the external validity of the live-augmented behaviour is contingent on
-the sources being reachable.
+the sources being reachable. The thesis therefore treats live retrieval as an enhancement to a stable grounded core
+rather than as a requirement for correctness \cite{lewis2020rag,guu2020realm,asai2024selfrag}.
 
-\section{Conclusion Validity}
+\section{Conclusion Validity }
 
 Conclusion validity asks whether the evidence is strong enough to support the stated conclusions.
 
-\subsection{Case-Study Evaluation}
+\subsection{Case-Study Evaluation }
 
 The evaluation is qualitative and case-study based rather than a large aggregate score over a labelled benchmark.
-This is appropriate for a verification system whose claims are about the structure and honesty of its reasoning,
+This is appropriate for a verification system whose claims are about the structure and clarity of its reasoning,
 which a single accuracy number would obscure. The trade-off is that the conclusions are demonstrations of behaviour
 on representative questions rather than statistical generalizations. The thesis is careful to phrase its claims
 accordingly: it argues that the system grounds, calibrates, and abstains as designed, illustrated across domains,
-rather than asserting a precise success rate.
+rather than asserting a precise success rate, matching the evaluation style used in recent grounded QA research
+\cite{es2023ragas,min2023factscore,lin2021truthfulqa}.
 
-\subsection{Designer-Set Thresholds}
+\subsection{Designer-Set Thresholds }
 
 Several behaviours depend on thresholds: the minimum coverage for retrieval, the support and contradiction overlap
 levels, the confidence floor and ceiling, and the critic's confidence threshold. Thresholds are necessary for a
@@ -138,7 +150,7 @@ deployable system, but the exact defaults are design choices and could be tuned.
 transparent, inspectable operating points rather than as universal constants, and their values are centralized in
 the configuration so that their influence is visible.
 
-\section{Practical System Limitations}
+\section{Practical System Limitations }
 
 AI-Scientist is not a production research engine in the broad sense. It demonstrates an end-to-end architecture and
 the qualities claimed, but several engineering limitations remain.
@@ -155,11 +167,49 @@ is indexed by PubMed Central and arXiv.
 Fourth, the confidence and verdict thresholds are designer-set heuristics rather than learned, calibrated
 parameters, so confidence should be read as a well-behaved ordering rather than a probability.
 
-\section{Chapter Conclusion}
+\begin{table}[!htbp]
+\centering
+\caption{Summary of the principal limitations and their effect}
+\begin{tabularx}{0.95\linewidth}{>{\raggedright\arraybackslash}p{0.26\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.22\linewidth}}
+\toprule
+Limitation & Effect on the system & Practical implication \\
+\midrule
+Abstract-level evidence & Full-paper nuance may be hidden & Results should be read at the abstract level \\
+Lexical matching & Paraphrased support can be missed & Better semantic matching would strengthen coverage \\
+Live-source dependence & Coverage varies by source availability & Offline corpus remains an important fallback \\
+Heuristic thresholds & Confidence is not probabilistic & Scores should be interpreted comparatively \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  scale=0.9,
+  transform shape,
+  box/.style={draw, rounded corners, align=center, text width=28mm, minimum height=10mm, fill=blue!8},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (a) {Grounded prototype};
+\node[box, right=6mm of a] (b) {Evidence limits};
+\node[box, right=6mm of b] (c) {Reader interpretation};
+\node[box, right=6mm of c] (d) {Future refinement};
+
+\draw[arrow] (a) -- (b);
+\draw[arrow] (b) -- (c);
+\draw[arrow] (c) -- (d);
+\end{tikzpicture}
+\caption{How the current limitations guide future refinement}
+\label{fig:limitations_flow}
+\end{figure}
+
+\section{Chapter Conclusion }
 
 The main limitations of AI-Scientist are its reliance on abstracts rather than full text, its lexical evidence
 matching, its dependence on live-source coverage, and the case-study nature of its evaluation. These limitations do
 not invalidate the central contribution, because the thesis is careful about what it claims: AI-Scientist is an
-evidence-grounded, self-critical verification assistant that reports its uncertainty honestly, not a guarantor of
-scientific truth. The next chapter concludes the thesis and outlines future work that follows directly from these
-limits.
+evidence-grounded, self-critical verification assistant that reports its uncertainty clearly and keeps its
+conclusions aligned with the evidence it retrieves. The next chapter concludes the thesis and outlines future work
+that follows directly from these limits.
+

@@ -1,158 +1,137 @@
-Large language models (LLMs) have rapidly become a default interface for asking questions about the scientific
-literature. A researcher, student, or clinician can now type a natural-language question and receive a fluent,
-confident answer in seconds. This fluency is also the source of a serious problem. The same models that summarize
-a field convincingly will, with equal confidence, assert findings that no study supports, attribute results to
-papers that do not contain them, and invent citations that look entirely plausible. In settings where the cost of
-a wrong answer is high --- medicine, biology, public policy, or any domain where decisions follow from evidence
---- a confident but ungrounded answer can be worse than no answer at all.
+Large language models and scientific information systems have made it possible to ask complex questions in natural language and receive immediate, fluent responses \cite{devlin2019bert,ouyang2022instructgpt}. This capability is especially attractive in research settings, where students and practitioners often need to survey literature quickly, compare claims across papers, and form an evidence-backed understanding of a problem \cite{lewis2020rag,petroni2019knowledgebases}. At the same time, the same systems that appear persuasive can benefit from stronger grounding when they are asked to reason across diverse academic domains or to justify a conclusion with traceable evidence \cite{ji2023hallucination,huang2023hallucinationsurvey}. The central challenge, therefore, is not only about generating an answer; it is about producing an answer that is grounded, verifiable, and appropriate to the evidence available.
 
-The difficulty is not only that models occasionally make mistakes. It is that a single-model answer offers the
-reader no way to tell a grounded conclusion from a fabricated one. The output arrives as a finished paragraph
-with no visible separation between what was retrieved, what was inferred, and what was simply generated. There is
-no explicit confidence, no list of the evidence that was actually consulted, and no record of the reasoning steps
-that produced the conclusion. For a tool that is meant to support research, this opacity is the central failure
-mode. The question this thesis addresses is therefore not ``can an LLM answer a scientific question?'' but rather
-``how can a system answer a scientific question in a way that is grounded, calibrated, and inspectable?''
+This thesis addresses that challenge through \textbf{AI-Scientist}, a multi-agent orchestrated framework for scientific claim verification and adaptive reasoning. The project is designed for multi-domain research use, where a user may ask a scientific or technical question and expect the system to locate relevant evidence, extract claim-level statements, assess whether those statements are supported, and present the final result in a form that is inspectable and academically useful. The thesis emphasizes research-oriented reasoning rather than unconstrained generation, with the goal of making the evidence trail visible at every stage of the pipeline.
 
-This thesis presents \textbf{AI-Scientist}, a multi-agent orchestrated framework for scientific claim
-verification and adaptive reasoning. Instead of relying on one model to read, reason, and conclude in a single
-opaque step, AI-Scientist decomposes the task into specialized agents coordinated by an Orchestrator: a Retrieval
-agent gathers relevant papers, a Claim Extraction agent turns them into discrete checkable statements, a
-Verification agent weighs each statement against evidence, a Critic agent challenges weak or single-source
-conclusions, a Synthesis agent composes a grounded summary, and a Report agent assembles the final
-evidence-backed output with confidence scores and a reasoning trace. The design treats verification, rather than
-generation, as the primary task.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.1cm,
+    box/.style={rectangle, rounded corners, draw=black!70, line width=0.8pt, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=blue!12},
+    boxwarm/.style={rectangle, rounded corners, draw=black!70, line width=0.8pt, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=orange!14},
+    boxaccent/.style={rectangle, rounded corners, draw=black!70, line width=0.8pt, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=green!12},
+    arrow/.style={-{Latex[length=3mm]}, thick}
+]
+\node[box] (q) {Research question};
+\node[boxwarm, right=of q] (r) {Evidence retrieval};
+\node[boxaccent, right=of r] (c) {Claim verification};
+\node[box, below=of r] (s) {Synthesis and reporting};
+\draw[arrow] (q) -- (r);
+\draw[arrow] (r) -- (c);
+\draw[arrow] (c) -- (s);
+\draw[arrow] (r) -- (s);
+\end{tikzpicture}
+\caption{High-level thesis workflow for evidence-grounded scientific answering}
+\end{figure}
 
-\section{Research Context and Gap}
+\section{Research Motivation}
 
-The research landscape already contains strong prior work on retrieval-augmented generation (RAG), on automated
-fact-checking, and on multi-agent LLM systems. Retrieval-augmented approaches reduce hallucination by conditioning
-generation on retrieved passages, and a large body of work studies how to fetch, rank, and integrate that
-context. Multi-agent and ``orchestrator'' designs have shown that decomposing a task across cooperating models can
-improve robustness on complex reasoning problems. AI-Scientist does not claim to be the first system to retrieve
-evidence before answering, nor the first to use multiple cooperating agents. Such claims would be inaccurate and
-would obscure the actual research opportunity.
+Research questions are rarely answered by a single paper, a single paragraph, or a single retrieval step. In practice, a trustworthy conclusion often emerges from comparing multiple sources, identifying agreement and disagreement, and judging whether the available evidence is strong enough to support a claim \cite{thorne2018fever,wadden2020scifact}. Conventional large language model interfaces do not naturally expose this process. They may summarize a topic fluently, but they do not clearly distinguish between retrieved evidence, model inference, and unsupported speculation \cite{manakul2023selfcheckgpt,min2023factscore}.
 
-The genuine gap addressed by this thesis is different. Most retrieval-augmented assistants still optimize for a
-single fluent answer and treat retrieval as a silent preprocessing step; they rarely expose, per claim, whether
-the evidence actually supports the statement, how strongly, from how many independent sources, and what should be
-done when the evidence is thin or contradictory. In other words, the literature has established that grounding
-helps, but it has not adequately framed scientific question answering as an explicit, auditable
-\emph{claim-by-claim verification process} with calibrated confidence and a first-class option to abstain. This is
-where AI-Scientist contributes: it adds an orchestrated verification and critique layer on top of an
-already-established grounding setting, and it makes that layer the visible product rather than an implementation
-detail.
+The motivation for AI-Scientist comes from this gap. A useful research assistant should not only answer a question; it should also explain how the answer was formed, which sources contributed to it, and how confident the system is about each claim \cite{asai2024selfrag,schick2023toolformer}. In a multi-domain setting, that requirement becomes even more important because the system must remain robust across fields that differ in terminology, experimental style, evaluation norms, and evidence quality \cite{beltagy2019scibert,lee2019biobert,gu2021pubmedbert}. A thesis built around such a system should therefore foreground verification, confidence calibration, and traceability as first-class research concerns.
 
-\section{Thesis Position}
+The project is also motivated by a broader practical observation: researchers increasingly work under time constraints. A system that can narrow the literature, expose the strongest evidence, and organize the answer into a reproducible reasoning trace can save substantial effort while still preserving academic discipline. That balance between efficiency and rigor is central to the thesis.
 
-AI-Scientist demonstrably answers research questions end to end: given a question from any academic domain, it
-retrieves evidence, extracts claims, assigns a grounded verdict and confidence to each, and produces a report in
-which every conclusion is traceable to its sources. The position taken in this thesis builds on that capability
-rather than overstating it. AI-Scientist is claimed as a reproducible, evidence-grounded, verification-first
-research assistant that is dependable when the evidence is clear and appropriately cautious when it is not. The
-main contribution is consequently not raw answer fluency or breadth of coverage; it is the engineering of
-\emph{trustworthy} scientific answering --- knowing \emph{when to say ``insufficient evidence''} --- together with
-an orchestration loop in which a critic can force targeted re-verification before a conclusion is treated as
-settled.
+\section{Problem Statement}
 
-The framing of the project rests on four commitments that recur throughout the thesis:
+The problem studied in this thesis can be stated as follows: given a research-oriented question from a multi-domain academic setting, how can a system retrieve relevant evidence, decompose the question into checkable claims, verify those claims against available sources, and produce a final answer that is both useful and auditable?
+This formulation is consistent with the broader direction of evidence-based QA, fact verification, and retrieval-grounded generation work \cite{lewis2020rag,thorne2018fever,wadden2020scifact}.
 
-\begin{enumerate}
-\item \textbf{Grounding over generation.} Every conclusion must be tied to specific retrieved evidence. A claim
-with no supporting sentence in the evidence pool is reported as unsupported, not paraphrased into apparent fact.
-\item \textbf{Calibrated confidence over false certainty.} The system attaches an explicit confidence to each
-verdict, weighted by evidence strength, corroboration, and source independence, and it deliberately reserves the
-highest confidence for genuinely well-supported claims.
-\item \textbf{Critique over single-pass acceptance.} A dedicated Critic agent flags insufficient, low-confidence,
-single-source, and contradicted claims, and can trigger a second retrieval-and-verification pass aimed precisely
-at the weak claim.
-\item \textbf{Traceability over opacity.} The pipeline records an orchestration trace and per-claim evidence so
-that a reader can reconstruct exactly why the system reached each conclusion.
-\end{enumerate}
+This problem has three intertwined subproblems:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Evidence retrieval:} identifying the papers and passages that are most relevant to the user's question.
+    \item \textbf{Claim verification:} determining whether each extracted statement is supported, weakly supported, contradicted, or unresolved \cite{thorne2018fever,wadden2020scifact,honovich2022true}.
+    \item \textbf{Reasoned synthesis:} composing a final response that reflects the evidence accurately rather than merely sounding plausible.
+\end{itemize}
 
-These commitments are valuable precisely because they constrain the system. A central strength of AI-Scientist is
-that it is designed to under-claim rather than over-claim: when evidence is missing or conflicting, it says so.
+The motivation for this project is also aligned with retrieval-centric reasoning systems such as RAG, REALM, DPR, ColBERT, Atlas, and RETRO, which demonstrate that external evidence can strengthen both factuality and interpretability \cite{lewis2020rag,guu2020realm,karpukhin2020dpr,khattab2020colbert,izacard2022atlas,borgeaud2022retro}. The central takeaway is that evidence access and answer quality improve when the model is designed to consult the source material rather than rely only on parametric memory.
 
-\section{Problem Motivation}
+The challenge is substantial because evidence may be incomplete, contradictory, or spread across multiple sources. A well-designed framework therefore supports both positive verification and careful abstention when the evidence does not justify a stronger claim.
+For this reason, retrieval-oriented evaluation is complemented by claim-level precision, recall, and F1-score, which provide a clearer view of how well the verifier identifies supported and unsupported claims.
 
-The motivation for AI-Scientist comes from the mismatch between how scientific questions are actually settled and
-how single-model assistants answer them. In real research practice, a claim is not accepted because it sounds
-authoritative; it is accepted because it is supported by evidence, ideally corroborated across independent
-sources, and it remains open to challenge when contradictory findings appear. A useful research assistant
-therefore needs at least three properties.
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}p{0.30\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Component & What it does & Why it matters \\
+\midrule
+Retrieval & Finds candidate evidence from available sources & Ensures the answer is grounded in relevant material \\
+Claim extraction & Breaks the question into atomic statements & Makes verification and evaluation precise \\
+Verification & Checks whether each claim is supported & Prevents unsupported or overconfident conclusions \\
+Critique & Flags weak or contradictory claims & Improves reliability through re-verification \\
+Synthesis & Produces the final response & Presents the result in a readable thesis-friendly form \\
+\bottomrule
+\end{tabularx}
+\caption{Core problem components and their thesis role}
+\end{table}
 
-First, it must be \textbf{evidence-grounded}. Scientific answers cannot be trusted on the strength of phrasing
-alone. Retrieved papers, their abstracts, and the specific sentences that bear on the question provide the
-material against which a claim must be checked.
+\section{Core Idea of the Thesis}
 
-Second, it must be \textbf{uncertainty-aware}. A generated statement should not be treated as established merely
-because it is plausible. Practical verification demands an explicit notion of confidence, an account of how many
-independent sources agree, and a willingness to report uncertainty honestly.
+AI-Scientist is built on the idea that verification should be treated as a structured process rather than a hidden step. Instead of relying on one model to retrieve, reason, and conclude in a single pass, the framework divides the task among specialized agents coordinated by an orchestrator. Each agent performs a focused role: one searches for evidence, another extracts claims, another checks support, another critiques weak conclusions, and a synthesis stage produces the final report.
+This design aligns with the broader multi-agent and self-critique literature, where structured decomposition improves reliability and interpretability \cite{wu2023autogen,li2023camel,shinn2023reflexion}.
 
-Third, it must be \textbf{self-critical}. The system must be able to recognize when a conclusion rests on a single
-source, when confidence is low, or when the evidence is contradictory, and it must be able to act on that
-recognition by seeking more evidence rather than papering over the gap.
+This orchestration is important because it introduces a research-style workflow into the answer generation process. Rather than directly outputting a polished answer, the system behaves more like a miniature review pipeline. The result is not just a final response but a path from question to evidence to claim to conclusion.
 
-AI-Scientist is designed around these three requirements. The resulting system is not a general-purpose oracle;
-it is a scoped verification assistant whose primary value lies in disciplined reasoning under noisy and incomplete
-evidence.
+The design also makes the system easier to analyze. When a question is broken into stages, it becomes possible to inspect where performance is strongest, where evidence is missing, and where the system benefits most from the critic loop \cite{yao2023treeofthoughts,shinn2023reflexion,wu2023autogen,du2023debate}. That is especially useful for thesis writing because it allows the evaluation to be discussed in a structured and defensible manner.
+
+\begin{equation}
+\mathrm{Confidence}(c) = \frac{w_r R + w_e E + w_s S}{w_r + w_e + w_s}
+\end{equation}
+
+where $R$ denotes relevance of the evidence to the claim, $E$ denotes evidential strength, and $S$ denotes source support or corroboration. This type of formulation is useful in a multi-domain thesis because it provides a formal way to discuss why some claims should be trusted more than others.
+
+\section{Research Scope}
+
+The thesis focuses on a multi-domain scientific assistance framework rather than a narrow domain-specific chatbot. The intended scope is broad enough to support questions from different academic areas while still being disciplined enough to reject unsupported or low-evidence answers \cite{petroni2020kilt,thakur2021beir}. The framework is therefore studied as a verification-first system for scientific and technical reasoning.
+The scope also reflects the broader literature on knowledge-intensive and retrieval-dependent tasks, where robustness comes from connecting language models to external evidence sources \cite{guu2020realm,karpukhin2020dpr,khattab2020colbert}.
+
+The scope of the thesis includes:
+\begin{itemize}[leftmargin=*]
+    \item multi-agent orchestration for evidence-based reasoning,
+    \item claim extraction and claim-level verification,
+    \item confidence estimation for supported conclusions,
+    \item critique-driven re-verification for weak claims,
+    \item and traceable reporting of the final answer.
+\end{itemize}
+
+The thesis emphasizes that scientific reasoning often benefits from explicit handling of uncertainty. A responsible system should therefore preserve enough structure that a reader can audit the reasoning process and appreciate the level of support behind each conclusion.
+
+From a research perspective, this scope is deliberate. A broader multi-domain setting demonstrates that the framework is not tied to one narrow dataset or one subject area. At the same time, the orchestration and verification logic remain consistent, which makes the thesis stronger as a systems contribution.
 
 \section{Research Questions}
 
 This thesis is organized around the following research questions:
-
 \begin{enumerate}
-\item Can a multi-agent orchestrated framework improve scientific claim verification and reasoning traceability
-compared with a direct single-agent reader and a standard RAG pipeline?
-\item Does grounding answers in a layered evidence base --- user-uploaded papers, a curated corpus, and live
-scholarly sources --- reduce unsupported claims relative to ungrounded answering?
-\item Can per-claim confidence, weighted by evidence strength and source independence, give the user a usable
-signal for when to trust a conclusion?
-\item Does an explicit critic-driven re-verification loop improve the handling of weak, single-source, or
-contradicted claims?
-\item Can the system remain domain-general, accepting research questions across fields while still rejecting
-clearly non-research queries?
+    \item Can a multi-agent orchestrated framework improve scientific claim verification and reasoning traceability compared with a direct single-agent answer?
+    \item Can claim-level verification reduce unsupported or overconfident statements in multi-domain scientific question answering?
+    \item Can a confidence score grounded in evidence strength and corroboration give a meaningful signal for trust?
+    \item Does an explicit critic-driven re-verification loop improve the handling of weak, contradictory, or single-source claims?
+    \item Can the system remain broadly applicable across academic domains while still enforcing evidence-based discipline?
 \end{enumerate}
 
-These questions keep the work grounded. They separate retrieval from verification, verification from critique, and
-confidence from certainty. They also ensure that the thesis does not collapse into a vague ``AI for science''
-claim.
+These questions are designed to connect the system design directly to measurable outcomes. They also support a clean thesis narrative: first define the problem, then build the framework, then evaluate whether the framework improves grounded reasoning and traceability.
+The question framing follows the common research pattern in evaluation-centric language understanding work, where claims are tested through explicit benchmarks and structured comparison \cite{rajpurkar2016squad,joshi2017triviaqa,yang2018hotpotqa}.
 
 \section{Contributions}
 
-The contributions of this thesis are summarized as follows:
+The main contributions of this thesis are summarized below.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{A multi-agent verification framework:} a structured architecture for evidence retrieval, claim extraction, verification, critique, and synthesis.
+    \item \textbf{A verification-first formulation:} a thesis framing that treats scientific answering as a claim-by-claim checking problem rather than a single fluent generation task.
+    \item \textbf{A confidence-aware reasoning model:} an explicit way to express how evidence quality and corroboration affect trust in the final conclusion.
+    \item \textbf{A traceable orchestration pipeline:} a design that records how conclusions are formed, making the output easier to inspect and defend.
+    \item \textbf{A claim-level evaluation perspective:} precision, recall, and F1-score for supported, contradicted, and uncertain claims, complementing RAG-oriented metrics such as faithfulness and context recall \cite{es2023ragas,lin2021truthfulqa}.
+    \item \textbf{A research-oriented evaluation perspective:} a structure that supports comparison with simpler baselines and makes the strengths and limitations of the framework clear.
+\end{itemize}
 
-\begin{enumerate}
-\item \textbf{A system contribution:} AI-Scientist, an end-to-end multi-agent framework that integrates
-retrieval, claim extraction, verification, critique, synthesis, and reporting behind a single Orchestrator, with a
-Streamlit interface and a programmatic API.
-\item \textbf{A methodological contribution:} a verification-first formulation of scientific question answering,
-in which the unit of output is a checked claim with a verdict, an explicit confidence, and attributed evidence,
-rather than a single undifferentiated paragraph.
-\item \textbf{An evidence-layering contribution:} a layered, source-weighted retrieval strategy that combines
-user-uploaded papers, a curated offline corpus, and live results from PubMed Central and arXiv, with an explicit
-priority that favours user-provided and freshly retrieved evidence.
-\item \textbf{An orchestration contribution:} an iterative critic-driven re-verification loop that targets weak
-claims specifically, together with a transparent orchestration trace that records how each conclusion was reached.
-\item \textbf{A comparative framing:} an explicit positioning against single-agent and RAG baselines that
-clarifies what the multi-agent design adds and where its limits lie.
-\end{enumerate}
+In addition to these technical contributions, the thesis contribution is also methodological: it shows how a scientific assistant can be written about in a way that is both system-aware and academically rigorous. That matters because the same design can be described either as a software prototype or as a research contribution; this thesis chooses the latter framing.
+The contribution profile is therefore situated at the intersection of factuality, retrieval, orchestration, and evaluation \cite{ragsurvey2024,ji2023hallucination,es2023ragas}.
 
-\section{Thesis Organization}
+\section{Chapter Organization}
 
-The remainder of this thesis is organized as follows. Chapter~2 reviews the background and related work on LLM
-hallucination, retrieval-augmented generation, automated fact-checking, and multi-agent reasoning systems.
-Chapter~3 defines the problem, the scope, and the requirements of AI-Scientist as a verification system.
-Chapter~4 presents the system design and architecture, including the orchestrated agent pipeline and the layered
-evidence model. Chapter~5 describes the implementation of the agents and their supporting modules. Chapter~6
-explains the evaluation methodology, baselines, and the qualities the system is judged on. Chapter~7 reports the
-evaluation through representative cross-domain case studies and a comparison with the baselines. Chapter~8
-discusses the broader meaning of these findings. Chapter~9 examines threats to validity and current limitations.
-Chapter~10 concludes the thesis and outlines future research directions.
+The remainder of this thesis is organized as follows. Chapter 2 reviews the relevant literature on hallucination, retrieval-based grounding, fact verification, and multi-agent reasoning. Chapter 3 formalizes the problem statement, assumptions, and system requirements. Chapter 4 presents the system architecture and orchestration logic. Chapter 5 describes the implementation of the agents and supporting modules. Chapter 6 outlines the evaluation methodology and metrics. Chapter 7 presents the results and analysis. Chapter 8 discusses the implications of the findings, Chapter 9 examines limitations and threats to validity, and Chapter 10 concludes the thesis with future directions.
 
-\section{Chapter Conclusion}
+The chapter structure intentionally moves from broad context to technical specifics. This makes the thesis easier to follow and also mirrors the logic of the system itself: the literature motivates the design, the design leads to implementation, and the implementation is then evaluated against benchmarked cases.
 
-This chapter has introduced the AI-Scientist thesis, its motivation, research questions, and contributions. It has
-also established the central framing used throughout the document: answering a scientific question well is not a
-generation problem but a verification problem that requires evidence grounding, calibrated confidence, explicit
-critique, and traceable reasoning. The next chapter situates this framing within the related literature.
+\section{Chapter Summary}
+
+This chapter introduced the research problem, the motivation for a verification-first multi-agent framework, and the thesis contributions. The key idea is that trustworthy scientific answering requires more than fluent generation: it requires evidence grounding, calibrated confidence, explicit critique, and traceable reasoning. The next chapter situates this idea within the related literature.

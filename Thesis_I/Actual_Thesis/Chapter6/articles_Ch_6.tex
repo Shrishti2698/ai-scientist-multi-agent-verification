@@ -1,36 +1,64 @@
-\section{Introduction}
+\section{Introduction }
 
-AI-Scientist is a systems thesis, but it is also an evaluation thesis. The contribution depends not only on whether
-the software runs, but on whether its behaviour can be examined honestly against meaningful baselines on
+AI-Scientist is a systems thesis, and it is also an evaluation thesis. The contribution depends not only on whether
+the software runs, but on whether its behaviour can be examined rigorously against meaningful baselines on
 representative scientific questions. This chapter therefore explains the evaluation methodology used throughout the
-project.
+project, drawing on standard practices from grounded-generation and factuality evaluation \cite{lin2021truthfulqa,min2023factscore,es2023ragas}.
 
 The methodology reflects a deliberate response to the risks identified in the literature review. Grounded question
-answering is easy to overclaim and hard to assess cleanly, because a fluent answer can hide whether it is actually
-supported by evidence. The central AI-Scientist claim concerns grounding, calibrated confidence, contradiction
-handling, abstention, and traceability rather than raw fluency. The evaluation is therefore organized around those
-qualities, uses real scholarly evidence rather than synthetic self-confirming text, and compares the multi-agent
-system against the two conventional alternatives it is meant to improve upon.
+answering benefits from careful evaluation, because a fluent answer can hide whether it is actually supported by
+evidence. The central AI-Scientist claim concerns grounding, calibrated confidence, contradiction handling,
+abstention, and traceability rather than raw fluency. The evaluation is therefore organized around those
+qualities, uses real scholarly evidence instead of synthetic self-confirming text, and compares the multi-agent
+system against the two conventional alternatives it is meant to improve upon, following the same evaluation logic
+used in factuality-oriented benchmarks \cite{thorne2018fever,wadden2020scifact,min2023factscore,es2023ragas}.
 
-\section{Evaluation Philosophy}
+\section{Evaluation Philosophy }
 
-The first methodological principle is that a fluent answer is not automatically a good one. A response counts as
-trustworthy only when its conclusions are tied to retrieved evidence, when its confidence reflects the strength and
-independence of that evidence, and when its uncertainty is reported rather than hidden. The evaluation therefore
-inspects the structure of the system's output --- its per-claim verdicts, confidence, evidence snippets, and
-orchestration trace --- not only the surface text of the summary.
+The first methodological principle is that a fluent answer is strengthened by explicit grounding. A response counts
+as trustworthy when its conclusions are tied to retrieved evidence, when its confidence reflects the strength and
+independence of that evidence, and when its uncertainty is presented clearly. The evaluation therefore inspects the
+structure of the system's output --- its per-claim verdicts, confidence, evidence snippets, and orchestration trace
+--- together with the surface text of the summary.
+This is aligned with the broader direction of grounded-generation and hallucination-aware evaluation research
+\cite{lin2021truthfulqa,ji2023hallucination,huang2023hallucinationsurvey}.
 
 The second principle is that the comparison must isolate the effect of the design under study. The single-agent and
 RAG baselines are implemented on the same retrieval and scoring substrate as the full system, so any observed
 difference reflects orchestration, claim-level verification, and critique rather than incidental differences in
-retrieval or tokenization.
+retrieval or tokenization. This is aligned with the benchmark-style separation of retrieval and reasoning used in
+modern retrieval evaluation suites \cite{petroni2020kilt,thakur2021beir}.
 
-The third principle is that honest, cautious behaviour is a success, not a failure. When the evidence for a claim
-is thin or contradictory, the correct outcome is an insufficient-evidence or contradicted verdict. The evaluation
-explicitly credits the system for abstaining and for surfacing disagreement, rather than rewarding it for always
-producing a confident-sounding conclusion.
+The third principle is that measured, evidence-aware behaviour is a strength. When the evidence for a claim is
+limited or contradictory, the system presents an appropriately calibrated verdict. The evaluation therefore
+recognizes abstention and disagreement handling as part of the system's disciplined reasoning style, echoing recent
+work on calibrated answering and self-critique \cite{kadavath2022language,shinn2023reflexion}.
 
-\section{Baselines}
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners, align=center, text width=34mm, minimum height=10mm, fill=blue!15},
+  compare/.style={draw, rounded corners, align=center, text width=34mm, minimum height=10mm, fill=yellow!25},
+  report/.style={draw, rounded corners, align=center, text width=34mm, minimum height=10mm, fill=orange!20},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (q) {Cross-domain question};
+\node[box, below=8mm of q] (e) {Matched evidence set};
+\node[box, below=8mm of e] (m) {Run three systems};
+\node[compare, below=8mm of m] (a) {Compare verdicts and traces};
+\node[report, below=8mm of a] (r) {Report metrics and case studies};
+
+\draw[arrow] (q) -- (e);
+\draw[arrow] (e) -- (m);
+\draw[arrow] (m) -- (a);
+\draw[arrow] (a) -- (r);
+\end{tikzpicture}
+\caption{Evaluation workflow used for the thesis study}
+\label{fig:evaluation_workflow}
+\end{figure}
+
+\section{Baselines }
 
 AI-Scientist is evaluated against two baselines that represent the conventional alternatives to a multi-agent
 verifier.
@@ -38,17 +66,45 @@ verifier.
 The \textbf{single-agent baseline} models a direct reader: it retrieves the single most relevant paper and trusts a
 direct overlap check between the question and that paper's sentences. It produces a verdict and a deliberately
 capped confidence, reflecting the limited evidential discipline of a one-shot reader that does not corroborate
-across sources or analyze contradictions.
+across sources or analyze contradictions. The baseline is intentionally simple, so its behaviour is easy to compare
+with retrieval-centric systems \cite{lewis2020rag,guu2020realm}.
 
 The \textbf{RAG baseline} models a standard retrieval-augmented pipeline: it retrieves several papers and aggregates
 simple supporting overlap into a verdict, again with capped confidence. Unlike the full system, it performs no
-explicit contradiction analysis, no claim-level decomposition, and no critic-driven re-verification.
+explicit contradiction analysis, no claim-level decomposition, and no critic-driven re-verification. This makes it
+useful as a contrast to evidence-first verification pipelines \cite{karpukhin2020dpr,khattab2020colbert}.
 
 The \textbf{proposed system} is the full multi-agent orchestrated pipeline described in Chapters~4 and~5. Holding
 the retrieval substrate fixed across all three systems makes the comparison a clean ablation of the contributions
-of orchestration, claim-level verification, confidence calibration, and critique.
+of orchestration, claim-level verification, confidence calibration, and critique, which is consistent with the
+design of modern self-refining systems \cite{wu2023autogen,yao2023treeofthoughts,asai2024selfrag}.
 
-\section{The Cross-Domain Question Set}
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\caption{Benchmark comparison across the evaluated systems}
+\begin{tabularx}{0.98\linewidth}{>{\raggedright\arraybackslash}p{0.23\linewidth} >{\raggedright\arraybackslash}p{0.13\linewidth} >{\raggedright\arraybackslash}p{0.13\linewidth} >{\raggedright\arraybackslash}p{0.14\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+System & Accuracy & Avg. confidence & Contradiction recall & Key observation \\
+\midrule
+Single-agent & 0.583 & 0.604 & 0.000 & Direct overlap produces limited contradiction handling \\
+RAG baseline & 0.667 & 0.531 & 0.000 & Better retrieval breadth, but still lacks explicit critique \\
+Multi-agent w/o critic loop & 0.833 & 0.577 & 0.500 & Structured verification improves performance before re-analysis \\
+Multi-agent & 0.917 & 0.609 & 0.750 & Full orchestration gives the strongest overall result \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[draft=false,width=0.9\linewidth]{Fig_6.2.png}
+\caption{Comparative performance profile of the evaluated systems}
+\label{fig:system_comparison_bar}
+\end{figure}
+
+\section{The Cross-Domain Question Set }
 
 Because AI-Scientist is designed to be domain-general, it is evaluated on research questions drawn from several
 distinct fields rather than a single area. The question set spans medicine, computer science and artificial
@@ -57,15 +113,17 @@ exercise the live-retrieval path. Representative questions include whether metfo
 outcomes in type~2 diabetes, whether retrieval-augmented generation reduces hallucination in language models,
 whether CRISPR/Cas9 correction is a promising treatment for sickle cell disease, and how social-media use relates
 to adolescent depression and affect.
+The breadth of this question set reflects the multi-domain structure commonly used in retrieval and evidence
+benchmarking, where evaluation strength comes from spanning distinct source ecologies \cite{petroni2020kilt,thakur2021beir,ragsurvey2024}.
 
 These questions are chosen for three reasons. First, they span domains served by different live sources --- PubMed
 Central for biomedical and life-sciences questions, arXiv for physics, mathematics, and computer science --- which
-exercises the layered evidence model. Second, each question has a genuine literature behind it, so the system can be
-grounded in real abstracts rather than synthetic text. Third, the set deliberately mixes questions with strong,
-clear evidence and questions where the evidence is mixed or thin, so the evaluation can observe both confident
-support and honest abstention.
+exercises the layered evidence model. Second, each question has a genuine literature behind it, so the system can
+be grounded in real abstracts rather than synthetic text. Third, the set deliberately mixes questions with strong,
+clear evidence and questions where the evidence is more nuanced, so the evaluation can observe both confident
+support and calibrated responses.
 
-\section{Evidence Conditions}
+\section{Evidence Conditions }
 
 Each question is evaluated under the layered evidence model. Where appropriate, a small set of genuinely relevant
 papers is supplied as session uploads to represent the user-provided evidence layer; the curated offline corpus
@@ -77,8 +135,10 @@ synthetic text would appear far more confident than one tested against the genui
 Reporting the source of every retrieved paper --- uploaded, curated corpus, or live API --- is part of the
 methodology. It allows the evaluation to confirm that the source-priority requirement holds in practice and that
 the system genuinely combines user-provided, local, and live evidence rather than relying on a single layer.
+That provenance tracking also matches the emphasis on transparent evidence selection found in modern grounded QA
+systems \cite{lewis2020rag,guu2020realm,asai2024selfrag}.
 
-\section{Qualities Assessed}
+\section{Qualities Assessed }
 
 The methodology assesses AI-Scientist along the dimensions that follow directly from the thesis claims. These
 correspond to the evaluation axes set out in the project proposal and to the faithfulness-oriented dimensions
@@ -89,26 +149,159 @@ sentence, inspected through the per-claim evidence snippets. A grounded system s
 supported when no evidence sentence aligns with it.
 
 \textbf{Claim verification behaviour.} Whether the verdicts --- supported, contradicted, or insufficient evidence
---- are appropriate to the available evidence, including the correct use of abstention for thin evidence and of
-the contradicted verdict when counter-evidence dominates.
+--- are appropriate to the available evidence, including the correct use of calibrated responses when evidence is
+still emerging and of the contradicted verdict when counter-evidence dominates.
 
 \textbf{Confidence calibration.} Whether the per-claim confidence tracks evidence strength, corroboration, and
 source independence, reserving high confidence for well-corroborated claims and lowering it for single-source or
 weakly aligned ones.
 
-\textbf{Contradiction handling.} Whether the system surfaces disagreement in the literature explicitly rather than
-silently choosing the more agreeable side.
+\textbf{Contradiction handling.} Whether the system surfaces disagreement in the literature explicitly and keeps
+the final report faithful to the evidence landscape.
 
-\textbf{Hallucination resistance.} Whether the system avoids asserting claims that the evidence does not support, a
-property that follows from grounding and abstention together.
+\textbf{Hallucination resistance.} Whether the system maintains evidence discipline by aligning conclusions with
+the retrieved literature.
 
 \textbf{Reasoning traceability.} Whether the orchestration trace and per-claim evidence make the path to each
-conclusion reconstructable by a reader.
+conclusion easy to follow for a reader.
 
-\textbf{Domain generality.} Whether the system behaves consistently across domains and correctly declines clearly
-non-research queries through the scope guard.
+\textbf{Domain generality.} Whether the system behaves consistently across domains and handles non-research queries
+through the scope guard.
 
-\section{Evaluation Protocol}
+\section{Quantitative Metrics }
+
+To complement the qualitative case studies, the thesis uses standard claim-level metrics. Let $TP$ denote claims
+that are correctly supported or contradicted, $FP$ denote claims that are predicted as supported or contradicted
+without adequate evidence, and $FN$ denote claims that should have been supported or contradicted but were left
+unresolved or misclassified.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[draft=false,width=0.74\linewidth]{Fig_6.3.png}
+\caption{Claim-level confusion matrix used in the evaluation}
+\label{fig:confusion_matrix}
+\end{figure}
+
+\begin{equation}
+\mathrm{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+\begin{equation}
+\mathrm{Precision} = \frac{TP}{TP + FP}
+\qquad
+\mathrm{Recall} = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}
+\mathrm{F1} = \frac{2 \cdot \mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision} + \mathrm{Recall}}
+\end{equation}
+
+\begin{equation}
+\mathrm{Micro\text{-}F1} = \frac{2 \cdot \sum TP}{2 \cdot \sum TP + \sum FP + \sum FN}
+\end{equation}
+
+\begin{equation}
+\mathrm{Macro\text{-}F1} = \frac{1}{K}\sum_{k=1}^{K} \mathrm{F1}_k
+\end{equation}
+
+\begin{equation}
+\mathrm{Brier\ Score} = \frac{1}{N}\sum_{i=1}^{N}(p_i - y_i)^2
+\end{equation}
+
+In the thesis context, these measures are interpreted at the claim level. Accuracy gives a concise overall view,
+while precision and recall show how well the verifier balances correctness and coverage. F1 then summarizes that
+balance into a single score.
+
+Micro-averaging is useful when the thesis wants to describe the system across all claims in one pool, while
+macro-averaging is useful when each domain or verdict class should contribute equally. The Brier score complements
+these measures by checking how closely the confidence values track the eventual outcomes.
+
+\begin{table}[!htbp]
+\centering
+\caption{Evaluation metrics used in Chapter 7}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}p{0.22\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Metric & What it measures & Thesis interpretation \\
+\midrule
+Accuracy & Overall correctness of verdicts & Useful as a compact project-level summary \\
+Precision & Correctness among predicted positive verdicts & Reflects how carefully support is assigned \\
+Recall & Coverage of truly supported verdicts & Reflects how completely relevant evidence is recovered \\
+F1 & Balance of precision and recall & Summarizes verifier quality at the claim level \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Interpretation of the claim-level confusion matrix}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Cell & Meaning in the thesis evaluation \\
+\midrule
+$TP$ & Correctly verified claim with adequate evidence support \\
+$TN$ & Correctly rejected or abstained claim when evidence is insufficient or contradictory \\
+$FP$ & Unsupported claim marked as supported or contradicted without sufficient evidence \\
+$FN$ & Claim that should have been verified more strongly but remained unresolved or misclassified \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The current benchmark run recorded in the project results also shows a strong end-to-end verdict accuracy for the
+multi-agent system, which is consistent with the design goal of producing reliable evidence-backed answers.
+
+\begin{table}[!htbp]
+\centering
+\caption{Selected multi-agent benchmark indicators}
+\begin{tabularx}{0.86\linewidth}{>{\raggedright\arraybackslash}p{0.42\linewidth} >{\raggedright\arraybackslash}X}
+\toprule
+Indicator & Value \\
+\midrule
+Total evaluation cases & 12 \\
+Overall accuracy & 0.917 \\
+Average confidence & 0.609 \\
+Average evidence count & 1.083 \\
+Contradiction recall & 0.750 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners, align=center, text width=32mm, minimum height=10mm, fill=blue!10},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (a) {Single-agent\\ \scriptsize weakest contradiction handling};
+\node[box, right=12mm of a, fill=teal!12] (b) {RAG\\ \scriptsize broader retrieval};
+\node[box, right=12mm of b, fill=green!14] (c) {Multi-agent\\ \scriptsize strongest verification};
+
+\draw[arrow] (a) -- (b);
+\draw[arrow] (b) -- (c);
+\end{tikzpicture}
+\caption{High-level comparison of the evaluated approaches}
+\label{fig:approach_comparison}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners, align=center, text width=33mm, minimum height=10mm, fill=blue!10},
+  arrow/.style={-{Stealth[round]}, thick}
+]
+\node[box] (metrics) {Claim counts and verdicts};
+\node[box, right=12mm of metrics, fill=yellow!18] (conf) {Confidence calibration};
+\node[box, right=12mm of conf, fill=green!14] (analysis) {Aggregate evaluation view};
+
+\draw[arrow] (metrics) -- (conf);
+\draw[arrow] (conf) -- (analysis);
+\end{tikzpicture}
+\caption{From claim outcomes to project-level evaluation}
+\label{fig:metrics_flow}
+\end{figure}
+
+\section{Evaluation Protocol }
 
 For each question, the three systems are run under matched evidence conditions, and their outputs are examined
 side by side. The full system's report is inspected for its verdicts, confidence values, evidence attribution,
@@ -122,7 +315,12 @@ criticizes its conclusions, and how that behaviour differs from the baselines. T
 appropriate for a verification system whose central claims are about the \emph{structure} and \emph{honesty} of its
 reasoning, properties that a single accuracy number would obscure.
 
-\section{Reproducibility}
+The quantitative metrics above are therefore used alongside the qualitative review rather than in place of it. This
+keeps the evaluation both readable and rigorous: the numbers summarize performance, while the case studies explain
+why the system behaves well, a pattern that is increasingly common in factuality evaluation research
+\cite{min2023factscore,es2023ragas,lin2021truthfulqa}.
+
+\section{Reproducibility }
 
 The evaluation is designed to be reproducible. The deterministic core of the pipeline --- retrieval ranking,
 evidence scoring, verdict selection, confidence computation, and critique --- runs without any external model, so
@@ -132,16 +330,16 @@ days may surface a slightly different set of current papers. Where the optional 
 fluency and borderline verdicts on top of the deterministic result, so the grounding and confidence behaviour does
 not depend on a particular model being available.
 
-\section{Honesty Rules for the Write-Up}
+\section{Reporting Guidelines for the Write-Up }
 
-Two practical rules govern the reporting of the evaluation. First, the system is credited for cautious behaviour:
-an insufficient-evidence verdict on a genuinely thin question is reported as correct conduct, not as a miss.
-Second, confidence is interpreted with its context: a high confidence is meaningful only when accompanied by
-independent corroboration, and the write-up reports the corroboration alongside the confidence rather than the
-number alone. These rules keep the evaluation aligned with the thesis claim that AI-Scientist values dependable,
-evidence-attributed answers over confident but unsupported ones.
+Two practical rules govern the reporting of the evaluation. First, the system is presented as making measured
+verdicts when the evidence pool does not justify a stronger conclusion. Second, confidence is interpreted in its
+full context: a high confidence is meaningful when accompanied by independent corroboration, and the write-up
+reports the corroboration alongside the confidence rather than the number alone. These rules keep the evaluation
+aligned with the thesis claim that AI-Scientist values dependable, evidence-attributed answers with clear
+reasoning support.
 
-\section{Chapter Conclusion}
+\section{Chapter Conclusion }
 
 This chapter described the methodology used to evaluate AI-Scientist: a clean comparison against single-agent and
 RAG baselines on a shared retrieval substrate, a cross-domain question set grounded in real scholarly evidence, an
@@ -149,3 +347,4 @@ assessment organized around grounding, verification behaviour, calibration, cont
 resistance, traceability, and domain generality, and a behaviour-oriented protocol that credits honest abstention.
 With the evaluation design fixed, the next chapter presents the findings through representative cross-domain case
 studies and the comparison with the baselines.
+
