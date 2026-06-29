@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ai_scientist.config import Settings
 from ai_scientist.llm import OpenAIResearchLLM
 from ai_scientist.models import ClaimAssessment, CritiqueNote, PaperDocument
+from ai_scientist.utils import tokenize
 
 
 @dataclass(slots=True)
@@ -85,39 +86,62 @@ class FinalAnswerAgent:
     ) -> str:
         """Deterministic answer used when the LLM path is unavailable.
 
-        It still produces a direct, readable answer from the claims rather than a meta
-        summary, but stays strictly grounded — without the LLM the heuristic path cannot
-        responsibly reach beyond the retrieved evidence.
+        Without the LLM the heuristic cannot freely synthesise prose, so it answers the
+        question by selecting the verified claims that are *most relevant to the question*
+        (not just the highest-confidence ones) and presenting them as a direct, grounded
+        answer rather than a meta-summary of how many claims were found.
         """
-        supported = [item for item in assessments if item.verdict == "supported"]
-        contradicted = [item for item in assessments if item.verdict == "contradicted"]
-
         if not assessments:
             return (
-                "The current evidence base does not contain enough information to answer "
+                "The retrieved material does not contain enough aligned evidence to answer "
                 "this question directly."
             )
 
-        parts: list[str] = []
-        if supported:
-            lead = max(supported, key=lambda item: item.confidence)
-            parts.append(
-                f"The available evidence supports the following: {lead.claim.text}"
+        question_tokens = set(tokenize(question))
+
+        def by_question_relevance(items: list[ClaimAssessment]) -> list[ClaimAssessment]:
+            # Rank by how much each claim overlaps the user's question, then by confidence,
+            # so the answer leads with claims that actually address what was asked.
+            return sorted(
+                items,
+                key=lambda item: (
+                    len(question_tokens & set(tokenize(item.claim.text))),
+                    item.confidence,
+                ),
+                reverse=True,
             )
-            if len(supported) > 1:
-                parts.append(
-                    f"This is reinforced by {len(supported) - 1} further supported claim(s) "
-                    "drawn from the retrieved papers."
-                )
+
+        supported = by_question_relevance(
+            [item for item in assessments if item.verdict == "supported"]
+        )
+        contradicted = by_question_relevance(
+            [item for item in assessments if item.verdict == "contradicted"]
+        )
+
+        parts: list[str] = [self._as_sentence(item.claim.text) for item in supported[:3]]
         if contradicted:
-            lead = max(contradicted, key=lambda item: item.confidence)
-            parts.append(
-                "The evidence also pushes back on at least one related claim: "
-                f"{lead.claim.text}"
-            )
+            lead = self._as_sentence(contradicted[0].claim.text)
+            if parts:
+                parts.append(f"However, the evidence also qualifies this: {lead}")
+            else:
+                # Nothing supported — answer is a qualified / negative one.
+                return (
+                    "Based on the retrieved evidence, the answer is qualified rather than "
+                    f"affirmative: {lead}"
+                )
         if not parts:
-            parts.append(
-                "The retrieved papers are relevant, but the verified claims are not strong "
+            return (
+                "The retrieved papers are on-topic, but the verified claims are not decisive "
                 "enough to settle the question with confidence."
             )
         return " ".join(parts)
+
+    @staticmethod
+    def _as_sentence(text: str) -> str:
+        text = text.strip()
+        if not text:
+            return ""
+        text = text[0].upper() + text[1:]
+        if text[-1] not in ".!?":
+            text += "."
+        return text

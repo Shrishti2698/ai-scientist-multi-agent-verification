@@ -33,6 +33,14 @@ def scale_confidence_to_display(raw: float) -> float:
 def overall_confidence_display(report: FinalReport) -> float | None:
     """Aggregate the verified-claim confidences into one number on the 8.5-10 scale.
 
+    The figure blends two signals:
+
+    * the mean confidence of the decisive claims, and
+    * a *consensus factor* — how much the decisive claims agree. When the evidence is
+      mixed (some claims supported, some contradicted), the answer is less certain, so the
+      score narrows down within the band instead of sitting at a flat 10. Unanimous
+      evidence (all supported, or all contradicted) keeps the full confidence.
+
     Returns ``None`` when there is no answer to attach a confidence to (no verified
     claims, or an out-of-scope / no-evidence result), so the UI can hide the metric
     instead of showing a misleading high score.
@@ -48,8 +56,15 @@ def overall_confidence_display(report: FinalReport) -> float | None:
     if not pool:
         return None
 
-    raw = sum(item.confidence for item in pool) / len(pool)
-    return scale_confidence_to_display(raw)
+    mean_confidence = sum(item.confidence for item in pool) / len(pool)
+
+    supported = sum(1 for item in pool if item.verdict == "supported")
+    contradicted = sum(1 for item in pool if item.verdict == "contradicted")
+    decided = supported + contradicted
+    # 1.0 when the decisive claims are unanimous; approaches 0.5 on an even split.
+    consensus = (max(supported, contradicted) / decided) if decided else 1.0
+
+    return scale_confidence_to_display(mean_confidence * consensus)
 
 
 def available_corpus_options(root: str | Path) -> dict[str, Path]:
